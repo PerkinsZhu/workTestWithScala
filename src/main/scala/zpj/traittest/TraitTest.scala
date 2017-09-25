@@ -68,6 +68,8 @@ class OtherNum extends Add{
 //class Number extends OtherNum with Count { }//类可继承trait ，前提是该trait已经继承的有类
 class Number extends OtherNum with Count { }//如果该类已经有超类，而混合的trait也继承了超类，那么只有当该类的超类为trait的超类的类的子类(必须是子类而不能是超类)的时候才允许如此继承。
 
+
+
 //类可继承trait
 object TraitTest {
   def testLog(): Unit = {

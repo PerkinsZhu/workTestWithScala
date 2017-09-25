@@ -10,21 +10,54 @@ import scala.util.Sorting
   */
 object BaseTest {
 
+  def testTypeVariable(): Unit = {
+    class Car {}
+    class DaZhong extends Car {}
+    class CarManager {
+      def showInfo[T <: Comparable[T], S](car: Array[T], other: T): Unit = {
+        println(car.toString)
+        car(0).compareTo(other)
+      }
+
+      def toCar[M <% Car](mm: M): Unit = {
+        showInfo(Array(mm), AnyRef)
+      }
+    }
+    trait BMWCar[T,C[_]] extends Car{
+
+    }
+
+    val carManager = new CarManager()
+
+
+  }
+
+  def main(args: Array[String]): Unit = {
+    //    testFor()
+    //    testThread()
+    //    testReduce()
+    testTypeVariable()
+  }
+
+
   def testReduce(): Unit = {
 
     println((1 to 10).reduce((x, y) => x - y))
     println((1 to 10).reduceRight((x, y) => x - y))
     println((1 to 10).reduceLeft((x, y) => x - y))
     //注意区别 fold 有初始参数，reduce没有初始参数
-    println((1 to 10).fold(10)((x, y) =>{println(x,y); x-y}))
-    println((1 to 10).foldLeft(10)((x, y) =>{println(x,y); x-y}))
-    println((1 to 10).foldRight(10)((x, y) =>{println(x,y); x-y}))
-  }
-
-  def main(args: Array[String]): Unit = {
-    //    testFor()
-    //    testThread()
-    testReduce()
+    println((1 to 10).fold(10)((x, y) => {
+      println(x, y);
+      x - y
+    }))
+    println((1 to 10).foldLeft(10)((x, y) => {
+      println(x, y);
+      x - y
+    }))
+    println((1 to 10).foldRight(10)((x, y) => {
+      println(x, y);
+      x - y
+    }))
   }
 
   def testThread(): Unit = {
