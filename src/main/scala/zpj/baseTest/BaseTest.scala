@@ -19,17 +19,15 @@ object BaseTest {
         car(0).compareTo(other)
       }
 
-      def toCar[M <% Car](mm: M): Unit = {
+ /*     def toCar[M <% Car](mm: M): Unit = {
         showInfo(Array(mm), AnyRef)
-      }
+      }*/
     }
-    trait BMWCar[T,C[_]] extends Car{
+    trait BMWCar[T, C[_]] extends Car {
 
     }
 
     val carManager = new CarManager()
-
-
   }
 
   def main(args: Array[String]): Unit = {
