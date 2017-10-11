@@ -1,6 +1,7 @@
 package zpj.machinelearning
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
+import zpj.io.MLTool
 
 import scala.collection.mutable.Map
 
@@ -8,30 +9,31 @@ import scala.collection.mutable.Map
   * Created by PerkinsZhu on 2017/10/9 19:03. 
   */
 object DesicionTree {
-
-  val dataSet = List(List("会呼吸", "会飞", "YES"), List("会呼吸", "不会飞", "YES"), List("不会呼吸", "会飞", "YES"), List("不会呼吸", "不会飞", "NO"))
-  val labelSet = List("会呼吸吗？", "会飞吗？")
-
-  def getShannonEntropy(dataArray: List[List[Any]]): Double = {
+//  计算信息熵 注意：信息熵和特征没有关系，只和最后的结果有关系
+  def getShannonEntropy(dataList: List[List[Any]]): Double = {
     import scala.collection.mutable.Map
     val labelMap: Map[String, Float] = Map()
-    val dataSize = dataArray.size
-    dataArray.foreach(item => {
-      val key = item.reverse.head.toString
+    val dataSize = dataList.size
+    dataList.foreach(item => {
+      val key = item.last.toString
       labelMap += (key -> (labelMap.getOrElse(key, 0.0f) + 1.0f))
     })
-
-    val temp = labelMap.map(item => {
+    labelMap.map(item => {
       val pro = item._2 / dataSize
       pro * (Math.log(pro) / Math.log(2)) * -1
-    }).sum.toDouble
-    temp
+    }).sum
   }
 
   def getSplitData(dataList: List[List[Any]], i: Int, value: Any) = {
+    //返回的数据为：那些在i位置上的特征值为Value的数据，移除该特征之后的其它特征和结果集。注意理解这里返回的是什么！！！！
     dataList.filter(item => item(i) == value).map(item => item.dropWhile(ele => ele == value))
   }
 
+  /**
+    * 计算决策树的下一个节点为什么特征，返回的是该特征在dataList中的index
+    * @param dataList
+    * @return
+    */
   def getBestFeture(dataList: List[List[Any]]): Int = {
     val baseEntropy = getShannonEntropy(dataList)
     var tempEntrop = 0.0d
@@ -54,8 +56,8 @@ object DesicionTree {
     fetureIndex
   }
 
-  def createDesicionTree(dataList: List[List[Any]], labelList: List[String]): String = {
-    doHandel(dataList, labelList).toString
+  def createDesicionTree(dataList: List[List[Any]], labelList: List[Any]): String = {
+    doHandel(dataList, labelList, None).toString
   }
 
   def majorityCnt(labels: List[Any]): String = {
@@ -63,19 +65,19 @@ object DesicionTree {
     labels.foreach(item => {
       map += (item.toString -> (map.getOrElse(item.toString, 0) + 1))
     })
-    val temp = map.toList.sortBy(_._2)
-    temp(0)._1
+    map.toList.sortBy(_._2).head._1
   }
 
-  def doHandel(dataList: List[List[Any]], labelList: List[String]): JsObject = {
+  def doHandel(dataList: List[List[Any]], labelList: List[Any], dealLabel: Option[String]): JsObject = {
+    //FIXME 看是否能够使用尾递归进行优化
     val tempValue = dataList.map(item => item.reverse.head)
     if (tempValue.toSet.size == 1) {
       //没有分支了
-      return Json.obj(tempValue(0).toString -> "")
+      return Json.obj(dealLabel.get -> tempValue(0).toString)
     }
     if (dataList(0).length == 1) {
       //没有属性了
-      return Json.obj(majorityCnt(tempValue) -> "")
+      return Json.obj(dealLabel.get -> majorityCnt(tempValue))
     }
 
     val bestFteureIndex = getBestFeture(dataList)
@@ -83,20 +85,29 @@ object DesicionTree {
 
 
     val newLabels = labelList.filter(item => item != label)
+    var treeNode: JsObject = Json.obj()
     val temp = dataList.map(item => item(bestFteureIndex)).toSet
-    val tempNode = temp.map(item => {
+    temp.foreach(item => {
       val splitData = getSplitData(dataList, bestFteureIndex, item)
-      val temp = Json.obj(item.toString -> doHandel(splitData, newLabels))
-      println(temp)
-      temp
+      val tempNode = doHandel(splitData, newLabels, Some(item.toString));
+      treeNode ++= (if (tempNode.keys.head == item) {
+        Json.obj(item.toString -> tempNode.values.head)
+      } else {
+        Json.obj(item.toString -> tempNode.value)
+      })
     })
-    println(Json.toJson(tempNode))
-    Json.obj(label.toString -> Json.toJson(tempNode))
+    Json.obj(label.toString -> treeNode)
   }
 
   def main(args: Array[String]): Unit = {
+
+    val dataSet = List(List("会呼吸", "会飞", "YES"), List("会呼吸", "不会飞", "YES"), List("不会呼吸", "会飞", "YES"), List("不会呼吸", "不会飞", "NO"))
+    val labelSet = List("会呼吸吗？", "会飞吗？")
+
     //    print(getShannonEntropy(dataSet))
     //    print(getBestFeture(dataSet))
+    val data = MLTool.readFileToList("E:\\zhupingjing\\sources\\git\\workTestWithScala\\src\\main\\scala\\zpj\\machinelearning\\testData\\data01.txt")
+    //    println(createDesicionTree(data.init, data.last))
     println(createDesicionTree(dataSet, labelSet))
   }
 }
