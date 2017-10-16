@@ -7,8 +7,8 @@ import play.api.libs.json.Json
   */
 object test {
   def main(args: Array[String]): Unit = {
-//    testJson
-    testList
+    //    testJson
+    testList()
   }
 
   def testList(): Unit = {
@@ -18,6 +18,11 @@ object test {
         ele == "jack"
       })
     )
+   val data = List(List(12,23,12,45),List(12,22,32,13))
+    print(data.reduceLeft((x,y)=>{
+      x.zip(y).map(ele => ele._2+ele._1)
+    }))
+
   }
 
   def testJson = {
