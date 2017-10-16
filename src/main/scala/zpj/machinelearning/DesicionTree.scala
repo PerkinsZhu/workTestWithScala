@@ -59,7 +59,7 @@ object DesicionTree {
   }
 
   def doHandel(dataList: List[List[Any]], labelList: List[Any], dealLabel: Option[String]): JsObject = {
-    //FIXME 看是否能够使用尾递归进行优化
+    //FIXME 看是否能够使用尾递归进行优化  使用尾递归需要对json树的子节点进行修改，这里比较麻烦。可以不使用json结构存储决策时，直接构造一个 树结构 来存储决策树
     val tempValue = dataList.map(item => item.reverse.head)
     if (tempValue.toSet.size == 1) {//没有分支了
       return Json.obj(dealLabel.get -> tempValue(0).toString)
