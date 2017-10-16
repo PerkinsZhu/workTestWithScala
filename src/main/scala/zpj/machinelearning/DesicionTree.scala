@@ -8,7 +8,7 @@ import scala.collection.mutable.Map
 /**
   * Created by PerkinsZhu on 2017/10/9 19:03. 
   */
-object DesicionTree {
+object DesicionTree extends Base{
 //  计算信息熵 注意：信息熵和特征没有关系，只和最后的结果有关系
   def getShannonEntropy(dataList: List[List[Any]]): Double = {
     import scala.collection.mutable.Map
@@ -26,7 +26,16 @@ object DesicionTree {
 
   def getSplitData(dataList: List[List[Any]], i: Int, value: Any) = {
     //返回的数据为：那些在i位置上的特征值为Value的数据，移除该特征之后的其它特征和结果集。注意理解这里返回的是什么！！！！
-    dataList.filter(item => item(i) == value).map(item => item.dropWhile(ele => ele == value))
+    val temp = dataList.filter(item => item(i) == value)
+      val result = temp.map(item => {
+//        注意：dropWhile()逐个匹配去除符合条件的元素 直到不符合条件 之后的元素不在判断
+//        item.dropWhile(ele =>{
+//          ele.toString == value.toString
+//        })
+        item.filter(ele =>ele != value)
+
+      })
+    result
   }
 
   /**
@@ -106,8 +115,9 @@ object DesicionTree {
 
     //    print(getShannonEntropy(dataSet))
     //    print(getBestFeture(dataSet))
-    val data = MLTool.readFileToList("E:\\zhupingjing\\sources\\git\\workTestWithScala\\src\\main\\scala\\zpj\\machinelearning\\testData\\data01.txt")
-    //    println(createDesicionTree(data.init, data.last))
-    println(createDesicionTree(dataSet, labelSet))
+
+    val data = MLTool.readFileToList(dataPath + "data01.txt")
+        println(createDesicionTree(data.init, data.last))
+//    println(createDesicionTree(dataSet, labelSet))
   }
 }
