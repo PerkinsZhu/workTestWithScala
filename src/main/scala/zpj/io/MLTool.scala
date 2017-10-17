@@ -11,12 +11,4 @@ object MLTool {
      line.split("\t").toList
     }
   }
-
-  def main(args: Array[String]): Unit = {
-   val data = readFileToList("E:\\zhupingjing\\sources\\git\\workTestWithScala\\src\\main\\scala\\zpj\\machinelearning\\testData\\data01.txt")
-    println(data)
-    println(data.last)
-    println(data)
-  }
 }
-
