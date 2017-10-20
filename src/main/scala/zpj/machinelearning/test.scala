@@ -33,12 +33,21 @@ object test {
   def testOther(): Unit = {
     println("2.000".toDouble)
   }
+//import scala.collection.mutable.Set
+  def testSet(): Unit = {
+    var set: Set[String]=Set()
+    set += ("2w2")
+    set += ("2w2")
+    set += ("2w2w")
+    println(set)
+  }
 
   def main(args: Array[String]): Unit = {
     //    testJson
     //    testList()
-    testND4S()
+//    testND4S()
 //    testOther()
+    testSet()
   }
 
   def testList(): Unit = {

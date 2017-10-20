@@ -10,5 +10,9 @@ libraryDependencies += "com.typesafe.play" % "play-json_2.12" % "2.6.6"
 //libraryDependencies += "org.nd4j" % "nd4s_2.11" % "0.9.1"
 // https://mvnrepository.com/artifact/org.nd4j/nd4j-native-platform
 libraryDependencies += "org.nd4j" % "nd4j-native-platform" % "0.9.1"
+// https://mvnrepository.com/artifact/au.com.bytecode/opencsv
+libraryDependencies += "au.com.bytecode" % "opencsv" % "2.4"
+libraryDependencies += "org.mongodb" %% "casbah" % "3.1.1"
+
 
 
