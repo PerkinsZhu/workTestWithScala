@@ -10,6 +10,14 @@ import scala.util.Sorting
   */
 object BaseTest {
 
+  def showEach(ele:Int*) = {
+    ele.foreach(println _)
+  }
+
+  def testList():Unit={
+    showEach(List(1,2,3):_*)
+  }
+
   def testTypeVariable(): Unit = {
     class Car {}
     class DaZhong extends Car {}
@@ -34,7 +42,8 @@ object BaseTest {
     //    testFor()
     //    testThread()
     //    testReduce()
-    testTypeVariable()
+//    testTypeVariable()
+    testList
   }
 
 
