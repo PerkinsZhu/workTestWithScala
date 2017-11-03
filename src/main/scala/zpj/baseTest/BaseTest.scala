@@ -3,6 +3,9 @@ package zpj.baseTest
 import java.io.IOException
 import java.util
 
+import com.mongodb.util.JSON
+import play.api.libs.json.Json
+
 import scala.util.Sorting
 
 /**
@@ -26,10 +29,9 @@ object BaseTest {
         println(car.toString)
         car(0).compareTo(other)
       }
-
- /*     def toCar[M <% Car](mm: M): Unit = {
+ /* def toCar[M <% Car](mm: M): Unit = {
         showInfo(Array(mm), AnyRef)
-      }*/
+   }*/
     }
     trait BMWCar[T, C[_]] extends Car {
 
@@ -38,13 +40,22 @@ object BaseTest {
     val carManager = new CarManager()
   }
 
+  case  class  APP(name:String,info:Option[String])
+  implicit val formate = Json.format[APP]
+  def testCaseClass(): Unit = {
+    println(Json.toJson(APP("JACL",None)))
+
+  }
+
   def main(args: Array[String]): Unit = {
     //    testFor()
     //    testThread()
     //    testReduce()
 //    testTypeVariable()
-    testList
+//    testList
+    testCaseClass()
   }
+
 
 
   def testReduce(): Unit = {
@@ -99,7 +110,6 @@ object BaseTest {
     import scala.collection.JavaConverters._
     jarray.asScala.foreach(println(_))
     jarray.asScala.asJava.forEach((str: String) => println(str))
-
   }
 
 }

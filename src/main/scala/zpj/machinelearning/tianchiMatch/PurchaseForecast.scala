@@ -3,9 +3,10 @@ package zpj.machinelearning.tianchiMatch
 
 import com.mongodb.DBObject
 import com.mongodb.casbah.commons.MongoDBObject
+import com.mongodb.casbah.commons.conversions.scala.JodaDateTimeDeserializer
 import org.joda.time.DateTime
 import zpj.database.MongodbTool
-
+import org.joda.time.Days
 import scala.collection.JavaConverters._
 
 /**
@@ -34,7 +35,7 @@ object PurchaseForecast {
     */
 
   def main(args: Array[String]): Unit = {
-    var set:Set[String] = Set()
+/*    var set:Set[String] = Set()
    /* val userList = users.find(MongoDBObject(),MongoDBObject("uid"->true)).forEach(item=>{set += item.get("uid").toString})
     println(set.size)*/
     val userData = getUserDate("11164332")
@@ -43,8 +44,18 @@ object PurchaseForecast {
     userData.filter(_.get("bhvt")=="4").foreach(item=>{
       userData.filter(good=>{good.get("gid")==item.get("gid") &&good.get("time").toString <= item.get("time").toString}).foreach(println _)
       println("=============================")
-    })
+    })*/
+
+    val nowTime =
+    println()
+
   }
+  import org.joda.time.format.DateTimeFormat
+
+  def getTime(time:String):Int=Days.daysBetween(DateTimeFormat.forPattern("yyyy-MM-dd HH").parseDateTime(time), new DateTime(2014,12,19,0,0,0)).getDays
+
+  def getScore(typ:Int,time:Int):Float=typ*1/(time)
+
   def getUserDate(uid:String):List[DBObject]={
     users.find(MongoDBObject("uid"->uid),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
   }
