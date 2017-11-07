@@ -53,9 +53,14 @@ object BaseTest {
     //    testReduce()
 //    testTypeVariable()
 //    testList
-    testCaseClass()
+//    testCaseClass()
+    testSort()
   }
 
+  def testSort()={
+    val map = Map(10481 -> 3.0, 5900 -> 5.0, 5395 -> 1.0).toList.sortWith(_._2>_._2).take(2)
+    println(map)
+  }
 
 
   def testReduce(): Unit = {

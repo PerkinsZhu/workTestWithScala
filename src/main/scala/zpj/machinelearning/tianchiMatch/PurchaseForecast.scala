@@ -1,12 +1,15 @@
 package zpj.machinelearning.tianchiMatch
 
 
+import java.io.{File, FileWriter}
+
 import com.mongodb.DBObject
 import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.commons.conversions.scala.JodaDateTimeDeserializer
 import org.joda.time.DateTime
 import zpj.database.MongodbTool
 import org.joda.time.Days
+
 import scala.collection.JavaConverters._
 
 /**
@@ -35,28 +38,52 @@ object PurchaseForecast {
     */
 
   def main(args: Array[String]): Unit = {
-/*    var set:Set[String] = Set()
-   /* val userList = users.find(MongoDBObject(),MongoDBObject("uid"->true)).forEach(item=>{set += item.get("uid").toString})
-    println(set.size)*/
-    val userData = getUserDate("11164332")
-//    userData.foreach(println _)
-    println("++++++++++++++++++++++++++++++++++++++++++++")
-    userData.filter(_.get("bhvt")=="4").foreach(item=>{
-      userData.filter(good=>{good.get("gid")==item.get("gid") &&good.get("time").toString <= item.get("time").toString}).foreach(println _)
-      println("=============================")
-    })*/
+//   users.find(MongoDBObject(),MongoDBObject("uid"->true)).forEach(item=>{dealUser(item.get("uid").toString)})
+   val allData = users.find(MongoDBObject(),MongoDBObject("uid"->true)).toArray.asScala.map(item=>{item.get("uid").toString}).toSet
+     allData.foreach(dealUser(allData.size,_))
+  }
+  val writer = new FileWriter(new File("E:\\zhupingjing\\test\\tianchi_mobile_recommendation_predict.csv"))
+  var num = 0;
+  def dealUser(size:Int,uid:String)={
+    """
+      |计算出用户所有购买商品所在的类别A
+      |对用户浏览、收藏、加购物车的所有商品（该商品不属于A类别）进行计算分值
+      |求出分值最高的五种商品为最终结果
+    """
+    num=num+1
+    println("总数："+size+"个用户，正在处理第"+num+"用户："+uid)
+    val userData = getUserDate(uid)
 
-    val nowTime =
-    println()
+    val buyType = userData.filter(_.get("bhvt")== "4").map(item=>{
+      item.get("icat")
+    }).toSet
 
+    var dateMap=scala.collection.mutable.Map.empty[String,Float]
+    userData.filter(ele=>{ele.get("bhvt") != "4" && !buyType.contains(ele.get("icat"))}).map(item=>{
+      val score = getScore(Integer.parseInt(item.get("bhvt").toString),getTime(item.get("time").toString))
+      val gid = item.get("gid").toString
+      val newScore = dateMap.getOrElse(gid,0.0f)+score
+      dateMap.put(gid,newScore)
+    })
+    dateMap.toList.sortWith(_._2>_._2).take(5).foreach(item=>{
+      writer.write(uid+","+item._1+",\n")
+    })
   }
   import org.joda.time.format.DateTimeFormat
 
-  def getTime(time:String):Int=Days.daysBetween(DateTimeFormat.forPattern("yyyy-MM-dd HH").parseDateTime(time), new DateTime(2014,12,19,0,0,0)).getDays
-
-  def getScore(typ:Int,time:Int):Float=typ*1/(time)
-
+  def getTime(time:String):Int=Days.daysBetween(DateTimeFormat.forPattern("yyyy-MM-dd HH").parseDateTime(time), new DateTime(2014,12,19,23,0,0)).getDays
+  def getScore(typ:Int,time:Int):Float=typ*1.0f/(time)
   def getUserDate(uid:String):List[DBObject]={
     users.find(MongoDBObject("uid"->uid),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
   }
+
+  """
+    |基于协同过滤模型来进行商品推荐
+    |   1、计算用户的相似度
+    |       根据以往购买商品类计算用户的购物相似度
+    |       对每个用户出其最为相似的用户，然后推荐相似用户购买而该用户未购买的商品
+    |    如计算用户的相似度？
+    |       根据以往商品的购买记录来进行计算。但又不可完全一致。可以取最相似的两个或三个用户进行推荐。
+  """.stripMargin
+
 }
