@@ -44,7 +44,12 @@ object PurchaseForecast {
   }
   val writer = new FileWriter(new File("E:\\zhupingjing\\test\\tianchi_mobile_recommendation_predict.csv"))
   var num = 0;
-  def dealUser(size:Int,uid:String)={
+
+  def getBuyGoods():List[DBObject]={
+    users.find(MongoDBObject("bhvt"-> "4" ),MongoDBObject("gid"->true)).toArray.asScala.toSet.toList
+  }
+  val buyGoods =getBuyGoods()
+  def dealUser(size:Int, uid:String)={
     """
       |计算出用户所有购买商品所在的类别A
       |对用户浏览、收藏、加购物车的所有商品（该商品不属于A类别）进行计算分值
@@ -54,25 +59,38 @@ object PurchaseForecast {
     println("总数："+size+"个用户，正在处理第"+num+"用户："+uid)
     val userData = getUserDate(uid)
 
-    val buyType = userData.filter(_.get("bhvt")== "4").map(item=>{
+  /*  val buyType = userData.filter(_.get("bhvt")== "4").map(item=>{
       item.get("icat")
-    }).toSet
+    }).toSet*/
 
-    var dateMap=scala.collection.mutable.Map.empty[String,Float]
+
+/*    var dateMap=scala.collection.mutable.Map.empty[String,Float]
     userData.filter(ele=>{ele.get("bhvt") != "4" && !buyType.contains(ele.get("icat"))}).map(item=>{
       val score = getScore(Integer.parseInt(item.get("bhvt").toString),getTime(item.get("time").toString))
       val gid = item.get("gid").toString
       val newScore = dateMap.getOrElse(gid,0.0f)+score
       dateMap.put(gid,newScore)
+    })*/
+    var dateMap=scala.collection.mutable.Map.empty[String,Float]
+    userData.filter(ele=>{buyGoods.contains(ele.get("gid"))}).map(item=>{
+      val score = getScore(Integer.parseInt(item.get("bhvt").toString),getTime(item.get("time").toString))
+      val gid = item.get("gid").toString
+      val newScore = dateMap.getOrElse(gid,0.0f)+score
+      dateMap.put(gid,newScore)
     })
-    dateMap.toList.sortWith(_._2>_._2).take(5).foreach(item=>{
+    val temp = dateMap.toList.sortWith(_._2>_._2)
+
+    (if (temp.length >5){temp.take(5)}else{temp}).foreach(item=>{
+      print(uid+","+item._1+",\n")
       writer.write(uid+","+item._1+",\n")
     })
+
   }
   import org.joda.time.format.DateTimeFormat
 
   def getTime(time:String):Int=Days.daysBetween(DateTimeFormat.forPattern("yyyy-MM-dd HH").parseDateTime(time), new DateTime(2014,12,19,23,0,0)).getDays
-  def getScore(typ:Int,time:Int):Float=typ*1.0f/(time)
+//  这里有一个可调参数
+  def getScore(typ:Int,time:Int):Float= if(typ == 4){(time-10)*typ*0.1f/(time)}else{typ*1.0f/(time)}
   def getUserDate(uid:String):List[DBObject]={
     users.find(MongoDBObject("uid"->uid),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
   }
