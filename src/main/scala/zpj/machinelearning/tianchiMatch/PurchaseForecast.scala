@@ -9,6 +9,7 @@ import com.mongodb.casbah.commons.conversions.scala.JodaDateTimeDeserializer
 import org.joda.time.DateTime
 import zpj.database.MongodbTool
 import org.joda.time.Days
+import play.api.libs.json.JsObject
 
 import scala.collection.JavaConverters._
 
@@ -45,8 +46,8 @@ object PurchaseForecast {
   val writer = new FileWriter(new File("E:\\zhupingjing\\test\\tianchi_mobile_recommendation_predict.csv"))
   var num = 0;
 
-  def getBuyGoods():List[DBObject]={
-    users.find(MongoDBObject("bhvt"-> "4" ),MongoDBObject("gid"->true)).toArray.asScala.toSet.toList
+  def getBuyGoods():List[String]={
+    users.find(MongoDBObject("bhvt"-> "4" ),MongoDBObject("gid"->true)).toArray.asScala.map(_.get("gid").toString).toSet.toList
   }
   val buyGoods =getBuyGoods()
   def dealUser(size:Int, uid:String)={
@@ -81,8 +82,7 @@ object PurchaseForecast {
     val temp = dateMap.toList.sortWith(_._2>_._2)
 
     (if (temp.length >5){temp.take(5)}else{temp}).foreach(item=>{
-      print(uid+","+item._1+",\n")
-      writer.write(uid+","+item._1+",\n")
+      writer.write(uid+","+item._1+"\n")
     })
 
   }
@@ -90,7 +90,9 @@ object PurchaseForecast {
 
   def getTime(time:String):Int=Days.daysBetween(DateTimeFormat.forPattern("yyyy-MM-dd HH").parseDateTime(time), new DateTime(2014,12,19,23,0,0)).getDays
 //  这里有一个可调参数
-  def getScore(typ:Int,time:Int):Float= if(typ == 4){(time-10)*typ*0.1f/(time)}else{typ*1.0f/(time)}
+//  def getScore(typ:Int,time:Int):Float= if(typ == 4){(time-10)*typ*0.1f/(time)}else{typ*1.0f/(time)}
+  //TODO 重新计算上次计分方式
+  def getScore(typ:Int,time:Int):Float= if(typ == 4){0}else{typ*1.0f/(time)}
   def getUserDate(uid:String):List[DBObject]={
     users.find(MongoDBObject("uid"->uid),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
   }
