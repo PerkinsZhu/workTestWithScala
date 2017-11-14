@@ -3,16 +3,16 @@ package zpj.machinelearning.tianchiMatch
 
 import java.io.{File, FileWriter}
 
-import com.mongodb.DBObject
 import com.mongodb.casbah.commons.MongoDBObject
-import com.mongodb.casbah.commons.conversions.scala.JodaDateTimeDeserializer
-import org.joda.time.DateTime
+import com.mongodb.{BasicDBObject, DBObject}
+import org.joda.time.{DateTime, Days, LocalDate}
+import play.api.libs.json.Json
 import zpj.database.MongodbTool
-import org.joda.time.Days
-import play.api.libs.json.JsObject
 
 import scala.collection.JavaConverters._
-
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.{Failure, Success}
 /**
   * Created by PerkinsZhu on 2017/10/20 16:30. 
   */
@@ -37,11 +37,39 @@ object PurchaseForecast {
     *   商品的浏览多少次才会购买？
     *    商品以前的浏览次数 * 用户的浏览权值 * W + 该用户的行为系数
     */
+  var allNum = 0
+  var dealNum = 0
+  var allDealNum = 0
+  var rightList=scala.collection.mutable.ListBuffer.empty[Tuple3[String,String,String]]
+  var isOver = false
+
+  def summary(userList: List[Tuple3[String,String,String]]): Unit = {
+    rightList = rightList ++ userList
+    dealNum = dealNum+1
+    println("共 "+allNum+"个用户，第 "+dealNum+" 处理结束")
+
+  }
 
   def main(args: Array[String]): Unit = {
 //   users.find(MongoDBObject(),MongoDBObject("uid"->true)).forEach(item=>{dealUser(item.get("uid").toString)})
+  val start= DateTime.now()
    val allData = users.find(MongoDBObject(),MongoDBObject("uid"->true)).toArray.asScala.map(item=>{item.get("uid").toString}).toSet
-     allData.foreach(dealUser(allData.size,_))
+    allNum = allData.size
+     allData.foreach(item=>{
+       val progress = Future {
+         List("2014-12-01", "2014-12-03", "2014-12-05", "2014-12-07", "2014-12-08", "2014-12-10", "2014-12-12").flatMap { elem =>
+           dealUser(allData.size, item, elem)
+         }
+       }
+       progress.onComplete{
+         case Failure(exception)=>print("failure")
+         case Success(userList)=>summary(userList)
+       }
+     })
+  while(dealNum != allNum){
+    Thread.sleep(10000)
+  }
+    print("共用时："+(DateTime.now().getMillis - start.getMillis)/1000.0)
   }
   val writer = new FileWriter(new File("E:\\zhupingjing\\test\\tianchi_mobile_recommendation_predict.csv"))
   var num = 0;
@@ -50,15 +78,20 @@ object PurchaseForecast {
     users.find(MongoDBObject("bhvt"-> "4" ),MongoDBObject("gid"->true)).toArray.asScala.map(_.get("gid").toString).toSet.toList
   }
   val buyGoods =getBuyGoods()
-  def dealUser(size:Int, uid:String)={
+
+  def writeToFile(uid:String,item: (String, Float))= {
+    writer.write(uid+","+item._1+"\n")
+  }
+
+
+  def dealUser(size:Int, uid:String,time:String):List[Tuple3[String,String,String]]={
     """
       |计算出用户所有购买商品所在的类别A
       |对用户浏览、收藏、加购物车的所有商品（该商品不属于A类别）进行计算分值
       |求出分值最高的五种商品为最终结果
     """
-    num=num+1
-    println("总数："+size+"个用户，正在处理第"+num+"用户："+uid)
-    val userData = getUserDate(uid)
+//    println("总数："+size+"个用户，正在处理第"+num+"用户："+uid)
+    val userData = getUserDate(uid,time)
 
   /*  val buyType = userData.filter(_.get("bhvt")== "4").map(item=>{
       item.get("icat")
@@ -80,21 +113,30 @@ object PurchaseForecast {
       dateMap.put(gid,newScore)
     })
     val temp = dateMap.toList.sortWith(_._2>_._2)
+    val nextDayPattern =LocalDate.parse(time).plusDays(1).toString("yyyy-MM-dd")+" .."
+    val validateData = users.find(BasicDBObject.parse(Json.obj("uid"->uid,"bhvt"->"4","time"->Json.obj("$regex"->nextDayPattern)).toString()),MongoDBObject("gid"->true)).toArray().asScala.map(_.get("gid").toString).toList
+//    println(nextDayPattern+"--->"+validateData)
 
-    (if (temp.length >5){temp.take(5)}else{temp}).foreach(item=>{
-      writer.write(uid+","+item._1+"\n")
-    })
+    (if (temp.length >5){temp.take(5)}else{temp}).filter(ele=>validateData.contains(ele._1))map(item=>{
+//     writeToFile(uid,item)
+//      print(item._1+"、")
+//      println()
+//        println("*************************************"+time+"----"+uid+"---->"+item._1)
+        (uid,nextDayPattern,item._1)
+      }
+    )
 
   }
   import org.joda.time.format.DateTimeFormat
 
   def getTime(time:String):Int=Days.daysBetween(DateTimeFormat.forPattern("yyyy-MM-dd HH").parseDateTime(time), new DateTime(2014,12,19,23,0,0)).getDays
 //  这里有一个可调参数
-//  def getScore(typ:Int,time:Int):Float= if(typ == 4){(time-10)*typ*0.1f/(time)}else{typ*1.0f/(time)}
+  def getScore(typ:Int,time:Int):Float= if(typ == 4){(time-10)*typ*0.1f/(time)}else{typ*1.0f/(time)}
   //TODO 重新计算上次计分方式
-  def getScore(typ:Int,time:Int):Float= if(typ == 4){0}else{typ*1.0f/(time)}
-  def getUserDate(uid:String):List[DBObject]={
-    users.find(MongoDBObject("uid"->uid),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
+//  def getScore(typ:Int,time:Int):Float= if(typ == 4){0}else{typ*1.0f/(time)}
+  def getUserDate(uid:String,time:String):List[DBObject]={
+//    users.find(MongoDBObject("uid"->uid),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
+    users.find(MongoDBObject(Json.obj("uid"->uid,"time"->Json.obj("$lte"->time)).toString()),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
   }
 
   """
