@@ -3,6 +3,7 @@ package zpj.machinelearning.tianchiMatch
 import com.mongodb.casbah.commons.MongoDBObject
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
+import zpj.machinelearning.tianchiMatch.Demo2.buyDivAll
 import zpj.machinelearning.tianchiMatch.PurchaseForecast.users
 
 import scala.collection.JavaConverters._
@@ -49,11 +50,31 @@ object Test {
     //    val result =PurchaseForecast.users.find(MongoDBObject(Json.obj("uid"->"10001082","time"->Json.obj("$lte"->"2014-12-02 15")).toString()),MongoDBObject("uid"->true,"gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
     //    val result =PurchaseForecast.users.find(MongoDBObject(Json.obj("uid"->"10001082","time"->Json.obj("$regex"->"2014-12-02 ..")).toString()),MongoDBObject("uid"->true,"gid"->true,"bhvt"->true,"icat"->true,"time"->true)).toArray.asScala.toList
     //    result.foreach(println _)
-    val resu = users.find(MongoDBObject(Json.obj("uid"->"102309547","time"->Json.obj("$lte"->"2014-11-10")).toString()),MongoDBObject("gid"->true,"bhvt"->true,"time"->true)).toArray.asScala.toList
-        resu.foreach(print _)
+//    val resu = users.find(MongoDBObject(Json.obj("uid"->"102309547","time"->Json.obj("$lte"->"2014-11-10")).toString()),MongoDBObject("gid"->true,"bhvt"->true,"time"->true)).toArray.asScala.toList
+//        resu.foreach(print _)
 //        val newDay = LocalDate.parse("2017-12-31").plusDays(1)
 //        print(newDay)
 //    testFuture()
 //    testList()
+//    println("-====-")
+//    show
+//    print(shwo)
+//   print(buyDivAll.find(MongoDBObject(Json.obj("resm"->Json.obj("$gte"->0.04633204638957977)).toString())).toArray.asScala.toList.length)
+    for(i <- 1 to 10){
+      val future = Future {
+        for (j <- 1 to 10) {
+          Thread.sleep(1000)
+          print(i, j)
+        }
+      }
+      future.onComplete{
+        case Success(res)=>println()
+        case Failure(ex)=>println()
+      }
+    }
+    while (true){Thread.sleep(50000)}
   }
+  val shwo = println("---val---")
+  def show = println("---def---")
+
 }
