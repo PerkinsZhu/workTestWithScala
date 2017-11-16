@@ -1,12 +1,14 @@
 package zpj.machinelearning.tianchiMatch
 
+import java.io.{File, FileWriter}
+
 import com.mongodb.{BasicDBObject, DBObject}
 import com.mongodb.casbah.commons.MongoDBObject
 import org.joda.time.{DateTime, Days}
 import org.joda.time.format.DateTimeFormat
-import play.api.libs.json.{Json}
+import play.api.libs.json.Json
 import zpj.database.MongodbTool
-import zpj.machinelearning.tianchiMatch.PurchaseForecast.{users}
+import zpj.machinelearning.tianchiMatch.PurchaseForecast.{users, writer}
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable
@@ -31,11 +33,19 @@ object Demo2 {
   val allUserItem = users.find(MongoDBObject(),MongoDBObject("gid"->true,"bhvt"->true,"icat"->true,"time"->true,"uid"->true)).toArray.asScala.toList
   val dealUser = buyDivAll.find(MongoDBObject(Json.obj("resm"->Json.obj("$gte"->0.04633204638957977)).toString())).toArray.asScala.toList.map(_.get("uid").toString)
   var dealNum = 0;
+  val writer = getFileWriter("E:\\zhupingjing\\test\\tianchi_mobile_recommendation_predict.csv")
   var allNum = allData.size;
 
   def getTime(time:String):Int=Days.daysBetween(DateTimeFormat.forPattern("yyyy-MM-dd HH").parseDateTime(time), new DateTime(2014,12,19,23,0,0)).getDays
   def getPreData(user: String, time: String) = users.find(MongoDBObject(Json.obj("uid"->user,"time"->Json.obj("$lte"->time)).toString()),MongoDBObject("gid"->true,"bhvt"->true,"time"->true)).toArray.asScala.toList
-
+  def getFileWriter(path: String) = {
+    val file = new File(path)
+    if(file.exists()){
+      file.delete()
+    }
+    file.createNewFile()
+    new FileWriter(file)
+  }
   def dealuserResult(res: immutable.IndexedSeq[(String,(Float, Float, Float))]): Unit = {
     res.foreach(item=>println(item._1+"---->"+item._2))
   }
@@ -171,8 +181,31 @@ object Demo2 {
     println("共 200 组，已经处理完成： "+dealNum+ " 组！")
   }
 
+  def createResult(startTime:String,endTime:String,topN:Int)={
+    val preData = getPreDataNew(startTime,endTime)
+    val allNum = dealUser.length
+    var dealNum = 0;
+    val userAndRecommend = dealUser.map(user => {
+      dealNum=dealNum+1
+      println("共 "+allNum+"用户，正在处理第 "+dealNum+"个用户。")
+      var dateMap = scala.collection.mutable.Map.empty[String, Int]
+      preData.foreach(item => {
+        val score =Integer.parseInt(item.get("bhvt").toString)
+        val gid = item.get("gid").toString
+        val newScore = dateMap.getOrElse(gid, 0) + score
+        dateMap.put(gid, newScore)
+      })
+      val sortGoods = dateMap.toList.sortWith(_._2 > _._2)
+      val recommend = (if (sortGoods.length > topN) {sortGoods.take(topN) } else {sortGoods}).map(_._1)
+      recommend.foreach(item=>{
+        writer.write(user+","+item+"\n")
+        writer.flush()
+      })
+    })
+    writer.close()
+  }
   def getDayNum(): Unit = {
-    for (dayStep <- 1 to 10) {
+    for (dayStep <- 3 to 10) {
       for (j <- 1 to 20) {
         val future = Future {
           for (topN <- 1 to 10) {
@@ -196,5 +229,6 @@ object Demo2 {
 //    showBuyDAllOper()
 //    showTimeWithCount()
     getDayNum()
+//    createResult("2014-12-17 23","2014-12-19 00",5)
   }
 }

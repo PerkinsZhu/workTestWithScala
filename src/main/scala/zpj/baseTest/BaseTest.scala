@@ -47,6 +47,14 @@ object BaseTest {
 
   }
 
+  def testEq(): Unit = {
+    val a = "aaa"
+    val b = "aaa"
+    println(a == b)
+    println(a eq b)
+    println(a ne b)
+  }
+
   def main(args: Array[String]): Unit = {
     //    testFor()
     //    testThread()
@@ -54,7 +62,8 @@ object BaseTest {
 //    testTypeVariable()
 //    testList
 //    testCaseClass()
-    testSort()
+//    testSort()
+    testEq()
   }
 
   def testSort()={
