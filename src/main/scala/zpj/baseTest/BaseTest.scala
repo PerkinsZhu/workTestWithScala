@@ -6,6 +6,7 @@ import java.util
 import com.mongodb.util.JSON
 import play.api.libs.json.Json
 
+import scala.collection.immutable.Stream.cons
 import scala.util.Sorting
 
 /**
@@ -55,6 +56,41 @@ object BaseTest {
     println(a ne b)
   }
 
+  lazy val t1 = {println("i am t1");10}
+  lazy val t2 = {println("i am t2");20} // lazy 只能对val进行修饰
+  def testLazy(): Unit = {
+    t1
+    t2
+    t1
+    t2
+    println(" start .....")
+  }
+
+  def testStream(): Unit = {
+/*    val data = Stream(1,2,3,4,5)
+    data.foreach(println _)*/
+    show({println("XXXXXX");10/2})
+  }
+//  def show(x :Int):Unit={
+  def show(x: => Int):Unit={
+    println("start..")
+    println(x)//在这里使用x的值的时候才去计算x的值
+    println("end..")
+    lazy val y = {println("----");x}//注意下面调用了两次y,但是这里的输出语句只执行了一下。而对于x值方法中掉用了两次所以会执行两次x值的运算
+    println(y,y)
+    val fruit = new Friut {
+      override def showInfo: Unit = println("apple")
+    }
+    fruit.showInfo
+//    constant(10).foreach(println _)
+    println()
+  }
+  def constant[A](a: A): Stream[A] = cons(a, constant(a))
+
+trait Friut{
+  def showInfo:Unit
+}
+
   def main(args: Array[String]): Unit = {
     //    testFor()
     //    testThread()
@@ -63,7 +99,9 @@ object BaseTest {
 //    testList
 //    testCaseClass()
 //    testSort()
-    testEq()
+//    testEq()
+//    testLazy()
+    testStream()
   }
 
   def testSort()={
