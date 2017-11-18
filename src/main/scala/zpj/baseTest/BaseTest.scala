@@ -7,6 +7,7 @@ import com.mongodb.util.JSON
 import play.api.libs.json.Json
 
 import scala.collection.immutable.Stream.cons
+import scala.collection.mutable.ListBuffer
 import scala.util.Sorting
 
 /**
@@ -91,6 +92,36 @@ trait Friut{
   def showInfo:Unit
 }
 
+  class A{}
+  object B
+  def testType(): Unit = {
+    val a = new A
+    val b:B.type = B
+    println(b)
+  }
+
+  def testBound(): Unit = {
+    /**
+      * 上界是为了强制参数具有某个方法
+      * 下界是为了进行类型转换
+      */
+    abstract  class Animal{
+      def run():Unit
+    }
+    class Tigger extends Animal{
+      override def run: Unit = {println("tigger running ...")}
+    }
+
+    def startRun[T <: Animal](an:T){
+      an.run()//为了限定an参数必须具有run()方法则强制指定[T <: Animal]
+    }
+    class Queue[+T]{
+      var list= List.ReusableCBF
+      def append[U >: T](x: U) = new Queue[U](leading, x :: trailing)
+    }
+
+  }
+
   def main(args: Array[String]): Unit = {
     //    testFor()
     //    testThread()
@@ -101,7 +132,9 @@ trait Friut{
 //    testSort()
 //    testEq()
 //    testLazy()
-    testStream()
+//    testStream()
+//    testType()
+    testBound()
   }
 
   def testSort()={
