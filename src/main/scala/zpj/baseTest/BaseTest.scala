@@ -4,10 +4,12 @@ import java.io.IOException
 import java.util
 
 import com.mongodb.util.JSON
+import org.joda.time.DateTime
 import play.api.libs.json.Json
 
 import scala.collection.immutable.Stream.cons
 import scala.collection.mutable.ListBuffer
+import scala.runtime.Nothing$
 import scala.util.Sorting
 
 /**
@@ -105,20 +107,41 @@ trait Friut{
       * 上界是为了强制参数具有某个方法
       * 下界是为了进行类型转换
       */
-    abstract  class Animal{
+    trait Animal{
       def run():Unit
+
     }
     class Tigger extends Animal{
       override def run: Unit = {println("tigger running ...")}
+      def eat={println("eating.....")}
     }
 
     def startRun[T <: Animal](an:T){
       an.run()//为了限定an参数必须具有run()方法则强制指定[T <: Animal]
     }
-    class Queue[+T]{
-      var list= List.ReusableCBF
-      def append[U >: T](x: U) = new Queue[U](leading, x :: trailing)
+
+    class Queue[+T](private val leading:List[T],private val trailing:List[T]){
+      def append[U >: T](x:U)= new Queue[U](leading,x::trailing)
     }
+
+    def demo02(tiggers:List[Tigger]):List[Animal] = {
+      val animals:List[Animal] = tiggers
+      animals.foreach(_.run())
+      Nil
+    }
+    demo02(List(new Tigger()))
+
+  }
+
+  def testNullUnit(): Unit = {
+    println(Unit)
+    println(Unit)
+    val n:Unit=Unit
+    println(n)
+    println(10.asInstanceOf[Unit])
+    println(new Student().asInstanceOf[Unit])
+  println("----------------")
+    println()
 
   }
 
@@ -134,7 +157,12 @@ trait Friut{
 //    testLazy()
 //    testStream()
 //    testType()
-    testBound()
+//    testBound()
+   testNullUnit()
+  }
+
+  class Not extends Nothing${
+    def showInfo= println("i am Not")
   }
 
   def testSort()={
