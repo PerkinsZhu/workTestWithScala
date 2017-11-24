@@ -2,6 +2,7 @@ package zpj.baseTest
 
 import java.io.IOException
 import java.util
+import java.util.Date
 
 import com.mongodb.util.JSON
 import org.joda.time.DateTime
@@ -130,7 +131,6 @@ trait Friut{
       Nil
     }
     demo02(List(new Tigger()))
-
   }
 
   def testNullUnit(): Unit = {
@@ -142,7 +142,25 @@ trait Friut{
     println(new Student().asInstanceOf[Unit])
   println("----------------")
     println()
+    class Hello{type Hello;val data= "hello"}
+    val a = new Hello
+    println(a.data)
+    println(a.getClass)
+    object BB{val data="bbbb";override def toString: String = "i am  bbbbb"}
+    class BB{
+    override def toString: String ="i am  class BB ----class---"}
+    println(BB)
+    println(new BB())
+    val time = new DateTime()
+    print(time.centuryOfEra().addToCopy(10))
+  }
 
+  def testTime(): Unit = {
+    println(System.currentTimeMillis)
+    println(new DateTime().getMillis)
+    println(new Date().getTime)
+    println(new DateTime(1511495763658l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
+    println(new DateTime(1511487662517l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
   }
 
   def main(args: Array[String]): Unit = {
@@ -158,7 +176,8 @@ trait Friut{
 //    testStream()
 //    testType()
 //    testBound()
-   testNullUnit()
+//   testNullUnit()
+    testTime()
   }
 
   class Not extends Nothing${
