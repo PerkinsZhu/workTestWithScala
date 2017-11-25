@@ -1,18 +1,21 @@
 package zpj.baseTest
 
-import java.io.IOException
+import java.io.{File, IOException}
 import java.util
 import java.util.Date
 
 import com.mongodb.util.JSON
+import com.typesafe.config.ConfigFactory
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 
 import scala.collection.immutable.Stream.cons
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
 import scala.runtime.Nothing$
 import scala.util.Sorting
-
+import scala.concurrent.ExecutionContext.Implicits.global
+import collection.JavaConverters._
 /**
   * Created by PerkinsZhu on 2017/9/22 16:11. 
   */
@@ -163,6 +166,21 @@ trait Friut{
     println(new DateTime(1511487662517l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
   }
 
+  def testFuture(): Unit = {
+    val res = for(i<-doFuture())yield i
+    println(res)
+  }
+  def doFuture():Future[Int]={
+    Future{Thread.sleep(3000);10}
+  }
+
+
+  def testConf(): Unit = {
+//    val res = ConfigFactory.load("application.conf")
+    val res = ConfigFactory.parseFile(new File("application.conf"))
+    res.entrySet().asScala.foreach(println _)
+  }
+
   def main(args: Array[String]): Unit = {
     //    testFor()
     //    testThread()
@@ -177,7 +195,9 @@ trait Friut{
 //    testType()
 //    testBound()
 //   testNullUnit()
-    testTime()
+//    testTime()
+//    testFuture()
+    testConf()
   }
 
   class Not extends Nothing${

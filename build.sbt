@@ -13,6 +13,19 @@ libraryDependencies += "org.nd4j" % "nd4j-native-platform" % "0.9.1"
 // https://mvnrepository.com/artifact/au.com.bytecode/opencsv
 libraryDependencies += "au.com.bytecode" % "opencsv" % "2.4"
 libraryDependencies += "org.mongodb" %% "casbah" % "3.1.1"
+//libraryDependencies += "com.typesafe.akka" % "akka-actor_2.12" % "2.5.1"
 
-
-
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-actor" % "2.5.6",
+  "com.typesafe.akka" %% "akka-testkit" % "2.5.6" % Test
+)
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-http" % "10.0.10",
+  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.10" % Test
+)
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-stream" % "2.5.6",
+  "com.typesafe.akka" %% "akka-stream-testkit" % "2.5.6" % Test
+)
+libraryDependencies += "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.0.7"
+libraryDependencies += "com.typesafe.play" %% "play-ws-standalone-json" % "1.0.7"
