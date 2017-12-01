@@ -17,7 +17,7 @@ object HelloHttp extends App {
   implicit val httpMat = ActorMaterializer()
   implicit val httpEc = httpSys.dispatcher
 
-  val (host,port) = ("localhost",8088)
+  val (host,port) = ("192.168.1.16",60000)
   val services: Flow[HttpRequest, HttpResponse, Any] = path("hello") {
     get {
       complete(HttpEntity(ContentTypes.`text/html(UTF-8)`,"<h> Hello World! </h>"))

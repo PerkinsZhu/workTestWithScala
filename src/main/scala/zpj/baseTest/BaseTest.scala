@@ -159,13 +159,13 @@ trait Friut{
   }
 
   def testTime(): Unit = {
-    println(System.currentTimeMillis)
+/*    println(System.currentTimeMillis)
     println(new DateTime().getMillis)
-    println(new Date().getTime)
-    println(new DateTime(1511495763658l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
-    println(new DateTime(1511487662517l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
+    println(new Date().getTime)*/
+    println(new DateTime(1512023853667l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
+    println(new DateTime(1512022041511l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
   }
-
+//ticket@@@QnoHyTTRFxdTCHlkdMT9ObFuenZ0Tnb9g-p_i0esGpU7j6LKFbk-ra46_Jmog7l-Dz0A-0SAKjUOI7E8KRtfQQ
   def testFuture(): Unit = {
     val res = for(i<-doFuture())yield i
     println(res)
@@ -195,9 +195,9 @@ trait Friut{
 //    testType()
 //    testBound()
 //   testNullUnit()
-//    testTime()
+    testTime()
 //    testFuture()
-    testConf()
+//    testConf()
   }
 
   class Not extends Nothing${
