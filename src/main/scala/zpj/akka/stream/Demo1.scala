@@ -12,7 +12,7 @@ import akka.util.ByteString
 
 import scala.concurrent._
 import scala.concurrent.duration.{FiniteDuration, TimeUnit}
-
+import concurrent.ExecutionContext.Implicits.global
 /**
   * Created by PerkinsZhu on 2017/11/25 13:54. 
   */
@@ -69,22 +69,17 @@ object Demo {
     (1 to 100).map(i=>{print(i+"====");i+1}).map(it=>{println(it);it
       -1})
   }
-
+  final case class Author(handle: String)
+  final case class Hashtag(name: String)
+  final case class Tweet(author: Author, timestamp: Long, body: String) {
+    def hashtags: Set[Hashtag] = body.split(" ").collect {
+      case t if t.startsWith("#") ⇒ Hashtag(t.replaceAll("[^#\\w]", ""))
+    }.toSet
+  }
   def test05(): Unit = {
-    final case class Author(handle: String)
-    final case class Hashtag(name: String)
-    final case class Tweet(author: Author, timestamp: Long, body: String) {
-      def hashtags: Set[Hashtag] = body.split(" ").collect {
-        case t if t.startsWith("#") ⇒ Hashtag(t.replaceAll("[^#\\w]", ""))
-      }.toSet
-    }
-   val akkaTag = Hashtag("#akka")
-    val author = Author("jack")
-    val tweets: Source[Tweet, NotUsed]= Source(List(Tweet(author,new Date().getTime,"#akka hello jack")))
-    val authors: Source[Author, NotUsed] =tweets.filter(_.hashtags.contains(akkaTag)).map(_.author)
     authors.runWith(Sink.foreach(println))
 
-    val writeAuthors: Sink[Author, NotUsed] = ???
+/*    val writeAuthors: Sink[Author, NotUsed] = ???
     val writeHashtags: Sink[Hashtag, NotUsed] = ???
     val g = RunnableGraph.fromGraph(GraphDSL.create() { implicit b =>
       import GraphDSL.Implicits._
@@ -94,7 +89,13 @@ object Demo {
       bcast.out(1) ~> Flow[Tweet].mapConcat(_.hashtags.toList) ~> writeHashtags
       ClosedShape
     })
-    g.run()
+    g.run()*/
+
+
+    tweets
+      .buffer(10, OverflowStrategy.dropHead)
+      .map(_.body)
+      .runWith(Sink.ignore)
   }
 
   def test06(): Unit = {
@@ -104,9 +105,83 @@ object Demo {
       .throttle(1, new FiniteDuration(3,TimeUnit.SECONDS), 1, ThrottleMode.shaping)
       .runForeach(println)
   }
+  val akkaTag = Hashtag("#akka")
+  val author = Author("jack")
+  val tweets: Source[Tweet, NotUsed]= Source(List.fill(30)(Tweet(author,new Date().getTime,"#akka hello jack")))
+  val authors: Source[Author, NotUsed] =tweets.filter(_.hashtags.contains(akkaTag)).map(_.author)
+  def test07(): Unit = {
+    val count: Flow[Tweet, Int, NotUsed] = Flow[Tweet].map(_ ⇒ 1)
+    val sumSink: Sink[Int, Future[Int]] = Sink.fold[Int, Int](0)(_ + _)
+    val counterGraph: RunnableGraph[Future[Int]] =tweets .via(count).toMat(sumSink)(Keep.right)
+    val sum: Future[Int] = counterGraph.run()
+    sum.foreach(c ⇒ println(s"Total tweets processed: $c"))
+  }
+
+  def test08(): Unit = {
+    val sink = Sink.fold[Int, Int](0)(_ + _)
+    val runnable: RunnableGraph[Future[Int]] = Source(1 to 10).toMat(sink)(Keep.right)
+    val sum1: Future[Int] = runnable.run()
+    val sum2: Future[Int] = runnable.run()
+  }
+
+  def test09(): Unit = {
+    // Create a source from an Iterable
+    Source(List(1, 2, 3))
+    // Create a source from a Future
+    Source.fromFuture(Future.successful("Hello Streams!"))
+    // Create a source from a single element
+    Source.single("only one element")
+    // an empty source
+    Source.empty
+    // Sink that folds over the stream and returns a Future
+    // of the final result as its materialized value
+    Sink.fold[Int, Int](0)(_ + _)
+    // Sink that returns a Future as its materialized value,
+    // containing the first element of the stream
+    Sink.head
+    // A Sink that consumes a stream without doing anything with the elements
+    Sink.ignore
+    // A Sink that executes a side-effecting call for every element of the stream
+    Sink.foreach[String](println(_))
+
+
+    // Explicitly creating and wiring up a Source, Sink and Flow
+    Source(1 to 6).via(Flow[Int].map(_ * 2)).to(Sink.foreach(println(_)))
+
+    // Starting from a Source
+    val source = Source(1 to 6).map(_ * 2)
+    source.to(Sink.foreach(println(_)))
+
+    // Starting from a Sink
+    val sink: Sink[Int, NotUsed] = Flow[Int].map(_ * 2).to(Sink.foreach(println(_)))
+    Source(1 to 6).to(sink)
+
+    // Broadcast to a sink inline
+    val otherSink: Sink[Int, NotUsed] =
+      Flow[Int].alsoTo(Sink.foreach(println(_))).to(Sink.ignore)
+    Source(1 to 6).to(otherSink)
+  }
+
+  def test10(): Unit = {
+    import GraphDSL.Implicits._
+    RunnableGraph.fromGraph(GraphDSL.create() { implicit builder =>
+      val A: Outlet[Int]                  = builder.add(Source.single(0)).out
+      val B: UniformFanOutShape[Int, Int] = builder.add(Broadcast[Int](2))
+      val C: UniformFanInShape[Int, Int]  = builder.add(Merge[Int](2))
+      val D: FlowShape[Int, Int]          = builder.add(Flow[Int].map(_ + 1))
+      val E: UniformFanOutShape[Int, Int] = builder.add(Balance[Int](2))
+      val F: UniformFanInShape[Int, Int]  = builder.add(Merge[Int](2))
+      val G: Inlet[Any]                   = builder.add(Sink.foreach(println)).in
+      C     <~      F
+      A  ~>  B  ~>  C     ~>      F
+      B  ~>  D  ~>  E  ~>  F
+      E  ~>  G
+      ClosedShape
+    })
+  }
 
   def main(args: Array[String]): Unit = {
-    test05()
+    test10()
   }
   implicit val system = ActorSystem("QuickStart")
   implicit val materializer = ActorMaterializer()
