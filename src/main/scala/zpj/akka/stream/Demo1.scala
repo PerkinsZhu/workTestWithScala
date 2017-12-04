@@ -13,6 +13,7 @@ import akka.util.ByteString
 import scala.concurrent._
 import scala.concurrent.duration.{FiniteDuration, TimeUnit}
 import concurrent.ExecutionContext.Implicits.global
+import scala.util.Success
 /**
   * Created by PerkinsZhu on 2017/11/25 13:54. 
   */
@@ -180,8 +181,37 @@ object Demo {
     })
   }
 
+  def test11(): Unit = {
+    val source = Source(1 to 10)
+    val sink = Sink.fold[Int, Int](0)(_ + _)
+    // connect the Source to the Sink, obtaining a RunnableGraph
+//    val runnable: RunnableGraph[Future[Int]] = source.toMat(sink)(Keep.right)
+    val runnable= source.toMat(sink)(Keep.both)
+    // materialize the flow and get the value of the FoldSink
+//    val sum: Future[Int] = runnable.run()
+    val sum= runnable.run()
+    Thread.sleep(2000)
+    println(sum._1)
+    println(sum._2)
+  }
+
+  def test12(): Unit = {
+    // Explicitly creating and wiring up a Source, Sink and Flow
+    Source(1 to 6).via(Flow[Int].map(_ * 2)).to(Sink.foreach(println(_)))
+    // Starting from a Source
+    val source = Source(1 to 6).map(_ * 2)
+    source.to(Sink.foreach(println(_)))
+    // Starting from a Sink
+    val sink: Sink[Int, NotUsed] = Flow[Int].map(_ * 2).to(Sink.foreach(println(_)))
+    Source(1 to 6).to(sink)
+    // Broadcast to a sink inline
+    val otherSink: Sink[Int, NotUsed] =
+      Flow[Int].alsoTo(Sink.foreach(println(_))).to(Sink.ignore)
+    Source(1 to 6).to(otherSink)
+  }
+
   def main(args: Array[String]): Unit = {
-    test10()
+    test12()
   }
   implicit val system = ActorSystem("QuickStart")
   implicit val materializer = ActorMaterializer()
