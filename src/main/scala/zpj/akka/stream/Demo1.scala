@@ -210,8 +210,44 @@ object Demo {
     Source(1 to 6).to(otherSink)
   }
 
+  def test13(): Unit = {
+    val source = Source(1 to 100)
+    val sink = Sink.foreach(println _)
+    val flow = Flow[Int].map(_ * 2).fold(0)(_ + _)
+    source.via(flow).toMat(Sink.ignore)(Keep.left).run()
+
+    val seq = Seq[Int](1,2,3)
+    val s1: Source[Int,NotUsed] = Source(1 to 10)
+    def toIterator() = seq.iterator
+    val flow1: Flow[Int,Int,NotUsed] = Flow[Int].map(_ + 2)
+    val flow2: Flow[Int,Int,NotUsed] = Flow[Int].map(_ * 3)
+    val s2 = Source.fromIterator(toIterator)
+    val s3 = s1 ++ s2
+
+    val s5: Source[Int,NotUsed] = s3.via(flow1).async.viaMat(flow2)(Keep.right)
+    val s6: Source[Int,NotUsed] = s3.viaMat(flow1)(Keep.right).async.viaMat(flow2)(Keep.right)
+    (s5.toMat(sink)(Keep.right).run()).andThen {case _ => system.terminate()}
+  }
+
+  def test14(): Unit = {
+    val topHeadSink = Sink.head[Int]
+    val bottomHeadSink = Sink.head[Int]
+    val sharedDoubler = Flow[Int].map(_ * 2)
+
+    RunnableGraph.fromGraph(GraphDSL.create(topHeadSink, bottomHeadSink)((_, _)) { implicit builder =>
+      (topHS, bottomHS) =>
+        import GraphDSL.Implicits._
+        val broadcast = builder.add(Broadcast[Int](2))
+        Source.single(1) ~> broadcast.in
+
+        broadcast.out(0) ~> sharedDoubler ~> topHS.in
+        broadcast.out(1) ~> sharedDoubler ~> bottomHS.in
+        ClosedShape
+    })
+  }
+
   def main(args: Array[String]): Unit = {
-    test12()
+    test14()
   }
   implicit val system = ActorSystem("QuickStart")
   implicit val materializer = ActorMaterializer()

@@ -4,6 +4,9 @@ import java.io.{File, IOException}
 import java.util
 import java.util.Date
 
+import akka.actor.Cancellable
+import akka.stream.javadsl.Flow
+import akka.stream.scaladsl.JavaFlowSupport.Source
 import com.mongodb.util.JSON
 import com.typesafe.config.ConfigFactory
 import org.joda.time.DateTime
@@ -183,6 +186,10 @@ trait Friut{
     res.entrySet().asScala.foreach(println _)
   }
 
+  def testStream2(): Unit = {
+
+  }
+
   def main(args: Array[String]): Unit = {
     //    testFor()
     //    testThread()
@@ -197,9 +204,10 @@ trait Friut{
 //    testType()
 //    testBound()
 //   testNullUnit()
-    testTime()
+//    testTime()
 //    testFuture()
 //    testConf()
+    testStream2()
   }
 
   class Not extends Nothing${
