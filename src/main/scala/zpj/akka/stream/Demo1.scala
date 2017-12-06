@@ -246,8 +246,55 @@ object Demo {
     })
   }
 
+  def test15(): Unit = {
+    import akka.actor.Actor
+    import akka.actor.Timers
+    import scala.concurrent.duration._
+
+    class MyActor extends Actor with Timers {
+      private case object TickKey
+      private case object FirstTick
+      private case object Tick
+      timers.startPeriodicTimer(TickKey, Tick, 100000000.nano)
+//      self ! Tick
+      var startTime = System.nanoTime()
+      def receive = {
+        case  FirstTick => println("-------")
+        case Tick ⇒{
+          self ! FirstTick
+          val nowTime  = System.nanoTime()
+          val temp = nowTime-startTime
+          startTime = nowTime
+          val temp2 = temp - (500 * 1000000)
+          println("时间差："+temp+"  误差："+temp2)
+
+        }
+      }
+    }
+
+    val system = ActorSystem("timer")
+    val actor = system.actorOf(Props[MyActor],"timer")
+
+  }
+
+  def test16(): Unit = {
+  val num = 1000000000l
+    val startTime = System.nanoTime()
+    while (true){
+      val nowTime=System.nanoTime()
+      if((nowTime - startTime ) % num == 0){
+        println("-------"+nowTime)
+      }
+    }
+  }
+
+  def test17(): Unit = {
+
+
+  }
+
   def main(args: Array[String]): Unit = {
-    test14()
+    test17()
   }
   implicit val system = ActorSystem("QuickStart")
   implicit val materializer = ActorMaterializer()
