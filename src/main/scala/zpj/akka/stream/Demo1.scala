@@ -9,10 +9,12 @@ import akka.stream._
 import akka.stream.scaladsl._
 import akka._
 import akka.util.ByteString
+import org.reactivestreams.{Publisher, Subscriber}
 
 import scala.concurrent._
 import scala.concurrent.duration.{FiniteDuration, TimeUnit}
 import concurrent.ExecutionContext.Implicits.global
+import scala.runtime.Nothing$
 import scala.util.Success
 /**
   * Created by PerkinsZhu on 2017/11/25 13:54. 
@@ -293,8 +295,42 @@ object Demo {
 
   }
 
+  def test18(): Unit = {
+//    val sources = Source.repeat(1)
+    val publisher = new MyPublish
+//    val sources = Source(1 to 5)
+    val sources = Source.fromPublisher(publisher)
+    val startTime = System.nanoTime()
+//    val flow = Flow[Int].throttle(1, FiniteDuration(1000000000l, TimeUnit.NANOSECONDS), 1, ThrottleMode.shaping)
+//    sources.via(flow).runForeach(i => println(System.nanoTime() - startTime+"--"+i))
+    sources.runForeach(i => println(System.nanoTime() - startTime+"--"+i))
+    while (true){
+      Thread.sleep(1000)
+      publisher.add(2)
+    }
+  }
+  class MyPublish extends Publisher[Int]{
+    var list = collection.mutable.ListBuffer.empty[Subscriber[_ >: Int]]
+    override def subscribe(s: Subscriber[_ >: Int]): Unit = {
+      println("----")
+      list.append(s)
+    }
+    def add(i:  Int): Unit ={
+      list.foreach(s=>{
+        println("++++")
+        s.onNext(i)
+        println("---")
+      })
+    }
+  }
+
+  def test19(): Unit = {
+
+  }
+
   def main(args: Array[String]): Unit = {
-    test17()
+    test19()
+//    test()
   }
   implicit val system = ActorSystem("QuickStart")
   implicit val materializer = ActorMaterializer()
@@ -312,9 +348,11 @@ object Demo {
     val factorials = source.scan(BigInt(1))((acc, next) ⇒ acc * next)
 //    factorials.runForeach(println _)
 //    val result: Future[IOResult] =  factorials.map(num ⇒ ByteString(s"$num\n")).runWith(FileIO.toPath(Paths.get("factorials.txt")))
+    val start = System.nanoTime()
     factorials
-      .zipWith(Source(0 to 100))((num, idx) ⇒ s"$idx! = $num")
-//      .throttle(1, 1.second, 1, ThrottleMode.shaping)
-      .runForeach(println)
+//      .zipWith(Source(0 to 100))((num, idx) ⇒ s"$idx! = $num")
+      .throttle(1, FiniteDuration(1000000000l,TimeUnit.NANOSECONDS), 1, ThrottleMode.shaping)
+      .runForeach(i => println(System.nanoTime() - start))
+
   }
 }

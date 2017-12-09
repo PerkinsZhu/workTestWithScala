@@ -29,3 +29,11 @@ libraryDependencies ++= Seq(
 )
 libraryDependencies += "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.0.7"
 libraryDependencies += "com.typesafe.play" %% "play-ws-standalone-json" % "1.0.7"
+// https://mvnrepository.com/artifact/ch.qos.logback/logback-classic 使用logback只需要这一个配置即可
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
+
+
+//log4j配置
+//libraryDependencies += "org.apache.logging.log4j" % "log4j-api" % "2.10.0"
+//libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.10.0"
+//libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.8.0-alpha2"

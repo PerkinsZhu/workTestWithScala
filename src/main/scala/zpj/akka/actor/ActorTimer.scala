@@ -9,9 +9,12 @@ class ActorTimer {
 
 
 }
-class MyActor extends Actor with Timers{
+package zz{
+
+private class MyActor extends Actor with Timers{
   override def receive: Receive = {
-    case "1"=>println("----")
-  }
+  case "1"=>println("----")
+}
   timers
+}
 }

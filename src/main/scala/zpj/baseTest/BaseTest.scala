@@ -7,8 +7,6 @@ import java.util.Date
 import akka.actor.Cancellable
 import akka.stream.javadsl.Flow
 import akka.stream.scaladsl.JavaFlowSupport.Source
-import com.mongodb.util.JSON
-import com.typesafe.config.ConfigFactory
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 
@@ -19,6 +17,7 @@ import scala.runtime.Nothing$
 import scala.util.Sorting
 import scala.concurrent.ExecutionContext.Implicits.global
 import collection.JavaConverters._
+import scala.collection.mutable
 /**
   * Created by PerkinsZhu on 2017/9/22 16:11. 
   */
@@ -182,12 +181,35 @@ trait Friut{
 
   def testConf(): Unit = {
 //    val res = ConfigFactory.load("application.conf")
-    val res = ConfigFactory.parseFile(new File("application.conf"))
-    res.entrySet().asScala.foreach(println _)
+ /*   val res = ConfigFactory.parseFile(new File("application.conf"))
+    res.entrySet().asScala.foreach(println _)*/
   }
 
   def testStream2(): Unit = {
+  /*  val data  = numFrom(1).take(10)
+    val str = 1 #:: 2 #:: 3 #:: Stream.empty
+    data.foreach(i=>{Thread.sleep(100);println(i)})*/
+/*    val powers = (0 until 10 ).view.map(Math.pow(10,_))
+    println(powers(5))*/
+    val v = Vector(1 to 10:_*)
+    v map (1+) map (2*) foreach(println)
+  }
 
+  def numFrom(num:BigInt):Stream[BigInt]=num #:: numFrom(num+1)
+
+  def threadName = Thread.currentThread.getName
+  def testPer(): Unit = {
+    val vec = Vector(1 to 10000:_*)
+  //vec.par foreach(i=>{println(i+"--"+Thread.currentThread().getName)})
+    for(i<-(0 to 1000).par ){println(i+threadName)}
+//    val map = new util.HashMap[String,Int]() with mutable.SynchronizedMap[String,Int]
+//    map.put("hello",10)
+
+  }
+
+  def test1(): Unit = {
+    val (x,y) = BigInt(10) /% 3
+    println(x,y)
   }
 
   def main(args: Array[String]): Unit = {
@@ -207,7 +229,9 @@ trait Friut{
 //    testTime()
 //    testFuture()
 //    testConf()
-    testStream2()
+//    testStream2()
+//    testPer()
+    test1()
   }
 
   class Not extends Nothing${
@@ -274,4 +298,19 @@ trait Friut{
     jarray.asScala.asJava.forEach((str: String) => println(str))
   }
 
+}
+
+package com{
+
+  class Demo2{
+    import  com.zpj.demo.Demo4
+    val name=new Demo4()
+  }
+  package zpj{
+    package demo{
+      class Demo1{
+        val d2 = new Demo3
+      }
+    }
+  }
 }
