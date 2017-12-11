@@ -10,7 +10,7 @@ public class JavaTest {
     private static Object result;
     private static ConcurrentHashMap<String,List<String>> answerListMap = new ConcurrentHashMap<String,List<String>>();
     public static void main(String[] args) {
-    new JavaTest().test03();
+    new JavaTest().testCase();
     }
     private void test03() {
      for(int i = 0; i< 10 ;i++)   {
@@ -56,5 +56,14 @@ public class JavaTest {
             return 11;
         }
         return 2;
+    }
+    public void testCase(){
+        char key = 'n';
+        switch (key){
+            case 'n':
+                System.out.println("AAA");break;
+            case 'a':break;
+
+        }
     }
 }
