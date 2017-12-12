@@ -8,6 +8,5 @@ import org.w3c.dom.Document;
 public class Test {
 
     public static void main(String[] args) {
-        Document responseHtml = Jsoup.parse(node.get(JSON_RESPOND).asText());
     }
 }
