@@ -39,3 +39,7 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 //libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.8.0-alpha2"
 
 libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.1.0"
+
+libraryDependencies ++= Seq(
+  "net.debasishg" %% "redisclient" % "3.4"
+)

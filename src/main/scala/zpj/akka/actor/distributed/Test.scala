@@ -20,7 +20,7 @@ class Master extends Actor{
 
   override def receive: Receive = {
     case "connect" => {
-      println("a client connected")
+      println("a r connected")
       sender ! "reply"
     }
     case "hello" => {
