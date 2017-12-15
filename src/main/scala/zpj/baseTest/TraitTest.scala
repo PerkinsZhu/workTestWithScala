@@ -1,11 +1,13 @@
 package zpj.baseTest
 
+import org.joda.time.DateTime
+import org.slf4j
 import org.slf4j.LoggerFactory
 import zpj.exception.MyUncaughtException
 
 
 /**
-  * Created by PerkinsZhu on 2017/12/7 19:34. 
+  * Created by PerkinsZhu on 2017/12/7 19:34.
   */
 object TraitTest {
   Thread.setDefaultUncaughtExceptionHandler(new MyUncaughtException());
@@ -22,13 +24,34 @@ object TraitTest {
     ming.showInfo
   }
 
-  def main(args: Array[String]): Unit = {
-    test1()
+def main(args: Array[String]): Unit = {
+  //test1()
+  //showPerson(new AAA {override def showName: Unit = {println("name")} })
+  test2()
+}
+def test2()={
+  2.addTime()
+}
+implicit class IntToString(m:Int){
+  def addTime(): Unit ={
+    println(m+new DateTime().toString("yyyy-MM-dd HH:mm:ss"))
+  }
+}
+
+  def showPerson(p:AAA)={
+    p.showName
   }
 
 }
 
+
+
+trait AAA{
+  def showName:Unit
+}
+
 trait Person {
+  def showName:Unit
   val logger = {
     println(this.getClass.getName); 1 / 0; LoggerFactory.getLogger(this.getClass)
   }
@@ -36,6 +59,8 @@ trait Person {
 
 class Student extends Person {
   def showInfo = logger.info("i am student")
+
+  override def showName: Unit = println("--------")
 }
 
 class MrMing extends Student {

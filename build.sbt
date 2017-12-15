@@ -43,3 +43,4 @@ libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.1.0"
 libraryDependencies ++= Seq(
   "net.debasishg" %% "redisclient" % "3.4"
 )
+libraryDependencies += "org.scalatest" % "scalatest_2.12" % "3.0.4"
