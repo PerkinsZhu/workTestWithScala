@@ -23,11 +23,14 @@ object TraitTest {
     ming.sayName
     ming.showInfo
   }
-
+def test3(): Unit ={
+  def showInfo(xx:TaskType.Value)= println("--------"+xx.id)
+  showInfo(TaskType.ERRORQA)
+}
 def main(args: Array[String]): Unit = {
   //test1()
   //showPerson(new AAA {override def showName: Unit = {println("name")} })
-  test2()
+  test3()
 }
 def test2()={
   2.addTime()
@@ -91,4 +94,10 @@ package com {
       }
     }
   }
+}
+class SSS(x:String){
+}
+object TaskType extends Enumeration{
+  val ERRORQA = Value(10)
+  val LIKEQA = Value(20)
 }

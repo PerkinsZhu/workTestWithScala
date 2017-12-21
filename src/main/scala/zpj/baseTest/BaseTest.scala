@@ -1,13 +1,14 @@
 package zpj.baseTest
 
 import java.io.{File, IOException}
+import java.text.SimpleDateFormat
 import java.util
-import java.util.Date
+import java.util.{Date, Random}
 
 import akka.actor.Cancellable
 import akka.stream.javadsl.Flow
 import akka.stream.scaladsl.JavaFlowSupport.Source
-import org.joda.time.DateTime
+import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.Json
 
 import scala.collection.immutable.Stream.cons
@@ -165,9 +166,16 @@ trait Friut{
     println(new DateTime().getMillis)
     println(new Date().getTime)*/
     println(new DateTime(1512135057792l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
-    println(new DateTime(1512134843821l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
+    println(new DateTime(1513752919598l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(System.currentTimeMillis)
     println(new DateTime(System.currentTimeMillis).toString("yyyy-MM-dd HH:mm:ss:SSS"))
+    println(new SimpleDateFormat("yyy-MM-dd hh:mm:ss").format(new Date(1513762144931l)))
+   println(new DateTime(1513762144931l).withZone(DateTimeZone.forOffsetHours(8)).toString("yyyy-MM-dd hh:mm:ss"))
+    val time = new Date().getTime
+    val time2 = new DateTime()
+    println(time)
+    println(time2)
+
   }
 //ticket@@@QnoHyTTRFxdTCHlkdMT9ObFuenZ0Tnb9g-p_i0esGpU7j6LKFbk-ra46_Jmog7l-Dz0A-0SAKjUOI7E8KRtfQQ
   def testFuture(): Unit = {
@@ -231,9 +239,41 @@ trait Friut{
 //    testConf()
 //    testStream2()
 //    testPer()
-    test1()
+//    testTime()
+//    testRandom()
+//    testSortedMap()
+    testException()
+  }
+def testException(): Unit ={
+  println(getRes())
+}
+  def getRes():Int ={
+    try {
+      10 / 2
+    } catch {
+      case ex:Exception =>println("-----");10
+    }
   }
 
+  def testSortedMap(): Unit ={
+    val res = mutable.SortedMap.empty[String,Int]
+    res +=("d"->132)
+    res +=("a"->122)
+    res +=("c"->42)
+    res.foreach(println _)
+  }
+  def testRandom(): Unit ={
+    for(i <-1 to 100){
+      println(getIp)
+    }
+  }
+  private def getIp = {
+    val temp1 = new Random().nextInt(100)+100
+    val temp2 = new Random().nextInt(100)+100
+    val numIp = new Random().nextInt(240) % (240 - 5 + 1) + 5;
+    val ip = "10."+temp1+"."+temp2+"." + numIp
+    ip
+  }
   class Not extends Nothing${
     def showInfo= println("i am Not")
   }

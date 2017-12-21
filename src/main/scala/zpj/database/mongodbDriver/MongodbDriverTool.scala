@@ -6,6 +6,9 @@ import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+import scala.concurrent.duration._
+
+import scala.concurrent.Await
 object MongodbDriverTool {
 //  val uri: String = "mongodb://user1:pwd1@host1/?authSource=db1"
 //  val uri: String = "mongodb://user1:pwd1@host1/?authSource=db1&authMechanism=SCRAM-SHA-1"
@@ -25,9 +28,16 @@ object MongodbDriverTool {
 //    update
 //    delete
 //    bulkOper
-    dealPerson
+//    dealPerson
+    testFuture()
     Thread.sleep(2000)
   }
+  def testFuture(): Unit ={
+    import org.mongodb.scala.model.Filters._
+    val res = Await.result(collection.find(equal("sss","sdsd")).first().toFuture,1 seconds)
+    println(res == null)
+  }
+
     def  insert():Unit = {
       val doc: Document = Document("name" -> "MongoDB", "type" -> "database", "count" -> 1, "info" -> Document("x" -> 203, "y" -> 102))
       val observable = collection.insertOne(doc)
@@ -43,7 +53,7 @@ object MongodbDriverTool {
 //    val findObservable = collection.find()
 
 //    val findObservable = collection.find(gte("i", 71))
-//    val findObservable = collection.find(and(gt("i", 50), lte("i", 100)))
+    val findObservable2 = collection.find(and(gt("i", 50), lte("i", 100)))
 
 //    val findObservable = collection.find(exists("i")).sort(descending("i"))
 
