@@ -242,8 +242,13 @@ trait Friut{
 //    testTime()
 //    testRandom()
 //    testSortedMap()
-    testException()
+//    testException()
+    print(MyEnum.SS.toString == "SS")
   }
+  object MyEnum extends Enumeration{
+    val SS = Value
+  }
+
 def testException(): Unit ={
   println(getRes())
 }
