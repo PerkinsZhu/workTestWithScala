@@ -243,8 +243,16 @@ trait Friut{
 //    testRandom()
 //    testSortedMap()
 //    testException()
-    print(MyEnum.SS.toString == "SS")
+    testProxy
   }
+
+  private def testProxy = {
+    while (true) {
+      print(System.getProperties().getProperty("http.proxyHost"))
+      Thread.sleep(1000)
+    }
+  }
+
   object MyEnum extends Enumeration{
     val SS = Value
   }

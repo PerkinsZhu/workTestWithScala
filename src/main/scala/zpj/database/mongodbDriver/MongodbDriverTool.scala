@@ -1,13 +1,17 @@
 package zpj.database.mongodbDriver
 
 import com.mongodb.client.model.WriteModel
+import org.bson.UuidRepresentation
+import org.bson.codecs.UuidCodec
+import org.bson.codecs.configuration.{CodecRegistries, CodecRegistry}
 import org.mongodb.scala._
+import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
 import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
-import scala.concurrent.duration._
 
+import scala.concurrent.duration._
 import scala.concurrent.Await
 object MongodbDriverTool {
 //  val uri: String = "mongodb://user1:pwd1@host1/?authSource=db1"
@@ -18,7 +22,7 @@ object MongodbDriverTool {
   val collection: MongoCollection[Document] = database.getCollection("mydb");
   def observer[T] = new Observer[T] {
     override def onNext(result:T): Unit = println("onNext-----"+result)
-    override def onError(e: Throwable): Unit = println("onError----")
+    override def onError(e: Throwable): Unit = println("onError----"+e.printStackTrace())
     override def onComplete(): Unit = println("Completed")
   }
   def main(args: Array[String]): Unit = {
@@ -29,13 +33,29 @@ object MongodbDriverTool {
 //    delete
 //    bulkOper
 //    dealPerson
-    testFuture()
+//    testFuture()
+    testPerson()
     Thread.sleep(2000)
   }
+
+  def testPerson(): Unit ={
+//    val codecRegistry: CodecRegistry =CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Student]),DEFAULT_CODEC_REGISTRY)
+  /*  val codecRegistry: CodecRegistry =
+      CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(new UuidCodec(UuidRepresentation.STANDARD)),
+        MongoClient.getDefaultCodecRegistry())*/
+
+ /*   val database: MongoDatabase = mongoClient.getDatabase("test").withCodecRegistry(codecRegistry)
+    val personCol: MongoCollection[Student] = database.getCollection[Student]("student")
+    personCol.insertOne(Student("123456","jack",20,SexType.BOY)).subscribe(observer[Completed])
+    personCol.find().foreach(println _)*/
+
+  }
+
   def testFuture(): Unit ={
     import org.mongodb.scala.model.Filters._
-    val res = Await.result(collection.find(equal("sss","sdsd")).first().toFuture,1 seconds)
-    println(res == null)
+    val res = Await.result(collection.find().toFuture,1 seconds)
+    res.foreach(e => {
+    })
   }
 
     def  insert():Unit = {
@@ -139,3 +159,9 @@ object Person {
     Person(new ObjectId(), firstName, lastName)
 }
 case class Person(_id: ObjectId, firstName: String, lastName: String)
+
+object SexType extends Enumeration{
+  val BOY = Value
+  val GIRL = Value
+}
+case class Student(_id:String,name:String,age:Int,sex:SexType.Value)
