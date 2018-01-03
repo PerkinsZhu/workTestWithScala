@@ -32,13 +32,14 @@ object QuickTourCaseClass {
     }
 
     object PPS {
-      def apply(firstName: String, lastName: String,t:MyEnum.Value): PPS = PPS(new ObjectId(), firstName, lastName,t);
+      def apply(firstName: String, lastName: String): PPS = PPS(new ObjectId(), firstName, lastName);
     }
-    case class PPS(_id: ObjectId, firstName: String, lastName: String,t:MyEnum.Value)
+    case class PPS(_id: ObjectId, firstName: String, lastName: String)
     import org.bson.codecs.configuration.CodecRegistries.{fromProviders, fromRegistries}
     import org.mongodb.scala.bson.codecs.DEFAULT_CODEC_REGISTRY
     import org.mongodb.scala.bson.codecs.Macros._
-    val codecRegistry = fromRegistries(fromProviders(classOf[MyEnum.Value],classOf[PPS]), DEFAULT_CODEC_REGISTRY)
+//    val codecRegistry = fromRegistries(fromProviders(classOf[MyEnum.Value],classOf[PPS]), DEFAULT_CODEC_REGISTRY)
+    val codecRegistry = fromRegistries(fromProviders(classOf[PPS]), DEFAULT_CODEC_REGISTRY)
 
     val mongoClient: MongoClient = if (args.isEmpty) MongoClient() else MongoClient(args.head)
 
@@ -46,7 +47,7 @@ object QuickTourCaseClass {
     val collection: MongoCollection[PPS] = database.getCollection("person1")
     collection.drop().subscribe(MongodbDriverTool.observer[Completed])
 
-    val person: PPS = PPS("Ada", "Lovelace",MyEnum.AA)
+    val person: PPS = PPS("Ada", "Lovelace")
 
     collection.insertOne(person).subscribe(MongodbDriverTool.observer[Completed])
     mongoClient.close()

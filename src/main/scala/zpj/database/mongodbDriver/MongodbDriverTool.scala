@@ -10,6 +10,7 @@ import org.mongodb.scala.model.Filters._
 import org.mongodb.scala.model.Updates._
 import org.mongodb.scala.model._
 import org.mongodb.scala.result.{DeleteResult, UpdateResult}
+import play.api.libs.json.{JsObject, Json}
 
 import scala.concurrent.duration._
 import scala.concurrent.Await
@@ -39,15 +40,14 @@ object MongodbDriverTool {
   }
 
   def testPerson(): Unit ={
-//    val codecRegistry: CodecRegistry =CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Student]),DEFAULT_CODEC_REGISTRY)
+    val codecRegistry: CodecRegistry =CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Student]),DEFAULT_CODEC_REGISTRY)
   /*  val codecRegistry: CodecRegistry =
       CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(new UuidCodec(UuidRepresentation.STANDARD)),
         MongoClient.getDefaultCodecRegistry())*/
 
- /*   val database: MongoDatabase = mongoClient.getDatabase("test").withCodecRegistry(codecRegistry)
+   val database: MongoDatabase = mongoClient.getDatabase("test").withCodecRegistry(codecRegistry)
     val personCol: MongoCollection[Student] = database.getCollection[Student]("student")
-    personCol.insertOne(Student("123456","jack",20,SexType.BOY)).subscribe(observer[Completed])
-    personCol.find().foreach(println _)*/
+    personCol.insertOne(Student("123456","jack",20,"sdss")).subscribe(observer[Completed])
 
   }
 
@@ -164,4 +164,4 @@ object SexType extends Enumeration{
   val BOY = Value
   val GIRL = Value
 }
-case class Student(_id:String,name:String,age:Int,sex:SexType.Value)
+  case class Student(_id:String,name:String,age:Int,sex:String)

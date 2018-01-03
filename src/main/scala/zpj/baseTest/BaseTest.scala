@@ -243,7 +243,31 @@ trait Friut{
 //    testRandom()
 //    testSortedMap()
 //    testException()
-    testProxy
+//    testProxy
+//    testJsonToOther()
+    testMatch
+  }
+  def testMatch(): Unit ={
+    val ss ="Hello"
+    ss match{
+      case  str if (List("Hello","ss").contains[String](str)) =>{println(str)}
+
+    }
+
+  }
+  import play.api.libs.json._
+  import play.api.libs.json.Reads._
+  import play.api.libs.functional.syntax._
+
+//  implicit val formatQA = Json.format[QA]
+
+  def testJsonToOther(): Unit ={
+    println(Json.toJson(List("aaa","bbb","ccc")))
+//    println(Json.toJson(List(QA("JACK",List("sss","sdsd"),"sss"))))
+    println(Json.toJson(Map("aaa"->111,"bbb"->2222,"ccc"->3333)))
+    println(Json.toJson(Map("aaa"->List("aaa","bbb","ccc"))))
+//    println(Json.toJson(HHH("JACK",QA(List("问题1","问题2","问题3"),"123456"))))
+//    println(Json.toJson(HHH("JACK",List(QA(List("问题1","问题2","问题3"),"123456")))))
   }
 
   private def testProxy = {
@@ -344,11 +368,11 @@ def testException(): Unit ={
     Sorting.quickSort(tempArray)
 
     tempArray.foreach(item => println("-----" + item))
-    val jarray = new util.ArrayList[String]();
+   /* val jarray = new util.ArrayList[String]();
     jarray.add("hello")
     import scala.collection.JavaConverters._
     jarray.asScala.foreach(println(_))
-    jarray.asScala.asJava.forEach((str: String) => println(str))
+    jarray.asScala.asJava.forEach((str: String) => println(str))*/
   }
 
 }
