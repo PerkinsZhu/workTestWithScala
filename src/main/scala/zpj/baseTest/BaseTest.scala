@@ -245,8 +245,13 @@ trait Friut{
 //    testException()
 //    testProxy
 //    testJsonToOther()
-    testMatch
+//    testMatch
+    testTake()
   }
+  def testTake(){
+    List(1,2,3).take(10).foreach(println _)
+  }
+
   def testMatch(): Unit ={
     val ss ="Hello"
     ss match{

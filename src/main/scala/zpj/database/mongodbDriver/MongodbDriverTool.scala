@@ -40,15 +40,15 @@ object MongodbDriverTool {
   }
 
   def testPerson(): Unit ={
-    val codecRegistry: CodecRegistry =CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Student]),DEFAULT_CODEC_REGISTRY)
+//    val codecRegistry: CodecRegistry =CodecRegistries.fromRegistries(CodecRegistries.fromProviders(classOf[Student]),DEFAULT_CODEC_REGISTRY)
   /*  val codecRegistry: CodecRegistry =
       CodecRegistries.fromRegistries(CodecRegistries.fromCodecs(new UuidCodec(UuidRepresentation.STANDARD)),
         MongoClient.getDefaultCodecRegistry())*/
 
-   val database: MongoDatabase = mongoClient.getDatabase("test").withCodecRegistry(codecRegistry)
+   /*val database: MongoDatabase = mongoClient.getDatabase("test").withCodecRegistry(codecRegistry)
     val personCol: MongoCollection[Student] = database.getCollection[Student]("student")
     personCol.insertOne(Student("123456","jack",20,"sdss")).subscribe(observer[Completed])
-
+*/
   }
 
   def testFuture(): Unit ={
