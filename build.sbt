@@ -44,3 +44,7 @@ libraryDependencies ++= Seq(
   "net.debasishg" %% "redisclient" % "3.4"
 )
 libraryDependencies += "org.scalatest" % "scalatest_2.12" % "3.0.4"
+// https://mvnrepository.com/artifact/net.sf.ehcache/ehcache
+libraryDependencies += "net.sf.ehcache" % "ehcache" % "2.10.4"
+// https://mvnrepository.com/artifact/cglib/cglib
+libraryDependencies += "cglib" % "cglib" % "3.2.6"

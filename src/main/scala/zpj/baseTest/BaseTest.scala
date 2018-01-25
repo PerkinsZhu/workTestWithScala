@@ -6,6 +6,7 @@ import java.util
 import java.util.{Date, Random}
 
 import akka.actor.Cancellable
+import akka.http.scaladsl.model.Uri.Query.Cons
 import akka.stream.javadsl.Flow
 import akka.stream.scaladsl.JavaFlowSupport.Source
 import org.joda.time.{DateTime, DateTimeZone}
@@ -13,11 +14,12 @@ import play.api.libs.json.Json
 
 import scala.collection.immutable.Stream.cons
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import scala.runtime.Nothing$
 import scala.util.Sorting
 import scala.concurrent.ExecutionContext.Implicits.global
 import collection.JavaConverters._
+import scala.collection.convert.Wrappers.MutableSeqWrapper
 import scala.collection.mutable
 /**
   * Created by PerkinsZhu on 2017/9/22 16:11. 
@@ -220,6 +222,149 @@ trait Friut{
     println(x,y)
   }
 
+  def testMethod(): Unit = {
+  val t1 = (a:Int,b: Double) => (a*b).toInt
+  val t2 =()=> println("----------")
+  def t3:Unit = println("----------")
+    callBack(t3)
+    println("---todo----")
+//    def callBack(callBack: ()=>Unit): Unit ={
+    def callBack(callBack: =>Unit): Unit ={
+      callBack
+      println(callBack)
+      println(callBack.getClass)
+    }
+  }
+
+  def testJson(): Unit = {
+    val str ="{\"name\":\"jack\",\"age\":12,\"boy\":true}"
+    val json = Json.parse(str)
+    val boy = (json \ "boy").as[Boolean]
+    println(boy == true)
+  }
+
+  def testPartialFunction(): Unit = {
+    val squareRoot:PartialFunction[Double,Double]={
+      case x if x >= 0 => println("---"+x);Math.sqrt(x)
+    }
+    val x = 23L
+    println(squareRoot.isDefinedAt(2))
+
+
+
+
+
+  }
+def isRight(data:String,statue:Boolean): Boolean= {
+ if(statue){
+
+   true
+ }else{
+
+   false
+ }
+}
+
+  def testAndThen(): Unit = {
+/*    List("a", "bb", "c", "dd", "dd").toStream.filter(ele => {
+      println(ele)
+      ele.length == 2
+    }).take(1) match {
+      case Stream.Empty => println("------------")
+      case Stream(x) => {
+        println("--------" + x)
+      }
+    }*/
+
+    def one(x: Int, y: Int): Int = x * y
+    def two(int: Int): Int = int + 10
+    def three(x: Int): Int = x * 10
+    //def result(x: Int) = three _ andThen two _
+
+    val f1 = (x: Int, y: Int) => x + y
+    val f2 = (y: Int) => y * 2
+
+    val f3 = f1.tupled andThen f2
+
+    println(f3((1, 2)))
+
+    val f4 = (x:Int, y:Int) => (x*10,y)
+    val f5 = (x:Tuple2[Int,Int]) => x._2 + x._1
+    val f6 = f4.tupled andThen f5
+
+    println(f6(1,4))
+
+  }
+
+  def testListMatch(): Unit = {
+    List(1,2,3,45,5,8).filter(_>5) match {
+      case x:List[String] =>println(x);
+      case Nil => println("_---")
+    }
+  }
+
+  def testWithTimeOfTodayStartOfDay(): Unit = {
+    val time = new DateTime(DateTimeZone.forOffsetHours(8)).plusDays(1).withTimeAtStartOfDay().toDate
+    println(time)
+    println(new Date())
+    val temp1 = new DateTime(DateTimeZone.forOffsetHours(8)).plusDays(1).withTimeAtStartOfDay().getMillis - DateTime.now().getMillis
+    println(temp1)
+    println(temp1 / (1000 * 60))
+  }
+
+  def testQueue(): Unit = {
+    val queue = mutable.Queue[String]()
+    println(queue.hashCode())
+    queue.enqueue("a")
+    queue.enqueue("b")
+    println(queue.hashCode())
+    queue.enqueue("c")
+    println(queue.head)
+    println(queue.dequeue())
+    println(queue)
+    println(queue.hashCode())
+  }
+
+  def testShutDownHook(): Unit = {
+    //JVM的shutdownHook
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable {
+      override def run(): Unit = {println("---------开始进行关闭----------")}
+    }))
+    println("---------")
+  }
+
+  def testPrivate(): Unit = {
+    class Student{
+      private[this] val name = "jack"
+      def showInfo(): Unit ={
+          println(name)
+      }
+
+    }
+    val student = new Student()
+    student.showInfo()
+    println()
+
+  }
+
+  def getTime(): Unit = {
+    println(new DateTime().getMillis - 1000 * 60 * 60 *24 )
+  }
+
+  def testSychnorized(): Unit = {
+  val lock = "LOCK"
+  for( i <- 1 to 3){
+    Future{
+      println(lock.synchronized[Int]{
+        println("----i am "+i)
+        Thread.sleep(5000)
+        i
+      }+" is over  ")
+    }
+  }
+  Thread.sleep(10000000)
+}
+
   def main(args: Array[String]): Unit = {
     //    testFor()
     //    testThread()
@@ -246,7 +391,21 @@ trait Friut{
 //    testProxy
 //    testJsonToOther()
 //    testMatch
-    testTake()
+//    testTake()
+//    testSortedMap()
+//    testMethod()
+//    testJson()
+//    testPartialFunction()
+//    testAndThen()
+//    testListMatch()
+//    testWithTimeOfTodayStartOfDay()
+//    testQueue()
+//    testShutDownHook()
+//    testPrivate()
+//    getTime()
+    testSychnorized()
+
+
   }
   def testTake(){
     List(1,2,3).take(10).foreach(println _)
