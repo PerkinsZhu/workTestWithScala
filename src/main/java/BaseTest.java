@@ -1,3 +1,5 @@
+import zpj.baseTest.Student;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -7,7 +9,40 @@ import java.util.concurrent.Executors;
 public class BaseTest {
     public static void main(String[] args) {
 //        new BaseTest().testThread();
-        new BaseTest().testThreadPool();
+        new BaseTest().testT();
+    }
+
+    class Speak{
+
+
+        void show(){
+            System.out.printf(" i am speak");
+        };
+        public void  read(){
+            System.out.printf(" i am speak read");
+        }
+    }
+    class Person extends Speak{
+
+        @Override
+        public void show() {
+            System.out.printf("---------- i am show");
+        }
+    }
+    class TestAny <T extends Speak>{
+        Speak obj = new Speak();
+        T t = (T)obj;
+        public void test(){
+            t.show();
+            t.read();
+        }
+
+    }
+
+    private void  testT(){
+        TestAny any = new TestAny<Person>();
+        any.test();
+
     }
 
     private void testThreadPool() {

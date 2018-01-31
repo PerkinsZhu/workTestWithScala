@@ -2,7 +2,7 @@ package zpj.ws.demo
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
 import scala.concurrent.Await
@@ -17,9 +17,20 @@ object WSDemo {
   implicit val ec = materializer.executionContext
   val wsClient = StandaloneAhcWSClient()
 
+  case class Body(title:String,content:String)
+  implicit  val format = Json.format[Body]
+  def test03() = {
+/*    wsClient.url("http://127.0.0.1:9000/zdk/doAddSingleTagApi").post(Json.toJson(Body("title","content"))).onComplete{
+      case Failure(ex)=>println("=======================")
+      case Success(ex)=>{
+        println(ex.statusText+"======================="+ex.body)
+      }
+    }*/
+  }
+
   def main(args: Array[String]): Unit = {
-    test02
-    Thread.sleep(1000000)
+    test03()
+    Thread.sleep(4000)
   }
 
 
@@ -32,9 +43,13 @@ object WSDemo {
      println("=======================")
      requese.body
    })*/
-   val future  = wsClient.url("https://www.baid1u.com/").get().onComplete{
+   wsClient.url("https://www.baidu.com/").get().onComplete{
      case Failure(ex)=>println("=======================")
-     case Success(ex)=>println("======================="+ex.body)
+     case Success(ex)=>{
+
+       ex.headers.foreach(println _)
+       println(ex.statusText+"======================="+ex.body)
+     }
    }
 //    println(Await.result(future,100 seconds))
 

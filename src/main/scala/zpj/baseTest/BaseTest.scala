@@ -3,6 +3,7 @@ package zpj.baseTest
 import java.io.{File, IOException}
 import java.text.SimpleDateFormat
 import java.util
+import java.util.concurrent.Executors
 import java.util.{Date, Random}
 
 import akka.actor.Cancellable
@@ -14,13 +15,15 @@ import play.api.libs.json.Json
 
 import scala.collection.immutable.Stream.cons
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.runtime.Nothing$
 import scala.util.Sorting
 import scala.concurrent.ExecutionContext.Implicits.global
 import collection.JavaConverters._
 import scala.collection.convert.Wrappers.MutableSeqWrapper
 import scala.collection.mutable
+import scala.compat.java8.JFunction22
+import scala.concurrent.ExecutionContext._
 /**
   * Created by PerkinsZhu on 2017/9/22 16:11. 
   */
@@ -348,7 +351,10 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def getTime(): Unit = {
-    println(new DateTime().getMillis - 1000 * 60 * 60 *24 )
+    val now = new DateTime().getMillis
+    println(now)
+    println(now -1000 * 60 *23)
+    println(now - 1000 * 60 * 60 *25 )
   }
 
   def testSychnorized(): Unit = {
@@ -365,7 +371,74 @@ def isRight(data:String,statue:Boolean): Boolean= {
   Thread.sleep(10000000)
 }
 
+  def testFunction(): Unit = {
+    val add = (x:Int, y1:Int, y2:Int, y3:Int, y4:Int, y5:Int, y6:Int, y7:Int, y8:Int, y9:Int, y11:Int, y12:Int, y13:Int, y14:Int, y15:Int, y16:Int, y17:Int, y22:Int, y33:Int, y44:Int, y55:Int) => x + y11
+
+    def deal[T](body: =>T): T = body
+
+    val getNum = 2+5
+    println(deal(getNum))
+  }
+
+  def testWhile(): Unit = {
+    while(true){
+      println("--------------")
+      Thread.sleep(2000)
+    }
+  }
+
+  @volatile var totleNUm = 0
+
+  def testVolatile(): Unit = {
+    implicit val ec = fromExecutor(Executors.newFixedThreadPool(4))
+    for (i <- 1 to 10) {
+      Future {
+        totleNUm += 1;
+        println(totleNUm)
+      }
+    }
+    Thread.sleep(2000)
+  }
+
+  def notNullTest(str:String): Unit ={
+    println(str)
+  }
+
+  def testAnnotation(): Unit = {
+    notNullTest("dd")
+  }
+
+  def testJsonOption() = {
+    println((Json.obj() \ "NAME").asOpt[Int])
+
+  }
+
+  def testStreamQueue(): Unit = {
+    val queue = mutable.Queue[Int]()
+    queue.enqueue(1)
+    queue.enqueue(2)
+    queue.enqueue(3)
+    queue.enqueue(4)
+    var num = 0
+    queue.toStream.filter(ele=>{
+      println(num)
+      num +=1
+      ele >2
+    }).take(1) match {
+      case Stream(res) => println("====="+res)
+      case Stream.Empty => println("-----")
+    }
+    println(queue.dequeue())
+    println(num)
+
+
+
+  }
+
   def main(args: Array[String]): Unit = {
+//    testStreamQueue()
+//    testJsonOption()
+//    testAnnotation()
     //    testFor()
     //    testThread()
     //    testReduce()
@@ -402,11 +475,13 @@ def isRight(data:String,statue:Boolean): Boolean= {
 //    testQueue()
 //    testShutDownHook()
 //    testPrivate()
-//    getTime()
-    testSychnorized()
-
-
+    getTime()
+//    testSychnorized()
+//    testFunction()
+//    testWhile()
+//      testVolatile()
   }
+
   def testTake(){
     List(1,2,3).take(10).foreach(println _)
   }
@@ -415,10 +490,9 @@ def isRight(data:String,statue:Boolean): Boolean= {
     val ss ="Hello"
     ss match{
       case  str if (List("Hello","ss").contains[String](str)) =>{println(str)}
-
     }
-
   }
+
   import play.api.libs.json._
   import play.api.libs.json.Reads._
   import play.api.libs.functional.syntax._
