@@ -1,5 +1,7 @@
 package zpj.future
 
+import java.util.concurrent.atomic.AtomicReference
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}
@@ -10,24 +12,27 @@ import scala.util.{Failure, Success}
 object FutreTest {
 
   def testFuture(): Unit = {
-    println(global)
-    val action: () => Int = () => {
+//    println(global)
+/*    val action: () => Int = () => {
       Thread.currentThread().getStackTrace.foreach(println _)
       println(" i am Sleeping ....")
       100
-    }
+    }*/
 
-    println(action)
+//    println(action)
     val future = Future[Int] {
       //    require(10 == 3)
-      action()
+//      Thread.sleep(100000)
+//      action()
+      println("===-------")
+      1000
     }
-    println(future)
-    future.onComplete {
+//    println(future)
+/*    future.onComplete {
       case Failure(ex) => ex.printStackTrace()
       case Success(res) => println(res)
-    }
-    Thread.sleep(1000)
+    }*/
+          Thread.sleep(1000)
 
     /* println(future)
 
@@ -106,13 +111,56 @@ object FutreTest {
     }
   }
 
+  def testIf() = {
+    var data = new AtomicReference[Object](Nil)
+    if(data.compareAndSet(Nil,5 :: Nil))(println("=="))
+    else{println("-----")}
+    println(data.get())
+  }
+
+  def testCase() = {
+    /*var data = new AtomicReference[Object](Nil)
+    data.get() match {
+      case raw: List[_] =>
+        println("----222-")
+        val cur = raw.asInstanceOf[List[Animal]]
+        println(data.compareAndSet(raw,cur))
+        println(cur.getClass+"--"+ raw.getClass)
+      case _ => println("-----");null
+    }
+
+
+    2 match {
+      case 1 => println("---w")
+      case 3 => println("--s-")
+      case 2 => println("-d--")
+      case 4 => println("-3e--")
+    }*/
+
+    var data = new AtomicReference[Object](Nil)
+    println(data.compareAndSet(Nil,Success(1000)))
+
+  }
+
+  def testFutureDebug() = {
+    for(i <- 1 to 3){
+      Future{
+        Thread.sleep(1000)
+        println("---=======")
+      }
+    }
+  }
+
   def main(args: Array[String]): Unit = {
 //    testFutureNum()
 //        testManyFuture()
-//        testFuture()
+        testFuture()
+//    testFutureDebug()
     //    testTemp()
-    testException()
-    Thread.sleep(5000)
+//    testCase()
+//    testException()
+//    testIf()
+    Thread.sleep(5000000)
   }
 
 }

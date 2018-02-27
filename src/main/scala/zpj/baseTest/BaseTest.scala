@@ -17,13 +17,14 @@ import scala.collection.immutable.Stream.cons
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.runtime.Nothing$
-import scala.util.Sorting
+import scala.util.{Sorting, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
 import collection.JavaConverters._
 import scala.collection.convert.Wrappers.MutableSeqWrapper
 import scala.collection.mutable
 import scala.compat.java8.JFunction22
 import scala.concurrent.ExecutionContext._
+import scala.util.control.NonFatal
 /**
   * Created by PerkinsZhu on 2017/9/22 16:11. 
   */
@@ -304,6 +305,11 @@ def isRight(data:String,statue:Boolean): Boolean= {
       case x:List[String] =>println(x);
       case Nil => println("_---")
     }
+    Nil match {
+      case x:List[_] =>println("=====");
+      case Nil => println("_---")
+    }
+
   }
 
   def testWithTimeOfTodayStartOfDay(): Unit = {
@@ -355,6 +361,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(now)
     println(now -1000 * 60 *23)
     println(now - 1000 * 60 * 60 *25 )
+    println(new DateTime(1517450603235L))
   }
 
   def testSychnorized(): Unit = {
@@ -434,8 +441,57 @@ def isRight(data:String,statue:Boolean): Boolean= {
 
 
   }
+  def toInt(me:Int=> Int):Unit={
+    println("toInt  start")
+    me(add(1,2))
+    println("toInt  end")
+  }
+  def add(a:Int,b:Int):Int={
+    println("add  start")
+    a + b
+  }
+  val paser:Int => Int = (str)=> {
+    println("=====")
+    str.toInt
+  }
+
+  def testMethod2():Unit  = {
+    println("+-=--=-=-=-")
+    toInt(paser)
+
+  }
+
+
+  def testRegex(): Unit = {
+    println("HEKLLO|NIHAO|KEFU".matches(".*?HEKLLO.*?|.*?KEFU.*?"))
+  }
+
+  def testForYield(): Unit = {
+    val a = Future[Option[Int]] {
+      10/0
+      Some(100)
+    }
+    val b = Future {
+      100
+    }
+    val res = for {
+      Some(aa)<- a
+      bb <- Future{aa +10}
+    } yield bb
+    Thread.sleep(50)
+
+    println(res.recover{
+      case NonFatal(e) => println(e.getMessage);111
+    })
+
+    println(res)
+  }
 
   def main(args: Array[String]): Unit = {
+    testForYield()
+//    testRegex()
+//    testListMatch()
+//    testMethod2()
 //    testStreamQueue()
 //    testJsonOption()
 //    testAnnotation()
@@ -475,7 +531,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
 //    testQueue()
 //    testShutDownHook()
 //    testPrivate()
-    getTime()
+//    getTime()
 //    testSychnorized()
 //    testFunction()
 //    testWhile()
