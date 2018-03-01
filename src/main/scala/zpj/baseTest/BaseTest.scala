@@ -357,11 +357,16 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def getTime(): Unit = {
-    val now = new DateTime().getMillis
+    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-01 00:00:000").getTime
     println(now)
     println(now -1000 * 60 *23)
-    println(now - 1000 * 60 * 60 *25 )
-    println(new DateTime(1517450603235L))
+    val start = now - 1000 * 60 * 60 * 24 * 3
+    print(start +" --->  "+now )
+    println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(1519574404352L).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))
+
   }
 
   def testSychnorized(): Unit = {
@@ -488,7 +493,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def main(args: Array[String]): Unit = {
-    testForYield()
+//    testForYield()
 //    testRegex()
 //    testListMatch()
 //    testMethod2()
@@ -531,7 +536,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
 //    testQueue()
 //    testShutDownHook()
 //    testPrivate()
-//    getTime()
+    getTime()
 //    testSychnorized()
 //    testFunction()
 //    testWhile()

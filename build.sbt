@@ -55,3 +55,6 @@ libraryDependencies += "net.sf.ehcache" % "ehcache" % "2.10.4"
 // https://mvnrepository.com/artifact/cglib/cglib
 libraryDependencies += "cglib" % "cglib" % "3.2.6"
 
+// https://mvnrepository.com/artifact/com.alibaba/fastjson
+libraryDependencies += "com.alibaba" % "fastjson" % "1.2.46"
+libraryDependencies += "org.apache.poi" % "poi-ooxml" % "3.17"
