@@ -357,7 +357,9 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def getTime(): Unit = {
-    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-01 00:00:000").getTime
+    val oneDay = 1000L * 60 * 60 * 24
+    // 获取指定时间
+/*    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-01 00:00:000").getTime
     println(now)
     println(now -1000 * 60 *23)
     val start = now - 1000 * 60 * 60 * 24 * 3
@@ -365,8 +367,24 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
     println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
     println(new DateTime(1519574404352L).toString("yyyy-MM-dd HH:mm:ss"))
-    println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))*/
+  // 计算时间段
+    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-02 00:00:000").getTime
+    println(now)
+    val temp = now - (oneDay * 30)
+    println(temp)
+    val start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-02 00:00:000").getTime
+    println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(temp).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
+    println(start+"---"+ (start - temp) / oneDay)
 
+
+
+   /* 术禾召回率统计时间
+    println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-26 00:00:000").getTime)
+    println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-28 00:00:000").getTime)
+*/
   }
 
   def testSychnorized(): Unit = {
