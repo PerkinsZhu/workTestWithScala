@@ -23,6 +23,5 @@ object SimpleTest{
       val simple = new SimpleTest("jack",29)
       println("当前线程容量:"+list.size)
     }
-
   }
 }

@@ -58,3 +58,6 @@ libraryDependencies += "cglib" % "cglib" % "3.2.6"
 // https://mvnrepository.com/artifact/com.alibaba/fastjson
 libraryDependencies += "com.alibaba" % "fastjson" % "1.2.46"
 libraryDependencies += "org.apache.poi" % "poi-ooxml" % "3.17"
+// https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
+libraryDependencies += "org.mongodb" % "mongo-java-driver" % "3.6.3"
+
