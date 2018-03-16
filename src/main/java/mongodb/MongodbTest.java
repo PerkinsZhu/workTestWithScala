@@ -32,6 +32,10 @@ import static java.util.Collections.singletonList;
  **/
 public class MongodbTest {
 
+    public static void main(String[] args) {
+
+    }
+
     //    MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
     //    MongoClientOptions option =  MongoClientOptions.builder().build();
     //    MongoClient mongoClient = new MongoClient(new ServerAddress("127.0.0.1"),option);

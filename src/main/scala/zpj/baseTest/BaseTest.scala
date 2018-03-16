@@ -17,7 +17,7 @@ import scala.collection.immutable.Stream.cons
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.runtime.Nothing$
-import scala.util.{Sorting, Try}
+import scala.util.{Failure, Sorting, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
 import collection.JavaConverters._
 import scala.collection.convert.Wrappers.MutableSeqWrapper
@@ -490,7 +490,19 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def testForYield(): Unit = {
-    val a = Future[Option[Int]] {
+    (for{
+     a <- Future{println("----a----");10}
+     b <- Future{println("----b----");10+a;10/0}
+     c <- Future{println("----c----");10+b}
+     d <- Future{println("----d----");10+c}
+    }yield {
+      println(d)
+    }).onComplete{
+      case Failure(ex) => ex.printStackTrace()
+    }
+
+    Thread.sleep(1000)
+    /*val a = Future[Option[Int]] {
       10/0
       Some(100)
     }
@@ -507,11 +519,11 @@ def isRight(data:String,statue:Boolean): Boolean= {
       case NonFatal(e) => println(e.getMessage);111
     })
 
-    println(res)
+    println(res)*/
   }
 
   def main(args: Array[String]): Unit = {
-//    testForYield()
+    testForYield()
 //    testRegex()
 //    testListMatch()
 //    testMethod2()
@@ -554,7 +566,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
 //    testQueue()
 //    testShutDownHook()
 //    testPrivate()
-    getTime()
+//    getTime()
 //    testSychnorized()
 //    testFunction()
 //    testWhile()
