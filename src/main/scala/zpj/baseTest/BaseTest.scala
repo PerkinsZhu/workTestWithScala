@@ -183,6 +183,9 @@ trait Friut{
     println(time2)
 
   }
+
+
+
 //ticket@@@QnoHyTTRFxdTCHlkdMT9ObFuenZ0Tnb9g-p_i0esGpU7j6LKFbk-ra46_Jmog7l-Dz0A-0SAKjUOI7E8KRtfQQ
   def testFuture(): Unit = {
     val res = for(i<-doFuture())yield i
@@ -369,7 +372,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(new DateTime(1519574404352L).toString("yyyy-MM-dd HH:mm:ss"))
     println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))*/
   // 计算时间段
-    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-02 00:00:000").getTime
+    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-17 00:00:001").getTime
     println(now)
     val temp = now - (oneDay * 30)
     println(temp)
@@ -379,7 +382,11 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
     println(start+"---"+ (start - temp) / oneDay)
 
+    val startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-17 00:00:000").getTime
 
+    val endTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-19 00:00:000").getTime
+
+    println(s"$startTime -- $endTime---${(endTime- startTime)/1000}")
 
    /* 术禾召回率统计时间
     println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-26 00:00:000").getTime)
@@ -523,7 +530,8 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def main(args: Array[String]): Unit = {
-    testForYield()
+    getTime()
+//    testForYield()
 //    testRegex()
 //    testListMatch()
 //    testMethod2()
@@ -640,9 +648,9 @@ def testException(): Unit ={
     val ip = "10."+temp1+"."+temp2+"." + numIp
     ip
   }
-  class Not extends Nothing${
+/*  class Not extends Nothing{
     def showInfo= println("i am Not")
-  }
+  }*/
 
   def testSort()={
     val map = Map(10481 -> 3.0, 5900 -> 5.0, 5395 -> 1.0).toList.sortWith(_._2>_._2).take(2)

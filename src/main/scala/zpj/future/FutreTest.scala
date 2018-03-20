@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Promise}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by PerkinsZhu on 2018/1/26 15:57
@@ -27,7 +27,11 @@ object FutreTest {
       println("===-------")
       1000
     }
-//    println(future)
+    val res = future.onComplete{
+      case _ => println("i am over")
+    }
+    future.isCompleted
+    println(future)
 /*    future.onComplete {
       case Failure(ex) => ex.printStackTrace()
       case Success(res) => println(res)
@@ -53,27 +57,30 @@ object FutreTest {
 
   def testManyFuture() = {
     Future {
+      val name = 1111111
       println("1 " + Thread.currentThread().getName)
       println("1 start")
       Future {
+        val name = 2222222
         println("2  " + Thread.currentThread().getName)
         println("2 start")
         Future {
+          val name = 333333
           println("3  " + Thread.currentThread().getName)
           println(" 3 start")
-          Thread.sleep(2000)
+          Thread.sleep(2000000000)
           println(" 3 end")
         }
-        Future {
+       /* Future {
           println("4  " + Thread.currentThread().getName)
           println(" 4 start")
           Thread.sleep(2000)
           println(" 4 end")
-        }
-        Thread.sleep(2000)
+        }*/
+        Thread.sleep(2000000000)
         println("2 end")
       }
-      Thread.sleep(2000)
+      Thread.sleep(2000000000)
       println("1 end")
     }
   }
@@ -143,24 +150,68 @@ object FutreTest {
   }
 
   def testFutureDebug() = {
-    for(i <- 1 to 3){
-      Future{
+    for (i <- 1 to 3) {
+      Future {
         Thread.sleep(1000)
         println("---=======")
       }
     }
   }
 
+  def testTemp2() = {
+    val met = (tty: Try[Int]) => {
+      println("---2222-----")
+      tty.map(_ + 10)
+    }
+
+    def test(f: Try[Int] => Try[Int]) = {
+      println("---1111-----")
+      val res = f(Success(100))
+      println(res)
+    }
+
+    test(met)
+
+  }
+
+  def testFuture3() = {
+    val future = Future {
+      println("--------->")
+      100
+    }.map(i => {
+      i * 100
+    }).map(i => {
+      i * 100
+    }).map(i => {
+      i * 100
+    }).map(i => {
+      i * 100
+    }).map(i => {
+      i * 100
+    }).map(i => {
+      i * 100
+    }).map(i => {
+      Thread.sleep(999999999)
+      i * 100
+    })
+    println(future)
+    Thread.sleep(999999999)
+  }
+
+
   def main(args: Array[String]): Unit = {
+      testFuture3()
+//    testTemp2()
+//      testFuture()
 //    testFutureNum()
 //        testManyFuture()
-        testFuture()
+//        testFuture()
 //    testFutureDebug()
     //    testTemp()
 //    testCase()
 //    testException()
 //    testIf()
-    Thread.sleep(5000000)
+Thread.sleep(100000)
   }
 
 }

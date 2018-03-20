@@ -49,7 +49,10 @@ libraryDependencies += "org.mongodb.scala" %% "mongo-scala-driver" % "2.1.0"
 libraryDependencies ++= Seq(
   "net.debasishg" %% "redisclient" % "3.4"
 )
-libraryDependencies += "org.scalatest" % "scalatest_2.12" % "3.0.4"
+// https://mvnrepository.com/artifact/org.scalatest/scalatest
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5"
+libraryDependencies += "org.scalactic" %% "scalactic" % "3.0.5"
+
 // https://mvnrepository.com/artifact/net.sf.ehcache/ehcache
 libraryDependencies += "net.sf.ehcache" % "ehcache" % "2.10.4"
 // https://mvnrepository.com/artifact/cglib/cglib
@@ -60,4 +63,6 @@ libraryDependencies += "com.alibaba" % "fastjson" % "1.2.46"
 libraryDependencies += "org.apache.poi" % "poi-ooxml" % "3.17"
 // https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
 libraryDependencies += "org.mongodb" % "mongo-java-driver" % "3.6.3"
+// https://mvnrepository.com/artifact/junit/junit
+libraryDependencies += "junit" % "junit" % "4.12" % Test
 
