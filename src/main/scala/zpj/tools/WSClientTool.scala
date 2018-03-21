@@ -11,7 +11,7 @@ import play.api.libs.ws.ahc.StandaloneAhcWSClient
   **/
 
 
-class WsClientTool {
+object WSClientTool {
   private implicit val system = ActorSystem()
   private implicit val materializer = ActorMaterializer()
   val wsClient = StandaloneAhcWSClient()
@@ -30,7 +30,7 @@ class WsClientTool {
   }
 }
 
-class WsClientToolTest extends FunSuite {
+class WSClientToolTest extends FunSuite {
   test("WSClient demo") {
     assert("Hello" equals ("Hello"))
   }

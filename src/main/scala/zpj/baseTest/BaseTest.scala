@@ -6,12 +6,13 @@ import java.util
 import java.util.concurrent.Executors
 import java.util.{Date, Random}
 
-import akka.actor.Cancellable
+import akka.actor.{ActorSystem, Cancellable}
 import akka.http.scaladsl.model.Uri.Query.Cons
 import akka.stream.javadsl.Flow
 import akka.stream.scaladsl.JavaFlowSupport.Source
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.libs.json.Json
+import zpj.tools.WSClientTool
 
 import scala.collection.immutable.Stream.cons
 import scala.collection.mutable.ListBuffer
@@ -382,9 +383,9 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
     println(start+"---"+ (start - temp) / oneDay)
 
-    val startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-17 00:00:000").getTime
+    val startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-20 00:00:000").getTime
 
-    val endTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-19 00:00:000").getTime
+    val endTime =  new Date().getTime
 
     println(s"$startTime -- $endTime---${(endTime- startTime)/1000}")
 
@@ -529,8 +530,74 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(res)*/
   }
 
+  import scala.concurrent.duration._
+
+  def waitAllFuture(): Unit = {
+    val fun = (data: Try[Int]) => println(data)
+    val data = List(1, 2, 3).map(num => {
+      Future {
+        Thread.sleep(1000)
+        println(num)
+        num * 10
+      }
+    })
+
+    while (data.map(_.isCompleted).contains(false)) {
+      Thread.sleep(1000)
+    }
+  }
+
+  def waitAllWSClient(): Unit = {
+    Thread.sleep(5000)
+    val ws = WSClientTool.wsClient
+    val iter = (1 to 10000 ).iterator
+    val list = ListBuffer[Future[String]]()
+    while (iter.hasNext) {
+      Thread.sleep(5)
+      val data = iter.next()
+      val future = ws.url("https://www.sogou.com/").get().map(respond => {
+        println("receive data"+data)
+        if (respond.status == 200) {
+          data +"---OK"
+        } else {
+          data + "--ERROR"
+        }
+      })
+      list += future
+    }
+
+    while(list.map(_.isCompleted).contains(false)){
+      Thread.sleep(1000)
+    }
+    for (elem <- list) {
+      println("--->"+elem)
+    }
+
+    println("---end----")
+    System.exit(0)
+  }
+
+  def testStringHashCode(): Unit = {
+    val hello = "hello"
+    val list = List(hello)
+    val temp = list(0)
+    println(temp.hashCode)
+    list.foreach(item => println(item.hashCode))
+    println(hello.hashCode)
+    again(hello)
+  }
+
+  def again(name: String): Unit = {
+    println(name.hashCode)
+  }
+
   def main(args: Array[String]): Unit = {
-    getTime()
+    testStringHashCode()
+//    getTime()
+//    waitAllWSClient()
+//    waitAllFuture()
+
+//    getTime()
 //    testForYield()
 //    testRegex()
 //    testListMatch()
