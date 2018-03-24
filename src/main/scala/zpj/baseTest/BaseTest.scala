@@ -591,8 +591,39 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(name.hashCode)
   }
 
+  def testFutureGlobalVariable(): Unit = {
+    var num = 0
+    val futures = (1 to 100).map(tem => Future {println(num);num += 1}).toList
+    waiting(futures)
+    println("--->"+num)
+    System.exit(0)
+  }
+
+  val waiting = (future: List[Future[Unit]]) => {
+    while (future.filter(_.isCompleted).contains(false)) {
+      Thread.sleep(1000)
+    }
+  }
+
+  def testSplit(): Unit = {
+    println("/".split("/").length)
+  }
+
+  def testFlatFuture(): Unit = {
+    val future = Future{
+      Future{
+        10
+      }
+    }
+    val res = future.flatMap(_)
+
+  }
+
   def main(args: Array[String]): Unit = {
-    testStringHashCode()
+    testFlatFuture()
+//    testSplit()
+//      testFutureGlobalVariable()
+//    testStringHashCode()
 //    getTime()
 //    waitAllWSClient()
 //    waitAllFuture()
