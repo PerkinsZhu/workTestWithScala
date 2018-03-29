@@ -615,12 +615,38 @@ def isRight(data:String,statue:Boolean): Boolean= {
         10
       }
     }
-    val res = future.flatMap(_)
+//    val res = future.flatMap(_)
 
   }
 
+  case class Aaa(a: Int)
+
+  def testListContain(): Unit = {
+    println(List(Aaa(1), Aaa(2)).contains(Aaa(1)))
+  }
+
+  def testFolder(): Unit = {
+    val map = List( Map("a"->"name","b"->"bbbnb"),Map("xc"->"ccccc","d"->"ddd")).foldLeft(Map.empty[String,String])((a,b)=>a.++(b))
+    println(map)
+  }
+
+  def testForeach(): Unit = {
+    val map = mutable.HashMap[String, List[Tuple2[String, String]]]()
+    map.put("a", List(("aaa", "bbbb")))
+    map.put("b", List(("bbbb", "ccc")))
+    map.foreach {
+      case Tuple2(k, v) => println(v)
+    }
+    map.foreach(item => println(item._2))
+    map.foreach((item: (String, List[Tuple2[String, String]])) => println(item._2))
+  }
+
   def main(args: Array[String]): Unit = {
-    testFlatFuture()
+    testForeach()
+//    testMatch()
+//    testFolder()
+//    testListContain()
+//    testFlatFuture()
 //    testSplit()
 //      testFutureGlobalVariable()
 //    testStringHashCode()
@@ -688,6 +714,9 @@ def isRight(data:String,statue:Boolean): Boolean= {
     ss match{
       case  str if (List("Hello","ss").contains[String](str)) =>{println(str)}
     }
+
+    println("/morenfenlei/903908288413833".matches(".*903908288413833.*"))
+    println("/morenfenlei/903908288413833/234234234".matches(".*903908288413833.*"))
   }
 
   import play.api.libs.json._
