@@ -642,7 +642,8 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def main(args: Array[String]): Unit = {
-    testForeach()
+    testMatch()
+//    testForeach()
 //    testMatch()
 //    testFolder()
 //    testListContain()
@@ -717,8 +718,17 @@ def isRight(data:String,statue:Boolean): Boolean= {
 
     println("/morenfenlei/903908288413833".matches(".*903908288413833.*"))
     println("/morenfenlei/903908288413833/234234234".matches(".*903908288413833.*"))
-  }
 
+    Nil match {
+      case Nil => println("--111-")
+      case x => println("---"+x)
+    }
+
+
+  }
+//master  test1
+//master  test2
+//master  test3
   import play.api.libs.json._
   import play.api.libs.json.Reads._
   import play.api.libs.functional.syntax._
@@ -733,7 +743,6 @@ def isRight(data:String,statue:Boolean): Boolean= {
 //    println(Json.toJson(HHH("JACK",QA(List("问题1","问题2","问题3"),"123456"))))
 //    println(Json.toJson(HHH("JACK",List(QA(List("问题1","问题2","问题3"),"123456")))))
   }
-//  1.1 pickup test
 
   private def testProxy = {
     while (true) {
