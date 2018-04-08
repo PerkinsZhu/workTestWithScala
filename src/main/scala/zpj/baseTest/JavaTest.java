@@ -47,7 +47,7 @@ public class JavaTest {
         }
         System.out.printf("end");
     }
-
+    //1.1 test4
     public static int getResult() {
         try {
             int res = 2/0;
