@@ -32,7 +32,7 @@ public class JavaTest {
      }
 
     }
-
+//1.1 test2
     private static void test02() {
         System.out.printf(getResult()+"");
     }
