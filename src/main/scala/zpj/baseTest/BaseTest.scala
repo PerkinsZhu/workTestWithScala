@@ -733,6 +733,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
 //    println(Json.toJson(HHH("JACK",QA(List("问题1","问题2","问题3"),"123456"))))
 //    println(Json.toJson(HHH("JACK",List(QA(List("问题1","问题2","问题3"),"123456")))))
   }
+//  1.1 pickup test
 
   private def testProxy = {
     while (true) {
