@@ -642,7 +642,8 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def main(args: Array[String]): Unit = {
-    testForeach()
+    testMatch()
+//    testForeach()
 //    testMatch()
 //    testFolder()
 //    testListContain()
@@ -717,6 +718,13 @@ def isRight(data:String,statue:Boolean): Boolean= {
 
     println("/morenfenlei/903908288413833".matches(".*903908288413833.*"))
     println("/morenfenlei/903908288413833/234234234".matches(".*903908288413833.*"))
+
+    Nil match {
+      case Nil => println("--111-")
+      case x => println("---"+x)
+    }
+
+
   }
 
   import play.api.libs.json._
