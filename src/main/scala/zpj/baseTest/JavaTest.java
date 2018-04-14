@@ -1,5 +1,7 @@
 package zpj.baseTest;
 
+import org.junit.Test;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +13,36 @@ public class JavaTest {
     private static ConcurrentHashMap<String,List<String>> answerListMap = new ConcurrentHashMap<String,List<String>>();
     public static void main(String[] args) {
     new JavaTest().testCase();
+    }
+
+    @Test
+    public void testPat(){
+        String str = "换行测试\\n\r\n\r\n换行测试\\n\r\n\r\n换行测试\\n\r\n换行测试\r\n换行测试\\n换行测试\\n\\n323"
+                .replace("\\n\r\n","\r\n")
+                .replace("\\n\n","\r\n")
+                .replaceAll("\\\\n(?<!\\r\\n|\\n|$)","\r\n").replace("\\n","");
+        System.out.println(str);
+
+        String temp = "asdfasddddfasss";
+        System.out.println(temp.replace("fas","--"));
+        System.out.println(temp.replaceAll("fas","--"));
+        /**
+         * replace 参数为 (str,str); replactAll 的参数为：(regex,str)
+         * 前者直接对所有一致的字符串进行替换
+         * 后者使用正则表达式来匹配所有符合规则的字符串、
+         */
+    }
+
+    @Test
+    public void testHanZi(){
+        String start = "\\u4e00";
+        String end = "\\u9fa5";
+        int s = Integer.parseInt(start.substring(2, start.length()), 16);
+        int e = Integer.parseInt(end.substring(2, end.length()), 16);
+        for (int i = s; i <= e; i++) {
+            System.out.println((char) i);
+        }
+        System.out.println(e-s);
     }
     private void test03() {
      for(int i = 0; i< 10 ;i++)   {

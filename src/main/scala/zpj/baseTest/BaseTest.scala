@@ -11,7 +11,7 @@ import akka.http.scaladsl.model.Uri.Query.Cons
 import akka.stream.javadsl.Flow
 import akka.stream.scaladsl.JavaFlowSupport.Source
 import org.joda.time.{DateTime, DateTimeZone}
-import play.api.libs.json.Json
+import play.api.libs.json.{JsArray, Json}
 import zpj.tools.WSClientTool
 
 import scala.collection.immutable.Stream.cons
@@ -172,7 +172,7 @@ trait Friut{
 /*    println(System.currentTimeMillis)
     println(new DateTime().getMillis)
     println(new Date().getTime)*/
-    println(new DateTime(1512135057792l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
+    println(new DateTime(1523607462115L).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(new DateTime(1513752919598l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(System.currentTimeMillis)
     println(new DateTime(System.currentTimeMillis).toString("yyyy-MM-dd HH:mm:ss:SSS"))
@@ -641,8 +641,22 @@ def isRight(data:String,statue:Boolean): Boolean= {
     map.foreach((item: (String, List[Tuple2[String, String]])) => println(item._2))
   }
 
+  def testSubString(): Unit = {
+    val str = "中2.34,"
+    println(str.length)
+    println(str.size)
+    println(str.getClass)
+    println(str.substring(0,str.size-1))
+
+    JsArray().value.map(println _)
+    println("========")
+  }
+
   def main(args: Array[String]): Unit = {
-    testMatch()
+      testTime()
+//      testSubString()
+//    testWhile()
+//    testMatch()
 //    testForeach()
 //    testMatch()
 //    testFolder()
