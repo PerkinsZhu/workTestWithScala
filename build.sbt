@@ -66,3 +66,5 @@ libraryDependencies += "org.mongodb" % "mongo-java-driver" % "3.6.3"
 // https://mvnrepository.com/artifact/junit/junit
 libraryDependencies += "junit" % "junit" % "4.12" % Test
 
+// https://mvnrepository.com/artifact/org.mockito/mockito-all
+libraryDependencies += "org.mockito" % "mockito-all" % "2.0.2-beta" % Test

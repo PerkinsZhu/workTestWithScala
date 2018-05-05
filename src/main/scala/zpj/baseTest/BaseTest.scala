@@ -172,12 +172,13 @@ trait Friut{
 /*    println(System.currentTimeMillis)
     println(new DateTime().getMillis)
     println(new Date().getTime)*/
-    println(new DateTime(1523607462115L).toString("yyyy-MM-dd HH:mm:ss:SSS"))
+    println(new DateTime(1523927366922L).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(new DateTime(1513752919598l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(System.currentTimeMillis)
     println(new DateTime(System.currentTimeMillis).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(new SimpleDateFormat("yyy-MM-dd hh:mm:ss").format(new Date(1513762144931l)))
    println(new DateTime(1513762144931l).withZone(DateTimeZone.forOffsetHours(8)).toString("yyyy-MM-dd hh:mm:ss"))
+
     val time = new Date().getTime
     val time2 = new DateTime()
     println(time)
@@ -252,14 +253,27 @@ trait Friut{
   }
 
   def testPartialFunction(): Unit = {
+
     val squareRoot:PartialFunction[Double,Double]={
       case x if x >= 0 => println("---"+x);Math.sqrt(x)
     }
     val x = 23L
-    println(squareRoot.isDefinedAt(2))
+    println(squareRoot.isDefinedAt(-5))
 
+    val pf: PartialFunction[Int, String] = {
+      case i if i%2 == 0 => "even"
+    }
+    val tf: (Int => String) = pf orElse { case _ => "odd"}
 
+    println(tf(1))
+    println(tf(2))
+    val  test2:PartialFunction[Int,String] = {
+      case 1 => "1"
+      case 2 =>"2"
+    }
 
+    println(test2.isDefinedAt(1))
+    println(test2(1))
 
 
   }
@@ -373,7 +387,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(new DateTime(1519574404352L).toString("yyyy-MM-dd HH:mm:ss"))
     println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))*/
   // 计算时间段
-    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-17 00:00:001").getTime
+    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2017-09-01 00:00:001").getTime
     println(now)
     val temp = now - (oneDay * 30)
     println(temp)
@@ -650,10 +664,44 @@ def isRight(data:String,statue:Boolean): Boolean= {
 
     JsArray().value.map(println _)
     println("========")
+    System.out.println("年后是的发送到....。。ewr 。。2".replaceAll("(?<!。)。*$",""))
+    System.out.println("年后是的发送到.  &nbsp;&nbsp;.。。ewr 。&nbsp;&nbsp;".replaceAll("(&nbsp;)+$","-"))
+
+
+
+    println("/morenfenlei/1169104780157830".contains("69104780"))
+  }
+
+  def testSet(): Unit = {
+    println ((List("a","c","b").toSet & List("c","d").toSet).size)
+  }
+
+  def testGroupBy(): Unit = {
+    val votes = Seq(("scala", 1), ("java", 4), ("scala", 10), ("scala", 1), ("python", 10))
+    val orderedVotes = votes
+      .groupBy(_._1)
+      println(orderedVotes)
+
+  }
+
+  def testNil(str:String): Unit = {
+    println(Nil.size)
+    print(List("safd;232423;234","asdfas")flatMap(_.split(";")))
+    if(str.length< 1){
+      return
+    }
+    Future{println(str.length)}
+    Future{println(str.size)}
+    Thread.sleep(100)
   }
 
   def main(args: Array[String]): Unit = {
-      testTime()
+//    testNil("234手动阀")
+//    getTime()
+//    testPartialFunction()
+//    testGroupBy()
+//    testSet()
+//      testTime()
 //      testSubString()
 //    testWhile()
 //    testMatch()
@@ -738,6 +786,8 @@ def isRight(data:String,statue:Boolean): Boolean= {
       case x => println("---"+x)
     }
 
+    val str = "2222"
+    println(str.matches("(.*上海2.*|.*222.*)"))
 
   }
 //master  test1
