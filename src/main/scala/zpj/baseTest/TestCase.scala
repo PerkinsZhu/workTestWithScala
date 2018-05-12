@@ -234,7 +234,7 @@ class UtilTest {
 
   @Test
   def testStream() {
-    val stream = Stream.Stream(1, 2, 3, 4, 5)
+    val stream = Stream(1, 2, 3, 4, 5)
     println(stream)
 
     val other = 20;
@@ -258,5 +258,26 @@ class UtilTest {
   }
   val addThem2 = new ((Int, Int) => Int) {
     def apply(a: Int, b: Int) = a + b
+  }
+
+
+  @Test
+  def test2(): Unit = {
+    Nil.map(println _)
+    List(1, 2, 3).map(println _)
+    val l1 = List(1, 2, 3, 3, 4)
+    /*val l2 = l1.map(item => {
+      println("---->"+item)
+      item * 2
+    })*/
+    l1.map(item => {
+      println(l1.map(item => {
+        println("---->" + item)
+        item * 2
+      }))
+      println(item)
+    })
+    println((l1.::(None.getOrElse(""))))
+    println((l1.::(Some("===").get)))
   }
 }

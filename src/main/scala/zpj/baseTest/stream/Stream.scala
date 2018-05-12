@@ -1,4 +1,4 @@
-package zpj.baseTest.Stream
+package zpj.baseTest.stream
 
 
 /**
@@ -7,7 +7,7 @@ package zpj.baseTest.Stream
 
 sealed trait Stream[+A]
 
-case object Empty extends Stream[Nothing]
+case object Emptyq extends Stream[Nothing]
 
 case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
 
@@ -18,7 +18,7 @@ object Stream {
     Cons(() => head, () => tail)
   }
 
-  def empty[A]: Stream[A] = Empty
+  def empty[A]: Stream[A] = Emptyq
 
   def apply[A](as: A*): Stream[A] = if (as.isEmpty) empty else cons(as.head, apply(as.tail: _*))
 }

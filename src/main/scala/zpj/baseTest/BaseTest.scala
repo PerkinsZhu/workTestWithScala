@@ -23,6 +23,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import collection.JavaConverters._
 import scala.collection.convert.Wrappers.MutableSeqWrapper
 import scala.collection.mutable
+import scala.collection.parallel.immutable
 import scala.compat.java8.JFunction22
 import scala.concurrent.ExecutionContext._
 import scala.util.control.NonFatal

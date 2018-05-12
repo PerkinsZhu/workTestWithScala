@@ -68,3 +68,5 @@ libraryDependencies += "junit" % "junit" % "4.12" % Test
 
 // https://mvnrepository.com/artifact/org.mockito/mockito-all
 libraryDependencies += "org.mockito" % "mockito-all" % "2.0.2-beta" % Test
+// https://mvnrepository.com/artifact/org.scalaz/scalaz-core
+libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.0-M22"
