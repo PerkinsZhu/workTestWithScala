@@ -1,7 +1,5 @@
 package zpj.baseTest
 
-import akka.http.scaladsl.model.Uri.Query.Cons
-import org.apache.poi.ss.formula.functions.T
 import org.junit.Test
 import org.scalatest.FlatSpec
 
