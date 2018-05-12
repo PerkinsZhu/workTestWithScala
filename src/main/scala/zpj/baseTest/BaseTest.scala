@@ -301,7 +301,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
     def one(x: Int, y: Int): Int = x * y
     def two(int: Int): Int = int + 10
     def three(x: Int): Int = x * 10
-    //def result(x: Int) = three _ andThen two _
+    def result(x: Int) = three _ andThen two _
 
     val f1 = (x: Int, y: Int) => x + y
     val f2 = (y: Int) => y * 2
@@ -397,7 +397,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
     println(start+"---"+ (start - temp) / oneDay)
 
-    val startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-20 00:00:000").getTime
+    val startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-05-08 00:00:000").getTime
 
     val endTime =  new Date().getTime
 
@@ -696,6 +696,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def main(args: Array[String]): Unit = {
+    println(Json.obj("name" -> "<p><td width=\"59\" valign=\"top\" style=\"word-break: break-all;\">这是一个图文本答案</td></p>"))
 //    testNil("234手动阀")
 //    getTime()
 //    testPartialFunction()

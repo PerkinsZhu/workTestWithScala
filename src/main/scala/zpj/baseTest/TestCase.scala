@@ -1,11 +1,14 @@
 package zpj.baseTest
 
+import akka.http.scaladsl.model.Uri.Query.Cons
+import org.apache.poi.ss.formula.functions.T
+import org.junit.Test
 import org.scalatest.FlatSpec
 
 /**
-  * Created by PerkinsZhu on 2017/12/14 19:21. 
+  * Created by PerkinsZhu on 2017/12/14 19:21.
   */
-class TestCase extends FlatSpec  {
+class TestCase extends FlatSpec {
   "An empty Set" should "have size 0" in {
     assert(Set.empty.size == 0)
   }
@@ -15,6 +18,247 @@ class TestCase extends FlatSpec  {
       Set.empty.head
     }
   }
-//1.1 test3
-//1.1 test4
+
+  "Nil" should ("is empty") in {
+    assert(List().isEmpty)
+    //    assert(List("w").isEmpty)
+    assert(Nil.isEmpty)
+  }
+
+  //1.1 test3
+  //1.1 test4
+}
+
+
+class UtilTest {
+
+  @Test
+  def testSplit(): Unit = {
+    "sadsd234224701fsa;中sdf国；werw".split("(;|；)").toList.foreach(println _)
+  }
+
+  @Test
+  def testMap(): Unit = {
+    List(("a", List(1, 2, 3, 4)), ("a", List(11, 22, 33, 44)), ("b", List(1, 2, 3, 4))).toMap.foreach(println _)
+  }
+
+  @Test
+  def testList(): Unit = {
+    val l1 = List(1, 2, 3)
+    val l2 = List(4, 5, 6)
+    println(l1 ::: l2)
+    println(l2 ::: l1)
+    println(l2.+:(3))
+    println(l2.++(l1))
+    println(l2.::("a"))
+    l1 match {
+      //      case Cons(s,::) => println("")
+      case x :: h => println(h)
+      case _ => println(l1)
+    }
+
+    println(l1.reduceLeft(_ * _))
+
+
+  }
+
+  @Test
+  def testListToSet(): Unit = {
+    println(List(23, 34, 2, 2, 12, 23, 234, 1, 21, 1).toSet)
+    println(List(23, 34, 2, 2, 12, 23, 234, 1, 21, 1).toSet.toList)
+  }
+
+  @Test
+  def testMathc(): Unit = {
+    println("lkwersdlfgpjef1sd".matches(".*(sd|地址).*"))
+    println("lkwersdlfgpjef1sd".matches("(.*sd.*|.*地址.*"))
+  }
+
+
+  @Test
+  def runList(): Unit = {
+    println((1 to 10).partition(_ % 2 == 0))
+    println((1 to 10).find(_ % 2 == 0))
+    println((1 to 10).filterNot(_ % 2 == 0))
+    println((1 to 10).takeWhile(_ > 5))
+    println(List(1, 2, 3, -4, 5, 6, 7, 8, 9, 10) takeWhile (_ > 0))
+    println(List(List(1, 2, List(11, 22, 33, 44)), List(4, 5, 6), List(7, 8, 9)).flatten)
+    println((1 to 10) reduceLeft (_ + _))
+    println((1 to 10).toList.foldLeft(100)(_ + _))
+    println(List.range(1, 10).foldLeft(1)(_ + _))
+
+    val t1 = (1 to 10)
+    println(t1.getClass)
+    println(t1.toList.getClass)
+    println(List(1).getClass)
+  }
+
+
+  @Test
+  def testAndThen(): Unit = {
+    /*    List("a", "bb", "c", "dd", "dd").toStream.filter(ele => {
+          println(ele)
+          ele.length == 2
+        }).take(1) match {
+          case Stream.Empty => println("------------")
+          case Stream(x) => {
+            println("--------" + x)
+          }
+        }*/
+
+    def onee(x: Int, y: Int): Int = x * y
+
+    def twoo(int: Int): Int = int + 10
+
+    def threee(x: Int): Int = x * 10
+
+    def result(x: Int) = threee _ andThen twoo _
+
+    val f1 = (x: Int, y: Int) => x + y
+    val f2 = (y: Int) => y * 2
+
+    val f3 = f1.tupled andThen f2
+
+    println(f3((1, 2)))
+
+    val f4 = (x: Int, y: Int) => (x * 10, y)
+    val f5 = (x: Tuple2[Int, Int]) => x._2 + x._1
+    val f6 = f4.tupled andThen f5
+
+    println(f6(1, 4))
+
+    val f7 = (x: Int, y: Int, z: Int) => x * y * z
+
+    val f8 = f7.tupled andThen f2
+    //    val f9 = f7.tupled compose  f2
+
+    println(f8(1, 2, 3))
+
+    def f(s: String) = "f(" + s + ")"
+
+    def g(s: String) = "g(" + s + ")"
+
+    val fComposeG = f _ compose g _
+    println(fComposeG("yay"))
+
+    val fAndThenG = f _ andThen g _
+
+    println(fAndThenG("yay"))
+    //偏函数（）
+    val one: PartialFunction[Int, String] = {case 1 => "one"}
+    println(one.isDefinedAt(1))
+    println(one.isDefinedAt(2))
+    println(one(1))
+
+    val two: PartialFunction[Int, String] = {case 2 => "two"}
+    val three: PartialFunction[Int, String] = {case 3 => "three"}
+    val wildcard: PartialFunction[Int, String] = {case _ => "something else"}
+    val partial = one orElse two orElse three orElse wildcard
+    println(partial(5))
+    println(partial(4))
+    println(partial(3))
+    println(partial(1))
+
+    // case  使用
+    List(1, 2, 3, "hello", "world").filter({
+      case num: Int => num > 1
+      case _ => false
+    }).foreach(println _)
+  }
+
+  @Test
+  def testParameter(): Unit = {
+    val param = List(Some(), None, None, Nil, List(1, 2, 3), List()) zip List("aaa", "bbb", "ccc", "ddd", "eee", "fff")
+
+    val add = sum _
+    //    val check: PartialFunction[T, Boolean] = {case T => false}
+    //    val result = param.toStream.filter(item => check(item._1)).take(1)
+    //    println(result.isEmpty)
+
+  }
+
+  def sum(i: Int)(j: Int)(k: Int): Int = {
+    i + j + k
+  }
+
+  val add = (a: Int, f: Int => Int) => f(a)
+
+  @Test
+  def testString(): Unit = {
+    println("My age is %d".format(100))
+  }
+
+
+  @Test
+  def testRecursion(): Unit = {
+    @annotation.tailrec
+    def go(n: Int, num: Int): Int = {
+      if (n < 1) num else go(n - 1, n * num)
+    }
+
+    println(go(10, 1))
+  }
+
+
+  @Test
+  def testFib(): Unit = {
+    //    @annotation.tailrec
+    def fib(n: Int): Int = if (n < 2) n else fib(n - 1) + fib(n - 2)
+
+    println(fib(3))
+  }
+
+  @Test
+  def testFuction(): Unit = {
+
+  }
+
+  def curry[A, B, C](f: (A, B) => C): A => (B => C) = {
+    (a: A) => (b: B) => f(a, b)
+  }
+
+  def uncurry[A, B, C](f: A => B => C): (A, B) => C = {
+    (a: A, b: B) => f(a)(b)
+  }
+
+  def compose[A, B, C](f: B => C, g: A => B): A => C = {
+    a: A => f(g(a))
+  }
+
+  def operationToLog(msg: String): ((Boolean, String)) => ((Boolean, String)) = {
+    a: (Boolean, String) => a
+  }
+
+  def temp(a: Int, f: () => String) {
+
+  }
+
+
+  @Test
+  def testStream() {
+    val stream = Stream.Stream(1, 2, 3, 4, 5)
+    println(stream)
+
+    val other = 20;
+    println(addNum(23))
+  }
+
+  val other = 10
+  val addNum = (x: Int) => x + other
+  //  这是函数  函数可单独存在 可赋值给其他常量
+  (a: Int, b: Int) => a + b
+  val a = (a: Int, b: Int) => a + b
+
+  //  这是方法  方法需要调用  无法直接赋值给常量 可转化为函数后赋值
+  def ddd(a: Int, b: Int) = a + b
+
+  //  val f = ddd     无法直接赋值给常量
+  val f = ddd _ //可转化为函数后赋值 ddd _ 即是把方法转化为函数
+
+  val addThem1 = new Function2[Int, Int, Int] {
+    def apply(a: Int, b: Int) = a + b
+  }
+  val addThem2 = new ((Int, Int) => Int) {
+    def apply(a: Int, b: Int) = a + b
+  }
 }
