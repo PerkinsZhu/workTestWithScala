@@ -70,3 +70,6 @@ libraryDependencies += "junit" % "junit" % "4.12" % Test
 libraryDependencies += "org.mockito" % "mockito-all" % "2.0.2-beta" % Test
 // https://mvnrepository.com/artifact/org.scalaz/scalaz-core
 libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.0-M22"
+
+// https://mvnrepository.com/artifact/org.typelevel/cats-core
+libraryDependencies += "org.typelevel" %% "cats-core" % "1.1.0"

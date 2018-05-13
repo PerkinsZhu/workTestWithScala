@@ -63,6 +63,27 @@ class ScalazTest {
     Apply[Option].apply2(some(1), some(2))((a, b) => a + b)
 //    Traverse[List].traverse(List(1, 2, 3))(i => some(i))
   }
+
+  @Test
+  def testCats(): Unit ={
+    import cats.Show
+    import cats.instances.int.catsStdShowForInt
+    val showInt=Show[Int]
+    val r:String=showInt.show(1212312)
+    println(r)
+    import cats.instances.list.catsStdShowForList
+    print(Show[List[Int]].show(List(1,2,3,4,5)))
+
+
+    import cats.syntax.show._
+    import cats.instances.int.catsStdShowForInt
+    println(List(1,2,3,4).show())
+
+
+  }
+
+
+
 }
 
 trait Tellable[T] {
