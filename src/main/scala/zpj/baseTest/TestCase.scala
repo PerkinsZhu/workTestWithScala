@@ -10,6 +10,7 @@ import org.scalatest.FlatSpec
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
 import scala.collection.mutable
+import scala.util.Try
 
 /**
   * Created by PerkinsZhu on 2017/12/14 19:21.
@@ -215,14 +216,22 @@ class UtilTest {
 
     println(fAndThenG("yay"))
     //偏函数（）
-    val one: PartialFunction[Int, String] = {case 1 => "one"}
+    val one: PartialFunction[Int, String] = {
+      case 1 => "one"
+    }
     println(one.isDefinedAt(1))
     println(one.isDefinedAt(2))
     println(one(1))
 
-    val two: PartialFunction[Int, String] = {case 2 => "two"}
-    val three: PartialFunction[Int, String] = {case 3 => "three"}
-    val wildcard: PartialFunction[Int, String] = {case _ => "something else"}
+    val two: PartialFunction[Int, String] = {
+      case 2 => "two"
+    }
+    val three: PartialFunction[Int, String] = {
+      case 3 => "three"
+    }
+    val wildcard: PartialFunction[Int, String] = {
+      case _ => "something else"
+    }
     val partial = one orElse two orElse three orElse wildcard
     println(partial(5))
     println(partial(4))
@@ -405,6 +414,18 @@ class UtilTest {
 
   }
 
-  case class LittleStudent(override val name: String, override val age: Int, override val little: Boolean, bigAge: Int) extends Student(name, age, little)
+  abstract class Person(name: String, age: Int)
+
+  case class LittleStudent(name: String, age: Int, little: Boolean, bigAge: Int) extends Person(name, age)
+
+  @Test
+  def testTry(): Unit = {
+    println(scala.util.Try(Integer.parseInt("")).toOption)
+  }
+
+
+  @Test
+  def test02(): Unit = {
+  }
 
 }
