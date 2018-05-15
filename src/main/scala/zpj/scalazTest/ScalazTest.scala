@@ -5,6 +5,7 @@ import java.util.Date
 import cats.{Monoid, Semigroup}
 import org.junit.Test
 
+import scala.concurrent.{ExecutionContext, Future}
 import scalaz.Apply
 
 /**
@@ -99,8 +100,8 @@ class ScalazTest {
     println("11" === "222")
 
     import cats.instances.long._
-    implicit val dateEqual=Eq.instance[Date]{(date1,date2)=>
-      date1.getTime===date2.getTime
+    implicit val dateEqual = Eq.instance[Date] { (date1, date2) =>
+      date1.getTime === date2.getTime
     }
 
     val x = new Date()
@@ -110,15 +111,32 @@ class ScalazTest {
   }
 
   @Test
-  def testMonid(): Unit ={
+  def testMonid(): Unit = {
     val intAdditionMonoid: Monoid[Int] = new Monoid[Int] {
       def empty: Int = 0
+
       def combine(x: Int, y: Int): Int = x + y
     }
+
+    def combineAll[A: Monoid](as: List[A]): A = as.foldLeft(Monoid[A].empty)(Monoid[A].combine)
+    import cats.instances.all._
+
+    combineAll(List(1, 2, 3))
+    // res4: Int = 6
+
+    combineAll(List("hello", " ", "world"))
+    // res5: String = hello world
+
+    combineAll(List(Map('a' -> 1), Map('a' -> 2, 'b' -> 3), Map('b' -> 4, 'c' -> 5)))
+    // res6: scala.collection.immutable.Map[Char,Int] = Map(b -> 7, c -> 5, a -> 3)
+
+    combineAll(List(Set(1, 2), Set(2, 3, 4, 5)))
+    // res7: scala.collection.immutable.Set[Int] = Set(5, 1, 2, 3, 4)
+
   }
 
   @Test
-  def testSemigroup(): Unit ={
+  def testSemigroup(): Unit = {
     import cats.instances.all._
     import cats.syntax.semigroup._
 
@@ -155,8 +173,79 @@ class ScalazTest {
     // res9: Boolean = true
   }
 
+  @Test
+  def testOptionMonoid(): Unit = {
+    val list = List(NonEmptyList(1, List(2, 3)), NonEmptyList(4, List(5, 6)))
+    val lifted = list.map(nel => Option(nel))
+    println(list)
+    println(lifted)
+    Monoid.combineAll(lifted)
+  }
+
+  import cats.syntax.semigroup._
+
+  implicit def optionMonoid[A: Semigroup]: Monoid[Option[A]] = new Monoid[Option[A]] {
+    def empty: Option[A] = None
+
+    def combine(x: Option[A], y: Option[A]): Option[A] =
+      x match {
+        case None => y
+        case Some(xv) =>
+          y match {
+            case None => x
+            case Some(yv) => Some(xv |+| yv)
+          }
+      }
+  }
+
+
+  @Test
+  def testType(): Unit = {
+    def showInfo[A, M[T]](a: M[A]): Unit = {
+      println(a)
+    }
+
+    showInfo(List(2.3, 43, 4))
+  }
+
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+//  @Test
+  /*def testTraversable(): Unit = {
+    val f = (a: Int) => Future[Int] {a}
+//    traverseFuture[Int, Int](List(1, 23, 4))(f)
+
+    implicit val functorForOption: Functor[Option] = new Functor[Option] {
+      def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa match {
+        case None => None
+        case Some(a) => Some(f(a))
+      }
+    }
+
+  }*/
+
+//  def traverseFuture[A, B](as: List[A])(f: A => Future[B])(implicit ec: ExecutionContext): Future[List[B]] = Future.traverse(as)(f)
 
 }
+
+trait Functor[F[_]] {
+  def map[A, B](fa: F[A])(f: A => B): F[B]
+}
+
+object NonEmptyList {
+  implicit def nonEmptyListSemigroup[A]: Semigroup[NonEmptyList[A]] =
+    new Semigroup[NonEmptyList[A]] {
+      def combine(x: NonEmptyList[A], y: NonEmptyList[A]): NonEmptyList[A] = x ++ y
+    }
+}
+
+final case class NonEmptyList[A](head: A, tail: List[A]) {
+  def ++(other: NonEmptyList[A]): NonEmptyList[A] = NonEmptyList(head, tail ++ other.toList)
+
+  def toList: List[A] = head :: tail
+}
+
 
 trait Tellable[T] {
   def tell(t: T): String

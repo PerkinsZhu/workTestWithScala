@@ -1,7 +1,15 @@
 package zpj.baseTest
 
+import java.text.SimpleDateFormat
+import java.time.{Instant, LocalDate, LocalTime}
+import java.util.Date
+
+import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
+import play.api.libs.json.{JsError, JsSuccess, Json}
+
+import scala.collection.mutable
 
 /**
   * Created by PerkinsZhu on 2017/12/14 19:21.
@@ -29,6 +37,70 @@ class TestCase extends FlatSpec {
 
 
 class UtilTest {
+
+  @Test
+  def getTime(): Unit = {
+    val oneDay = 1000L * 60 * 60 * 24
+    // 获取指定时间
+    /*    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-01 00:00:000").getTime
+        println(now)
+        println(now -1000 * 60 *23)
+        val start = now - 1000 * 60 * 60 * 24 * 3
+        print(start +" --->  "+now )
+        println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
+        println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
+        println(new DateTime(1519574404352L).toString("yyyy-MM-dd HH:mm:ss"))
+        println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))*/
+    // 计算时间段
+    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2017-09-01 00:00:001").getTime
+    println(now)
+    val temp = now - (oneDay * 30)
+    println(temp)
+    val start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-02 00:00:000").getTime
+    println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(temp).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
+    println(start + "---" + (start - temp) / oneDay)
+
+    val startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-05-14 00:00:000").getTime
+
+    val endTime = new Date().getTime
+
+    println(s"$startTime -- $endTime---${(endTime - startTime) / 1000}")
+
+
+    /* 术禾召回率统计时间
+     println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-26 00:00:000").getTime)
+     println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-28 00:00:000").getTime)
+ */
+  }
+
+
+  @Test
+  def testTime(): Unit = {
+    println(new DateTime(1523934330251L).toString("yyyy-MM-dd HH:mm:ss"))
+    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-05-14 00:00:000").getTime
+    println(now)
+    val time = DateTime.now()
+    val time2 = new Date()
+    val utcTime = DateTime.now(DateTimeZone.UTC)
+    println(time2 + "--->" + time2.getTime)
+    println(time + "--->" + time.getMillis)
+    println(utcTime + "--->" + utcTime.getMillis)
+    println(utcTime.toString("yyyy-MM-dd HH:mm:ss"))
+    println(time.toString("yyyy-MM-dd HH:mm:ss"))
+    println(time.withZone(DateTimeZone.forOffsetHours(8)).toString("yyyy-MM-dd HH:mm:ss"))
+
+  }
+
+
+  @Test
+  def testJavaTime(): Unit = {
+    println(LocalDate.now())
+    println(LocalTime.now())
+    println(Instant.now())
+  }
+
 
   @Test
   def testSplit(): Unit = {
@@ -280,4 +352,59 @@ class UtilTest {
     println((l1.::(None.getOrElse(""))))
     println((l1.::(Some("===").get)))
   }
+
+  case class Student(name: String, age: Int, little: Boolean)
+
+  @Test
+  def testSort(): Unit = {
+    println(List(Student("aa", 23, false), Student("bb", 12, true), Student(" cc", 52, false)).sortBy(!_.little))
+  }
+
+  @Test
+  def testPlayJson(): Unit = {
+    val data = Json.parse("{\n  \"name\" : \"Watership Down\",\n  \"location\" : {\n    \"lat\" : 51.235685,\n    \"long\" : -1.309197\n  },\n  \"residents\" : [ {\n    \"name\" : \"Fiver\",\n    \"age\" : 4,\n    \"role\" : null\n  }, {\n    \"name\" : \"Bigwig\",\n    \"age\" : 6,\n    \"role\" : \"Owsla\"\n  } ]\n}")
+    println(data)
+    println(data \ "name")
+    println(data \\ "name")
+    println((data \ "name").validate[Int])
+    println((data \ "name").validate[String])
+
+    (data \ "name").validate[Int] match {
+      case s: JsSuccess[String] => println(s.get)
+      case ex: JsError => println(JsError.toJson(ex).toString())
+    }
+    println("asfEDRFWwerf23".toLowerCase)
+  }
+
+  def creatArray[A: Manifest](a: A, b: A): Unit = {
+    val r = new Array[A](2)
+    r(0) = a
+    r(1) = b
+    println(r)
+  }
+
+  @Test
+  def testClassType(): Unit = {
+    creatArray[String]("a", "b")
+    List(1, 23, 3)
+  }
+
+  @Test
+  def testOther1(): Unit = {
+    //    val fib: Stream[Int] = 0 #:: fib.scanLeft(1)(_ + _)
+    //    println(fib.take(10).toList)
+
+    val seq = IndexedSeq.empty[Int]
+    val seq2 = mutable.Seq.empty[Int]
+    seq.+("www")
+    seq2.+("www")
+
+    seq.foreach(println _)
+    seq2.foreach(println _)
+
+
+  }
+
+  case class LittleStudent(override val name: String, override val age: Int, override val little: Boolean, bigAge: Int) extends Student(name, age, little)
+
 }
