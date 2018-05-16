@@ -426,6 +426,7 @@ class UtilTest {
 
   @Test
   def test02(): Unit = {
+    (false,"aaa")
   }
 
 }
