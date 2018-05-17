@@ -83,11 +83,7 @@ object WSDemo {
 
   @Test
   def testDemo(): Unit = {
-    wsClient.url("").post(Json.obj()).map(respond => {
-      respond.body
-      respond.status
-      val json = Json.parse(respond.body)
-    })
+
   }
 
 }

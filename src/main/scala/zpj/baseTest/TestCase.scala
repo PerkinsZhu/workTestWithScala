@@ -2,7 +2,7 @@ package zpj.baseTest
 
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
-import java.util.Date
+import java.util.{Comparator, Date}
 
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
@@ -426,7 +426,54 @@ class UtilTest {
 
   @Test
   def test02(): Unit = {
-    (false,"aaa")
+    (false, "aaa")
   }
 
+
+  @Test
+  def testOrdering(): Unit = {
+    //    上下文界定测试
+    val jack = Student("jack", 23, false)
+    val tome = Student("tome", 26, false)
+
+    implicit val stuOrder = new Ordering[Student] {
+      override def compare(x: Student, y: Student): Int = x.age - y.age
+    }
+
+    println(max(jack, tome))
+  }
+
+  @Test
+  def testBound(): Unit = {
+    //    上下文绑定测试
+    val jack = Student("jack", 23, false)
+    val tome = Student("tome", 26, false)
+    println(max2(jack, tome))
+    println(max3(jack, tome))
+  }
+
+
+
+  /**
+    * 上下文界定 通过T:M 形式来指定该方法的作用域中需要存在M[T]的隐式参数
+    * 如下 [T: Ordering]的存在则限定了该方法的调用处必须存在一个隐式参数order
+    * 如：zpj.baseTest.UtilTest#testOrdering()
+    */
+  def max[T: Ordering](a: T, b: T)(implicit order: Ordering[T]) = {
+    if (order.compare(a, b) > 0) a else b
+  }
+
+  //  上下文绑定到时候，该隐式变量必须存在。否则zpj.baseTest.UtilTest.max2无法从上下文中找到该隐式变量
+  implicit val stuOrder = new Ordering[Student] {
+    override def compare(x: Student, y: Student): Int = x.age - y.age
+  }
+
+  def max2[T: Ordering](a: T, b: T) = {
+    val order = implicitly[Ordering[T]]
+    if (order.compare(a, b) > 0) a else b
+  }
+//  也可以直接使用隐式参数，这时不是上下文绑定。而是从上下文中自动找到的隐式变量
+  def max3[T: Ordering](a: T, b: T)(implicit order: Ordering[T]) = {
+    if (order.compare(a, b) > 0) a else b
+  }
 }
