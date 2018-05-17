@@ -73,3 +73,5 @@ libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.0-M22"
 
 // https://mvnrepository.com/artifact/org.typelevel/cats-core
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.1.0"
+
+scalacOptions += "-Ypartial-unification"

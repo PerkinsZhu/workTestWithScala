@@ -41,10 +41,6 @@ class MonoidTest {
     import cats.syntax.semigroup._
     items.foldLeft(Monoid[A].empty)(_ |+| _)
   }
-
-
-
-
 }
 
 
