@@ -4,11 +4,13 @@ import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util.{Comparator, Date}
 
+import cats.Monoid
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
 import play.api.libs.json.{JsError, JsSuccess, Json}
 
+import scala.annotation.tailrec
 import scala.collection.mutable
 import scala.util.Try
 
@@ -453,7 +455,6 @@ class UtilTest {
   }
 
 
-
   /**
     * 上下文界定 通过T:M 形式来指定该方法的作用域中需要存在M[T]的隐式参数
     * 如下 [T: Ordering]的存在则限定了该方法的调用处必须存在一个隐式参数order
@@ -472,8 +473,84 @@ class UtilTest {
     val order = implicitly[Ordering[T]]
     if (order.compare(a, b) > 0) a else b
   }
-//  也可以直接使用隐式参数，这时不是上下文绑定。而是从上下文中自动找到的隐式变量
+
+  //  也可以直接使用隐式参数，这时不是上下文绑定。而是从上下文中自动找到的隐式变量
   def max3[T: Ordering](a: T, b: T)(implicit order: Ordering[T]) = {
     if (order.compare(a, b) > 0) a else b
   }
+
+  @Test
+  def testOther(): Unit = {
+
+    //    (1 to 1000).par.sum
+    val list = List(2, 0, 1, 4, 12, 5)
+    println(list.zipWithIndex)
+    println(list.zipWithIndex.sorted)
+    println(list.zipWithIndex.sorted.reverse)
+    val seq = (1 to 200)
+    println(Seq("a", "fd", "sw", "a", "wer", "wer", "ssw", "sw").groupBy(a => a).mapValues(_.length))
+    println(Map("a" -> Seq(1, 2, 3), "b" -> Seq(2, 4, 4)).mapValues(_.length))
+    println("wwekUIOHLkj".capitalize)
+    println("wwekUIOHLkj".slice(2, 5))
+
+
+    import sys.process._
+    import java.net.URL
+    import java.io.File
+    new URL("https://my.oschina.net/joymufeng/blog/353654") #> new File("G:\\test\\abc.html") !!
+  }
+
+  @Test
+  def testGame(): Unit = {
+    val temp = Stream.iterate(0)(_ + 0)
+    //    val fibs: Stream[Int] = 0 #:: fibs.scanLeft(1) {_ + _}
+    //    println(fibs take 10 toList)
+
+    val seq = Seq(1, 2, 3)
+    println(seq.scanLeft(11)(_ + _))
+
+    println(Stream.iterate(0)(_ + 0).scanLeft(1)(_ + _).take(100).toList)
+  }
+
+  @Test
+  def testGame2(): Unit = {
+    println(List("1", "2", "3").foldLeft("1111")(strMonoid.combine(_, _)))
+    println(List("1", "2", "3").foldLeft("1111")(strMonoidScalaz.append(_, _)))
+  }
+
+  val strMonoidScalaz = new scalaz.Monoid[String] {
+    override def zero: String = ""
+
+    override def append(f1: String, f2: => String): String = f1 + f2
+  }
+  val strMonoid = new Monoid[String] {
+    override def empty: String = ""
+
+    override def combine(x: String, y: String): String = x + y
+  }
+
+
+  /**
+    * Y-组合子的实现函数
+    *
+    * @param function 需要被递归执行的函数
+    * @tparam T 函数递归元素类型
+    * @return 可递归执行的函数
+    */
+  def Y[T](function: (T => T) => (T => T)): (T => T) = function(Y(function))(_)
+
+  @tailrec
+  val fibonacci = Y[Int] { f =>
+    n =>
+      n match {
+        case x if x <= 1 => x
+        case _ => f(n - 2) + f(n - 1)
+      }
+  }
+
+  @Test
+  def testY(): Unit = {
+    (0 to 10) foreach { i => println(fibonacci(i)) }
+  }
+
 }

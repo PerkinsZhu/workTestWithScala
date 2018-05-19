@@ -5,8 +5,10 @@ package zpj.fpinscala
   **/
 object PurelyFunctionalParallelism {
   def main(args: Array[String]): Unit = {
-    println(sum(1 to 1000))
-    println(sum3(1 to 1000))
+    //    println(sum(1 to 1000))
+    //    println(sum3(1 to 1000))
+    //    (1 to 1000000000).map(_ => (1 to 1000000000)).par.map(_.sum).map(println _)
+
   }
 
   def sum(ints: IndexedSeq[Int]): Int = {
@@ -50,7 +52,6 @@ object Par {
 
   def map2[A](a: A, b: A)(f: (A, A) => A): A = f(a, b)
 
-  def fork[A](a :  => A):Par[A] = Par(a)
 
 }
 
