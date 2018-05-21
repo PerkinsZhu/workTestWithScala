@@ -9,6 +9,7 @@ import akka.stream._
 import akka.stream.scaladsl._
 import akka._
 import akka.util.ByteString
+import org.junit.Test
 import org.reactivestreams.{Publisher, Subscriber}
 
 import scala.concurrent._
@@ -329,7 +330,7 @@ object Demo {
   }
 
   def main(args: Array[String]): Unit = {
-    test19()
+    test06()
 //    test()
   }
   implicit val system = ActorSystem("QuickStart")

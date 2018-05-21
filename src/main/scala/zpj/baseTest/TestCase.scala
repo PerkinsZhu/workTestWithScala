@@ -147,6 +147,14 @@ class UtilTest {
     println("lkwersdlfgpjef1sd".matches("(.*sd.*|.*地址.*"))
   }
 
+  @Test
+  def testMatch(): Unit = {
+    val res = "hello" match {
+      case "ss" => println(22)
+      case "hello" => println(11112)
+    }
+    println(res)
+  }
 
   @Test
   def runList(): Unit = {
@@ -552,5 +560,22 @@ class UtilTest {
   def testY(): Unit = {
     (0 to 10) foreach { i => println(fibonacci(i)) }
   }
+
+  @Test
+  def testLoop(): Unit = {
+    val list = 1 to 20 toList
+
+    println(list.scan(10)(_ + _))
+    println(list.scanLeft(10)(_ + _))
+    println(list.scanRight(10)(_ + _))
+    println(list.reduce(_ + _))
+    println(list.reduceLeft(_ + _))
+    println(list.reduceRight(_ + _))
+    println(list.fold(10)(_ + _))
+    println(list.foldLeft(10)(_ + _))
+    println(list.foldRight(10)(_ + _))
+
+  }
+
 
 }
