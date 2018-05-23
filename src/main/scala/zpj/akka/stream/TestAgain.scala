@@ -358,12 +358,28 @@ class TestAgain {
 
   @Test
   def testCombine(): Unit = {
-    val sourceOne = Source(List(1))
-    val sourceTwo = Source(List(2))
-    val merged = Source.combine(sourceOne, sourceTwo)(Merge(_))
-    merged.runWith(Sink.fold(0)(_ + _)).foreach(println _)
+    /*
+    //使用combine组合多个数据源
+        val sourceOne = Source(List(1))
+        val sourceTwo = Source(List(2))
+        val merged = Source.combine(sourceOne, sourceTwo)(Merge(_))
+        merged.runWith(Sink.fold(0)(_ + _)).foreach(println _)
+    */
 
 
+    val matValuePoweredSource = Source.actorRef[String](bufferSize = 100, overflowStrategy = OverflowStrategy.dropHead)
+    val (actorRef, source) = matValuePoweredSource.preMaterialize()
+    for (i <- 1 to 10000) {
+      actorRef ! "Hello!" + i
+    }
+
+    val sendRmotely = Sink.actorRef(actorRef, "Done")
+    val localProcessing = Sink.foreach[Int](println)
+
+    val sink = Sink.combine(sendRmotely, localProcessing)(Broadcast[Int](_))
+
+    Source(List(0, 1, 2)).runWith(sink)
+//      source.runForeach(println)
   }
 
 }
