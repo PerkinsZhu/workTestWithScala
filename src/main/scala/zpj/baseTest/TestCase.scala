@@ -574,8 +574,11 @@ class UtilTest {
     println(list.fold(10)(_ + _))
     println(list.foldLeft(10)(_ + _))
     println(list.foldRight(10)(_ + _))
-
   }
 
+  @Test
+  def testTail(): Unit = {
+    println(List(1, 2, 3, 4, 5).tail)
+  }
 
 }
