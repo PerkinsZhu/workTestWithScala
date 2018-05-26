@@ -2,6 +2,7 @@ package zpj.baseTest
 
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
+import java.util.concurrent.TimeUnit
 import java.util.{Comparator, Date}
 
 import cats.Monoid
@@ -579,6 +580,12 @@ class UtilTest {
   @Test
   def testTail(): Unit = {
     println(List(1, 2, 3, 4, 5).tail)
+    println("".trim == "")
   }
+@Test
+  def testTime3(): Unit ={
+  println(TimeUnit.MILLISECONDS.toNanos(16L))
+}
+
 
 }
