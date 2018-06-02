@@ -1,5 +1,8 @@
+import org.junit.Test;
 import zpj.baseTest.Student;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -8,38 +11,61 @@ import java.util.concurrent.Executors;
  **/
 public class BaseTest {
     public static void main(String[] args) {
-//        new BaseTest().testThread();
+        //        new BaseTest().testThread();
         new BaseTest().testT();
     }
 
-    class Speak{
+
+    @Test
+    public void testList() {
+        List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        list.add("e");
+
+        System.out.println(list);
+        List temp = list.subList(0, list.size()-1);
+        System.out.println(temp);
+        System.out.println(list);
+    }
 
 
-        void show(){
+    class Speak {
+
+
+        void show() {
             System.out.printf(" i am speak");
-        };
-        public void  read(){
+        }
+
+        ;
+
+        public void read() {
             System.out.printf(" i am speak read");
         }
     }
-    class Person extends Speak{
+
+    class Person extends Speak {
 
         @Override
         public void show() {
             System.out.printf("---------- i am show");
         }
     }
-    class TestAny <T extends Speak>{
+
+    class TestAny<T extends Speak> {
         Speak obj = new Speak();
-        T t = (T)obj;
-        public void test(){
+        T t = (T) obj;
+
+        public void test() {
             t.show();
             t.read();
         }
 
     }
 
-    private void  testT(){
+    private void testT() {
         TestAny any = new TestAny<Person>();
         any.test();
 
