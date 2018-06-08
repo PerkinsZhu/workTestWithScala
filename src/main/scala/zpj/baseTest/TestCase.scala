@@ -9,10 +9,12 @@ import cats.Monoid
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import zpj.catsTest.chapter01.JsObject
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.concurrent.Future
 import scala.util.Try
 
 /**
@@ -582,10 +584,39 @@ class UtilTest {
     println(List(1, 2, 3, 4, 5).tail)
     println("".trim == "")
   }
-@Test
-  def testTime3(): Unit ={
-  println(TimeUnit.MILLISECONDS.toNanos(16L))
-}
 
+  @Test
+  def testTime3(): Unit = {
+    println(TimeUnit.MILLISECONDS.toNanos(16L))
+  }
+
+  @Test
+  def testTime2(): Unit = {
+    val time = DateTime.now()
+    println(time.toDate.getTime)
+    println(time.getMillis)
+
+    println(List[Int](1, 23, 2, 3, 43).sortBy(_.toInt))
+
+    println(List(1, 2, 3).map(_ + 2))
+
+    println(System.getProperty("user.dir"))
+  }
+
+  @Test
+  def testFile(): Unit = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+    //    println(List(Future(1), Future(2), Future(3)))
+    //    println(List(List(1), List(2), List(3)).flatten)
+
+
+    println(List(Future(1), Future(2), Future(3)).foldLeft(Future(List.empty[Int]))((a, b) => a.flatMap(list => b.map(list.:+(_)))))
+    val future = List(Future(Json.obj("a" -> 1)), Future(Json.obj("b" -> 2)), Future(Json.obj("c" -> 3))).foldLeft(Future(List.empty[JsValue]))((a, b) => a.flatMap(list => b.map(list.:+(_))))
+
+    println(List(List(1), List(2), List(3)).foldLeft(List.empty[Int])((a, b) => a ::: b))
+
+    Thread.sleep(1000)
+    println(future)
+  }
 
 }

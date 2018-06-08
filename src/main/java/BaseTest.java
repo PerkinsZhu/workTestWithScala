@@ -1,4 +1,6 @@
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Test;
+import play.api.libs.json.Json;
 import zpj.baseTest.Student;
 
 import java.util.ArrayList;
@@ -117,5 +119,14 @@ public class BaseTest {
         thread.interrupt();
         System.out.println(" i  AM over ");
     }
+
+
+    @Test
+    public void testJson(){
+        String str = "{\"errcode\":40006,\"errmsg\":\"invalid meida size hint: [tKd7rA09183723]\"}";
+//        JsonNode json = play.libs.Json.parse(str);
+//        String media_id = json.get("media_id").asText();
+    }
+
 }
 

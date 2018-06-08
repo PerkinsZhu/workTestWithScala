@@ -1,5 +1,6 @@
 package zpj.catsTest.chapter03
 
+import org.apache.commons.lang3.StringUtils
 import org.junit.Test
 import zpj.catsTest.chapter01.Printable
 
@@ -7,6 +8,14 @@ import zpj.catsTest.chapter01.Printable
   * Created by PerkinsZhu on 2018/5/17 14:52
   **/
 class TestOther {
+
+
+  @Test
+  def testSplit(): Unit ={
+    val temp = "nihao;sdfwe；sdfsdf;dfsf；sdferee;;;;;；；;".split("(；|;)").filter(!StringUtils.isBlank(_))
+      println(temp.size)
+      temp.foreach(println)
+  }
 
   @Test
   def testString(): Unit = {
