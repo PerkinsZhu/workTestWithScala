@@ -75,3 +75,5 @@ libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.0-M22"
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.1.0"
 
 scalacOptions += "-Ypartial-unification"
+
+libraryDependencies += "cn.playscala" % "play-mongo_2.12" % "0.1.0"
