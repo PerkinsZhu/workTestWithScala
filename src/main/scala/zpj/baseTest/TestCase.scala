@@ -619,4 +619,12 @@ class UtilTest {
     println(future)
   }
 
+  @Test
+  def testLoopDea(): Unit = {
+    while (true) {
+      Thread.sleep(1000)
+      println("----")
+    }
+  }
+
 }
