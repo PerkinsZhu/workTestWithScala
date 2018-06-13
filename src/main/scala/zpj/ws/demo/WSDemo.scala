@@ -4,12 +4,16 @@ import java.lang.Exception
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
+import akka.util.ByteString
 import org.junit.Test
 import play.api.libs.json.{JsValue, Json}
+import play.api.libs.ws.{BodyWritable, InMemoryBody}
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
+import zpj.tools.EncodeTest
 
 import scala.concurrent.{Await, Future}
 import concurrent.duration._
+import scala.io.Source
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success}
 
@@ -35,7 +39,9 @@ object WSDemo {
   }
 
   def main(args: Array[String]): Unit = {
-    test03()
+    //    test03()
+//    testForm
+    testJson
     Thread.sleep(4000)
   }
 
@@ -82,8 +88,35 @@ object WSDemo {
   }
 
   @Test
-  def testDemo(): Unit = {
+  def testForm(): Unit = {
+    import play.api.libs.ws.DefaultBodyWritables.writeableOf_urlEncodedForm
+    val seqMap = Map[String, Seq[String]]("robotId" -> Seq("5b1a4d623e00004d034c947a"), "channel" -> Seq("web"), "userId" -> Seq("web-user"), "sessionId" -> Seq("1519889667217"), "question" -> Seq("hello"))
+    wsClient.url("http://192.168.10.150:8081/cloud/robot/answer")
+      .post(seqMap).onComplete({
+      case Success(data) => println(data.body)
+      case Failure(ex) => ex.printStackTrace()
+    })
+  }
 
+  def testJson(): Unit ={
+
+
+    implicit val jsonWritable = BodyWritable[JsValue]({ json =>
+      val byteString = ByteString.fromString(json.toString())
+      InMemoryBody(byteString)
+    }, "application/json")
+
+    val json = Json.obj("startTime" -> "20170901", "endTime" -> "20170930", "mercId" -> "你好你就是很慢民资")
+    wsClient.url("http://127.0.0.1:9002/apiTest")
+      .withHttpHeaders("Content-Type" ->"application/json;charset=utf-8")
+      .post(json.toString()).onComplete({
+      case Success(response) =>{
+        response.headers.foreach(println)
+        val body = response.body
+        EncodeTest.findCode(body)
+      }
+      case Failure(ex) => ex.printStackTrace()
+    })
   }
 
 }
