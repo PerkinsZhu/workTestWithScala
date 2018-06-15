@@ -696,8 +696,16 @@ def isRight(data:String,statue:Boolean): Boolean= {
     Thread.sleep(100)
   }
 
+
+  def testLoop(): Unit = {
+    val start = System.currentTimeMillis()
+    1 to 10000 map(i=>{i + 1}) map(i=>{i + 1})
+    println(System.currentTimeMillis() - start)
+  }
+
   def main(args: Array[String]): Unit = {
-    println(Json.obj("name" -> "<p><td width=\"59\" valign=\"top\" style=\"word-break: break-all;\">这是一个图文本答案</td></p>"))
+    testLoop()
+//    println(Json.obj("name" -> "<p><td width=\"59\" valign=\"top\" style=\"word-break: break-all;\">这是一个图文本答案</td></p>"))
 //    testNil("234手动阀")
 //    getTime()
 //    testPartialFunction()
