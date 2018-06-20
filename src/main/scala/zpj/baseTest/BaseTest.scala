@@ -740,8 +740,31 @@ object BaseTest {
     }
   }
 
+  def testFutre(): Unit = {
+    println("-------")
+    Future {
+      Thread.sleep(10)
+      10
+    }.map(i =>{
+      println(DateTime.now().getMillis)
+      i
+    }).map(i =>{
+      println(DateTime.now().getMillis)
+      i
+    }).map(i =>{
+      println(DateTime.now().getMillis)
+      i
+    }).map(i =>{
+      println(DateTime.now().getMillis)
+      i
+    })
+
+Thread.sleep(1000)
+  }
+
   def main(args: Array[String]): Unit = {
-    testLoop()
+    testFutre()
+    //    testLoop()
     //    println(Json.obj("name" -> "<p><td width=\"59\" valign=\"top\" style=\"word-break: break-all;\">这是一个图文本答案</td></p>"))
     //    testNil("234手动阀")
     //    getTime()
