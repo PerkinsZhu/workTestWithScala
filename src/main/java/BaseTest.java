@@ -14,7 +14,18 @@ import java.util.concurrent.Executors;
 public class BaseTest {
     public static void main(String[] args) {
         //        new BaseTest().testThread();
-        new BaseTest().testT();
+        new BaseTest().testJVM();
+
+    }
+
+    private void testJVM() {
+        List<Object> list = new ArrayList<>();
+        while(true) {
+            list.add(new Object[1024*254]);
+            if(list.size()>1000){
+                list.clear();
+            }
+        }
     }
 
 
@@ -28,7 +39,7 @@ public class BaseTest {
         list.add("e");
 
         System.out.println(list);
-        List temp = list.subList(0, list.size()-1);
+        List temp = list.subList(0, list.size() - 1);
         System.out.println(temp);
         System.out.println(list);
     }
@@ -122,10 +133,10 @@ public class BaseTest {
 
 
     @Test
-    public void testJson(){
+    public void testJson() {
         String str = "{\"errcode\":40006,\"errmsg\":\"invalid meida size hint: [tKd7rA09183723]\"}";
-//        JsonNode json = play.libs.Json.parse(str);
-//        String media_id = json.get("media_id").asText();
+        //        JsonNode json = play.libs.Json.parse(str);
+        //        String media_id = json.get("media_id").asText();
     }
 
 }

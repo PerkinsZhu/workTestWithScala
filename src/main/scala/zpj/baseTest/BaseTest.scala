@@ -27,17 +27,18 @@ import scala.collection.parallel.immutable
 import scala.compat.java8.JFunction22
 import scala.concurrent.ExecutionContext._
 import scala.util.control.NonFatal
+
 /**
   * Created by PerkinsZhu on 2017/9/22 16:11. 
   */
 object BaseTest {
 
-  def showEach(ele:Int*) = {
+  def showEach(ele: Int*) = {
     ele.foreach(println _)
   }
 
-  def testList():Unit={
-    showEach(List(1,2,3):_*)
+  def testList(): Unit = {
+    showEach(List(1, 2, 3): _*)
   }
 
   def testTypeVariable(): Unit = {
@@ -48,9 +49,10 @@ object BaseTest {
         println(car.toString)
         car(0).compareTo(other)
       }
- /* def toCar[M <% Car](mm: M): Unit = {
-        showInfo(Array(mm), AnyRef)
-   }*/
+
+      /* def toCar[M <% Car](mm: M): Unit = {
+             showInfo(Array(mm), AnyRef)
+        }*/
     }
     trait BMWCar[T, C[_]] extends Car {
 
@@ -59,10 +61,12 @@ object BaseTest {
     val carManager = new CarManager()
   }
 
-  case  class  APP(name:String,info:Option[String])
+  case class APP(name: String, info: Option[String])
+
   implicit val formate = Json.format[APP]
+
   def testCaseClass(): Unit = {
-    println(Json.toJson(APP("JACL",None)))
+    println(Json.toJson(APP("JACL", None)))
 
   }
 
@@ -74,8 +78,8 @@ object BaseTest {
     println(a ne b)
   }
 
-  lazy val t1 = {println("i am t1");10}
-  lazy val t2 = {println("i am t2");20} // lazy 只能对val进行修饰
+  lazy val t1 = {println("i am t1"); 10}
+  lazy val t2 = {println("i am t2"); 20} // lazy 只能对val进行修饰
   def testLazy(): Unit = {
     t1
     t2
@@ -85,35 +89,39 @@ object BaseTest {
   }
 
   def testStream(): Unit = {
-/*    val data = Stream(1,2,3,4,5)
-    data.foreach(println _)*/
-    show({println("XXXXXX");10/2})
+    /*    val data = Stream(1,2,3,4,5)
+        data.foreach(println _)*/
+    show({println("XXXXXX"); 10 / 2})
   }
-//  def show(x :Int):Unit={
-  def show(x: => Int):Unit={
+
+  //  def show(x :Int):Unit={
+  def show(x: => Int): Unit = {
     println("start..")
-    println(x)//在这里使用x的值的时候才去计算x的值
+    println(x) //在这里使用x的值的时候才去计算x的值
     println("end..")
-    lazy val y = {println("----");x}//注意下面调用了两次y,但是这里的输出语句只执行了一下。而对于x值方法中掉用了两次所以会执行两次x值的运算
-    println(y,y)
+    lazy val y = {println("----"); x} //注意下面调用了两次y,但是这里的输出语句只执行了一下。而对于x值方法中掉用了两次所以会执行两次x值的运算
+    println(y, y)
     val fruit = new Friut {
       override def showInfo: Unit = println("apple")
     }
     fruit.showInfo
-//    constant(10).foreach(println _)
+    //    constant(10).foreach(println _)
     println()
   }
+
   def constant[A](a: A): Stream[A] = cons(a, constant(a))
 
-trait Friut{
-  def showInfo:Unit
-}
+  trait Friut {
+    def showInfo: Unit
+  }
 
-  class A{}
+  class A {}
+
   object B
+
   def testType(): Unit = {
     val a = new A
-    val b:B.type = B
+    val b: B.type = B
     println(b)
   }
 
@@ -122,47 +130,61 @@ trait Friut{
       * 上界是为了强制参数具有某个方法
       * 下界是为了进行类型转换
       */
-    trait Animal{
-      def run():Unit
+    trait Animal {
+      def run(): Unit
 
     }
-    class Tigger extends Animal{
-      override def run: Unit = {println("tigger running ...")}
-      def eat={println("eating.....")}
+    class Tigger extends Animal {
+      override def run: Unit = {
+        println("tigger running ...")
+      }
+
+      def eat = {
+        println("eating.....")
+      }
     }
 
-    def startRun[T <: Animal](an:T){
-      an.run()//为了限定an参数必须具有run()方法则强制指定[T <: Animal]
+    def startRun[T <: Animal](an: T) {
+      an.run() //为了限定an参数必须具有run()方法则强制指定[T <: Animal]
     }
 
-    class Queue[+T](private val leading:List[T],private val trailing:List[T]){
-      def append[U >: T](x:U)= new Queue[U](leading,x::trailing)
+    class Queue[+T](private val leading: List[T], private val trailing: List[T]) {
+      def append[U >: T](x: U) = new Queue[U](leading, x :: trailing)
     }
 
-    def demo02(tiggers:List[Tigger]):List[Animal] = {
-      val animals:List[Animal] = tiggers
+    def demo02(tiggers: List[Tigger]): List[Animal] = {
+      val animals: List[Animal] = tiggers
       animals.foreach(_.run())
       Nil
     }
+
     demo02(List(new Tigger()))
   }
 
   def testNullUnit(): Unit = {
     println(Unit)
     println(Unit)
-    val n:Unit=Unit
+    val n: Unit = Unit
     println(n)
     println(10.asInstanceOf[Unit])
     println(new Student().asInstanceOf[Unit])
-  println("----------------")
+    println("----------------")
     println()
-    class Hello{type Hello;val data= "hello"}
+    class Hello {
+      type Hello;
+      val data = "hello"
+    }
     val a = new Hello
     println(a.data)
     println(a.getClass)
-    object BB{val data="bbbb";override def toString: String = "i am  bbbbb"}
-    class BB{
-    override def toString: String ="i am  class BB ----class---"}
+    object BB {
+      val data = "bbbb";
+
+      override def toString: String = "i am  bbbbb"
+    }
+    class BB {
+      override def toString: String = "i am  class BB ----class---"
+    }
     println(BB)
     println(new BB())
     val time = new DateTime()
@@ -170,15 +192,15 @@ trait Friut{
   }
 
   def testTime(): Unit = {
-/*    println(System.currentTimeMillis)
-    println(new DateTime().getMillis)
-    println(new Date().getTime)*/
+    /*    println(System.currentTimeMillis)
+        println(new DateTime().getMillis)
+        println(new Date().getTime)*/
     println(new DateTime(1523927366922L).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(new DateTime(1513752919598l).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(System.currentTimeMillis)
     println(new DateTime(System.currentTimeMillis).toString("yyyy-MM-dd HH:mm:ss:SSS"))
     println(new SimpleDateFormat("yyy-MM-dd hh:mm:ss").format(new Date(1513762144931l)))
-   println(new DateTime(1513762144931l).withZone(DateTimeZone.forOffsetHours(8)).toString("yyyy-MM-dd hh:mm:ss"))
+    println(new DateTime(1513762144931l).withZone(DateTimeZone.forOffsetHours(8)).toString("yyyy-MM-dd hh:mm:ss"))
 
     val time = new Date().getTime
     val time2 = new DateTime()
@@ -188,58 +210,62 @@ trait Friut{
   }
 
 
-
-//ticket@@@QnoHyTTRFxdTCHlkdMT9ObFuenZ0Tnb9g-p_i0esGpU7j6LKFbk-ra46_Jmog7l-Dz0A-0SAKjUOI7E8KRtfQQ
+  //ticket@@@QnoHyTTRFxdTCHlkdMT9ObFuenZ0Tnb9g-p_i0esGpU7j6LKFbk-ra46_Jmog7l-Dz0A-0SAKjUOI7E8KRtfQQ
   def testFuture(): Unit = {
-    val res = for(i<-doFuture())yield i
+    val res = for (i <- doFuture()) yield i
     println(res)
   }
-  def doFuture():Future[Int]={
-    Future{Thread.sleep(3000);10}
+
+  def doFuture(): Future[Int] = {
+    Future {Thread.sleep(3000); 10}
   }
 
 
   def testConf(): Unit = {
-//    val res = ConfigFactory.load("application.conf")
- /*   val res = ConfigFactory.parseFile(new File("application.conf"))
-    res.entrySet().asScala.foreach(println _)*/
+    //    val res = ConfigFactory.load("application.conf")
+    /*   val res = ConfigFactory.parseFile(new File("application.conf"))
+       res.entrySet().asScala.foreach(println _)*/
   }
 
   def testStream2(): Unit = {
-  /*  val data  = numFrom(1).take(10)
-    val str = 1 #:: 2 #:: 3 #:: Stream.empty
-    data.foreach(i=>{Thread.sleep(100);println(i)})*/
-/*    val powers = (0 until 10 ).view.map(Math.pow(10,_))
-    println(powers(5))*/
-    val v = Vector(1 to 10:_*)
-    v map (1+) map (2*) foreach(println)
+    /*  val data  = numFrom(1).take(10)
+      val str = 1 #:: 2 #:: 3 #:: Stream.empty
+      data.foreach(i=>{Thread.sleep(100);println(i)})*/
+    /*    val powers = (0 until 10 ).view.map(Math.pow(10,_))
+        println(powers(5))*/
+    val v = Vector(1 to 10: _*)
+    v map (1 +) map (2 *) foreach (println)
   }
 
-  def numFrom(num:BigInt):Stream[BigInt]=num #:: numFrom(num+1)
+  def numFrom(num: BigInt): Stream[BigInt] = num #:: numFrom(num + 1)
 
   def threadName = Thread.currentThread.getName
+
   def testPer(): Unit = {
-    val vec = Vector(1 to 10000:_*)
-  //vec.par foreach(i=>{println(i+"--"+Thread.currentThread().getName)})
-    for(i<-(0 to 1000).par ){println(i+threadName)}
-//    val map = new util.HashMap[String,Int]() with mutable.SynchronizedMap[String,Int]
-//    map.put("hello",10)
+    val vec = Vector(1 to 10000: _*)
+    //vec.par foreach(i=>{println(i+"--"+Thread.currentThread().getName)})
+    for (i <- (0 to 1000).par) {println(i + threadName)}
+    //    val map = new util.HashMap[String,Int]() with mutable.SynchronizedMap[String,Int]
+    //    map.put("hello",10)
 
   }
 
   def test1(): Unit = {
-    val (x,y) = BigInt(10) /% 3
-    println(x,y)
+    val (x, y) = BigInt(10) /% 3
+    println(x, y)
   }
 
   def testMethod(): Unit = {
-  val t1 = (a:Int,b: Double) => (a*b).toInt
-  val t2 =()=> println("----------")
-  def t3:Unit = println("----------")
+    val t1 = (a: Int, b: Double) => (a * b).toInt
+    val t2 = () => println("----------")
+
+    def t3: Unit = println("----------")
+
     callBack(t3)
     println("---todo----")
-//    def callBack(callBack: ()=>Unit): Unit ={
-    def callBack(callBack: =>Unit): Unit ={
+
+    //    def callBack(callBack: ()=>Unit): Unit ={
+    def callBack(callBack: => Unit): Unit = {
       callBack
       println(callBack)
       println(callBack.getClass)
@@ -247,7 +273,7 @@ trait Friut{
   }
 
   def testJson(): Unit = {
-    val str ="{\"name\":\"jack\",\"age\":12,\"boy\":true}"
+    val str = "{\"name\":\"jack\",\"age\":12,\"boy\":true}"
     val json = Json.parse(str)
     val boy = (json \ "boy").as[Boolean]
     println(boy == true)
@@ -255,22 +281,22 @@ trait Friut{
 
   def testPartialFunction(): Unit = {
 
-    val squareRoot:PartialFunction[Double,Double]={
-      case x if x >= 0 => println("---"+x);Math.sqrt(x)
+    val squareRoot: PartialFunction[Double, Double] = {
+      case x if x >= 0 => println("---" + x); Math.sqrt(x)
     }
     val x = 23L
     println(squareRoot.isDefinedAt(-5))
 
     val pf: PartialFunction[Int, String] = {
-      case i if i%2 == 0 => "even"
+      case i if i % 2 == 0 => "even"
     }
-    val tf: (Int => String) = pf orElse { case _ => "odd"}
+    val tf: (Int => String) = pf orElse { case _ => "odd" }
 
     println(tf(1))
     println(tf(2))
-    val  test2:PartialFunction[Int,String] = {
+    val test2: PartialFunction[Int, String] = {
       case 1 => "1"
-      case 2 =>"2"
+      case 2 => "2"
     }
 
     println(test2.isDefinedAt(1))
@@ -278,30 +304,34 @@ trait Friut{
 
 
   }
-def isRight(data:String,statue:Boolean): Boolean= {
- if(statue){
 
-   true
- }else{
+  def isRight(data: String, statue: Boolean): Boolean = {
+    if (statue) {
 
-   false
- }
-}
+      true
+    } else {
+
+      false
+    }
+  }
 
   def testAndThen(): Unit = {
-/*    List("a", "bb", "c", "dd", "dd").toStream.filter(ele => {
-      println(ele)
-      ele.length == 2
-    }).take(1) match {
-      case Stream.Empty => println("------------")
-      case Stream(x) => {
-        println("--------" + x)
-      }
-    }*/
+    /*    List("a", "bb", "c", "dd", "dd").toStream.filter(ele => {
+          println(ele)
+          ele.length == 2
+        }).take(1) match {
+          case Stream.Empty => println("------------")
+          case Stream(x) => {
+            println("--------" + x)
+          }
+        }*/
 
     def one(x: Int, y: Int): Int = x * y
+
     def two(int: Int): Int = int + 10
+
     def three(x: Int): Int = x * 10
+
     def result(x: Int) = three _ andThen two _
 
     val f1 = (x: Int, y: Int) => x + y
@@ -311,21 +341,21 @@ def isRight(data:String,statue:Boolean): Boolean= {
 
     println(f3((1, 2)))
 
-    val f4 = (x:Int, y:Int) => (x*10,y)
-    val f5 = (x:Tuple2[Int,Int]) => x._2 + x._1
+    val f4 = (x: Int, y: Int) => (x * 10, y)
+    val f5 = (x: Tuple2[Int, Int]) => x._2 + x._1
     val f6 = f4.tupled andThen f5
 
-    println(f6(1,4))
+    println(f6(1, 4))
 
   }
 
   def testListMatch(): Unit = {
-    List(1,2,3,45,5,8).filter(_>5) match {
-      case x:List[String] =>println(x);
+    List(1, 2, 3, 45, 5, 8).filter(_ > 5) match {
+      case x: List[String] => println(x);
       case Nil => println("_---")
     }
     Nil match {
-      case x:List[_] =>println("=====");
+      case x: List[_] => println("=====");
       case Nil => println("_---")
     }
 
@@ -356,16 +386,19 @@ def isRight(data:String,statue:Boolean): Boolean= {
   def testShutDownHook(): Unit = {
     //JVM的shutdownHook
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable {
-      override def run(): Unit = {println("---------开始进行关闭----------")}
+      override def run(): Unit = {
+        println("---------开始进行关闭----------")
+      }
     }))
     println("---------")
   }
 
   def testPrivate(): Unit = {
-    class Student{
+    class Student {
       private[this] val name = "jack"
-      def showInfo(): Unit ={
-          println(name)
+
+      def showInfo(): Unit = {
+        println(name)
       }
 
     }
@@ -378,16 +411,16 @@ def isRight(data:String,statue:Boolean): Boolean= {
   def getTime(): Unit = {
     val oneDay = 1000L * 60 * 60 * 24
     // 获取指定时间
-/*    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-01 00:00:000").getTime
-    println(now)
-    println(now -1000 * 60 *23)
-    val start = now - 1000 * 60 * 60 * 24 * 3
-    print(start +" --->  "+now )
-    println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
-    println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
-    println(new DateTime(1519574404352L).toString("yyyy-MM-dd HH:mm:ss"))
-    println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))*/
-  // 计算时间段
+    /*    val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-03-01 00:00:000").getTime
+        println(now)
+        println(now -1000 * 60 *23)
+        val start = now - 1000 * 60 * 60 * 24 * 3
+        print(start +" --->  "+now )
+        println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
+        println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
+        println(new DateTime(1519574404352L).toString("yyyy-MM-dd HH:mm:ss"))
+        println(new DateTime(1519833597613L).toString("yyyy-MM-dd HH:mm:ss"))*/
+    // 计算时间段
     val now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2017-09-01 00:00:001").getTime
     println(now)
     val temp = now - (oneDay * 30)
@@ -396,45 +429,45 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(new DateTime(now).toString("yyyy-MM-dd HH:mm:ss"))
     println(new DateTime(temp).toString("yyyy-MM-dd HH:mm:ss"))
     println(new DateTime(start).toString("yyyy-MM-dd HH:mm:ss"))
-    println(start+"---"+ (start - temp) / oneDay)
+    println(start + "---" + (start - temp) / oneDay)
 
     val startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-05-08 00:00:000").getTime
 
-    val endTime =  new Date().getTime
+    val endTime = new Date().getTime
 
-    println(s"$startTime -- $endTime---${(endTime- startTime)/1000}")
+    println(s"$startTime -- $endTime---${(endTime - startTime) / 1000}")
 
-   /* 术禾召回率统计时间
-    println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-26 00:00:000").getTime)
-    println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-28 00:00:000").getTime)
-*/
+    /* 术禾召回率统计时间
+     println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-26 00:00:000").getTime)
+     println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-02-28 00:00:000").getTime)
+ */
   }
 
   def testSychnorized(): Unit = {
-  val lock = "LOCK"
-  for( i <- 1 to 3){
-    Future{
-      println(lock.synchronized[Int]{
-        println("----i am "+i)
-        Thread.sleep(5000)
-        i
-      }+" is over  ")
+    val lock = "LOCK"
+    for (i <- 1 to 3) {
+      Future {
+        println(lock.synchronized[Int] {
+          println("----i am " + i)
+          Thread.sleep(5000)
+          i
+        } + " is over  ")
+      }
     }
+    Thread.sleep(10000000)
   }
-  Thread.sleep(10000000)
-}
 
   def testFunction(): Unit = {
-    val add = (x:Int, y1:Int, y2:Int, y3:Int, y4:Int, y5:Int, y6:Int, y7:Int, y8:Int, y9:Int, y11:Int, y12:Int, y13:Int, y14:Int, y15:Int, y16:Int, y17:Int, y22:Int, y33:Int, y44:Int, y55:Int) => x + y11
+    val add = (x: Int, y1: Int, y2: Int, y3: Int, y4: Int, y5: Int, y6: Int, y7: Int, y8: Int, y9: Int, y11: Int, y12: Int, y13: Int, y14: Int, y15: Int, y16: Int, y17: Int, y22: Int, y33: Int, y44: Int, y55: Int) => x + y11
 
-    def deal[T](body: =>T): T = body
+    def deal[T](body: => T): T = body
 
-    val getNum = 2+5
+    val getNum = 2 + 5
     println(deal(getNum))
   }
 
   def testWhile(): Unit = {
-    while(true){
+    while (true) {
       println("--------------")
       Thread.sleep(2000)
     }
@@ -453,7 +486,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
     Thread.sleep(2000)
   }
 
-  def notNullTest(str:String): Unit ={
+  def notNullTest(str: String): Unit = {
     println(str)
   }
 
@@ -473,35 +506,37 @@ def isRight(data:String,statue:Boolean): Boolean= {
     queue.enqueue(3)
     queue.enqueue(4)
     var num = 0
-    queue.toStream.filter(ele=>{
+    queue.toStream.filter(ele => {
       println(num)
-      num +=1
-      ele >2
+      num += 1
+      ele > 2
     }).take(1) match {
-      case Stream(res) => println("====="+res)
+      case Stream(res) => println("=====" + res)
       case Stream.Empty => println("-----")
     }
     println(queue.dequeue())
     println(num)
 
 
-
   }
-  def toInt(me:Int=> Int):Unit={
+
+  def toInt(me: Int => Int): Unit = {
     println("toInt  start")
-    me(add(1,2))
+    me(add(1, 2))
     println("toInt  end")
   }
-  def add(a:Int,b:Int):Int={
+
+  def add(a: Int, b: Int): Int = {
     println("add  start")
     a + b
   }
-  val paser:Int => Int = (str)=> {
+
+  val paser: Int => Int = (str) => {
     println("=====")
     str.toInt
   }
 
-  def testMethod2():Unit  = {
+  def testMethod2(): Unit = {
     println("+-=--=-=-=-")
     toInt(paser)
 
@@ -513,14 +548,14 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def testForYield(): Unit = {
-    (for{
-     a <- Future{println("----a----");10}
-     b <- Future{println("----b----");10+a;10/0}
-     c <- Future{println("----c----");10+b}
-     d <- Future{println("----d----");10+c}
-    }yield {
+    (for {
+      a <- Future {println("----a----"); 10}
+      b <- Future {println("----b----"); 10 + a; 10 / 0}
+      c <- Future {println("----c----"); 10 + b}
+      d <- Future {println("----d----"); 10 + c}
+    } yield {
       println(d)
-    }).onComplete{
+    }).onComplete {
       case Failure(ex) => ex.printStackTrace()
     }
 
@@ -565,15 +600,15 @@ def isRight(data:String,statue:Boolean): Boolean= {
   def waitAllWSClient(): Unit = {
     Thread.sleep(5000)
     val ws = WSClientTool.wsClient
-    val iter = (1 to 10000 ).iterator
+    val iter = (1 to 10000).iterator
     val list = ListBuffer[Future[String]]()
     while (iter.hasNext) {
       Thread.sleep(5)
       val data = iter.next()
       val future = ws.url("https://www.sogou.com/").get().map(respond => {
-        println("receive data"+data)
+        println("receive data" + data)
         if (respond.status == 200) {
-          data +"---OK"
+          data + "---OK"
         } else {
           data + "--ERROR"
         }
@@ -581,11 +616,11 @@ def isRight(data:String,statue:Boolean): Boolean= {
       list += future
     }
 
-    while(list.map(_.isCompleted).contains(false)){
+    while (list.map(_.isCompleted).contains(false)) {
       Thread.sleep(1000)
     }
     for (elem <- list) {
-      println("--->"+elem)
+      println("--->" + elem)
     }
 
     println("---end----")
@@ -608,9 +643,9 @@ def isRight(data:String,statue:Boolean): Boolean= {
 
   def testFutureGlobalVariable(): Unit = {
     var num = 0
-    val futures = (1 to 100).map(tem => Future {println(num);num += 1}).toList
+    val futures = (1 to 100).map(tem => Future {println(num); num += 1}).toList
     waiting(futures)
-    println("--->"+num)
+    println("--->" + num)
     System.exit(0)
   }
 
@@ -625,12 +660,12 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def testFlatFuture(): Unit = {
-    val future = Future{
-      Future{
+    val future = Future {
+      Future {
         10
       }
     }
-//    val res = future.flatMap(_)
+    //    val res = future.flatMap(_)
 
   }
 
@@ -641,7 +676,7 @@ def isRight(data:String,statue:Boolean): Boolean= {
   }
 
   def testFolder(): Unit = {
-    val map = List( Map("a"->"name","b"->"bbbnb"),Map("xc"->"ccccc","d"->"ddd")).foldLeft(Map.empty[String,String])((a,b)=>a.++(b))
+    val map = List(Map("a" -> "name", "b" -> "bbbnb"), Map("xc" -> "ccccc", "d" -> "ddd")).foldLeft(Map.empty[String, String])((a, b) => a.++(b))
     println(map)
   }
 
@@ -661,131 +696,133 @@ def isRight(data:String,statue:Boolean): Boolean= {
     println(str.length)
     println(str.size)
     println(str.getClass)
-    println(str.substring(0,str.size-1))
+    println(str.substring(0, str.size - 1))
 
     JsArray().value.map(println _)
     println("========")
-    System.out.println("年后是的发送到....。。ewr 。。2".replaceAll("(?<!。)。*$",""))
-    System.out.println("年后是的发送到.  &nbsp;&nbsp;.。。ewr 。&nbsp;&nbsp;".replaceAll("(&nbsp;)+$","-"))
-
+    System.out.println("年后是的发送到....。。ewr 。。2".replaceAll("(?<!。)。*$", ""))
+    System.out.println("年后是的发送到.  &nbsp;&nbsp;.。。ewr 。&nbsp;&nbsp;".replaceAll("(&nbsp;)+$", "-"))
 
 
     println("/morenfenlei/1169104780157830".contains("69104780"))
   }
 
   def testSet(): Unit = {
-    println ((List("a","c","b").toSet & List("c","d").toSet).size)
+    println((List("a", "c", "b").toSet & List("c", "d").toSet).size)
   }
 
   def testGroupBy(): Unit = {
     val votes = Seq(("scala", 1), ("java", 4), ("scala", 10), ("scala", 1), ("python", 10))
     val orderedVotes = votes
       .groupBy(_._1)
-      println(orderedVotes)
+    println(orderedVotes)
 
   }
 
-  def testNil(str:String): Unit = {
+  def testNil(str: String): Unit = {
     println(Nil.size)
-    print(List("safd;232423;234","asdfas")flatMap(_.split(";")))
-    if(str.length< 1){
+    print(List("safd;232423;234", "asdfas") flatMap (_.split(";")))
+    if (str.length < 1) {
       return
     }
-    Future{println(str.length)}
-    Future{println(str.size)}
+    Future {println(str.length)}
+    Future {println(str.size)}
     Thread.sleep(100)
   }
 
 
   def testLoop(): Unit = {
-    val start = System.currentTimeMillis()
-    1 to 10000 map(i=>{i + 1}) map(i=>{i + 1})
-    println(System.currentTimeMillis() - start)
+    val list = mutable.ListBuffer("1")
+    var i = 0;
+    while (true) {
+      list.append(s"字符创$i")
+      i += 1
+    }
   }
 
   def main(args: Array[String]): Unit = {
     testLoop()
-//    println(Json.obj("name" -> "<p><td width=\"59\" valign=\"top\" style=\"word-break: break-all;\">这是一个图文本答案</td></p>"))
-//    testNil("234手动阀")
-//    getTime()
-//    testPartialFunction()
-//    testGroupBy()
-//    testSet()
-//      testTime()
-//      testSubString()
-//    testWhile()
-//    testMatch()
-//    testForeach()
-//    testMatch()
-//    testFolder()
-//    testListContain()
-//    testFlatFuture()
-//    testSplit()
-//      testFutureGlobalVariable()
-//    testStringHashCode()
-//    getTime()
-//    waitAllWSClient()
-//    waitAllFuture()
+    //    println(Json.obj("name" -> "<p><td width=\"59\" valign=\"top\" style=\"word-break: break-all;\">这是一个图文本答案</td></p>"))
+    //    testNil("234手动阀")
+    //    getTime()
+    //    testPartialFunction()
+    //    testGroupBy()
+    //    testSet()
+    //      testTime()
+    //      testSubString()
+    //    testWhile()
+    //    testMatch()
+    //    testForeach()
+    //    testMatch()
+    //    testFolder()
+    //    testListContain()
+    //    testFlatFuture()
+    //    testSplit()
+    //      testFutureGlobalVariable()
+    //    testStringHashCode()
+    //    getTime()
+    //    waitAllWSClient()
+    //    waitAllFuture()
 
-//    getTime()
-//    testForYield()
-//    testRegex()
-//    testListMatch()
-//    testMethod2()
-//    testStreamQueue()
-//    testJsonOption()
-//    testAnnotation()
+    //    getTime()
+    //    testForYield()
+    //    testRegex()
+    //    testListMatch()
+    //    testMethod2()
+    //    testStreamQueue()
+    //    testJsonOption()
+    //    testAnnotation()
     //    testFor()
     //    testThread()
     //    testReduce()
-//    testTypeVariable()
-//    testList
-//    testCaseClass()
-//    testSort()
-//    testEq()
-//    testLazy()
-//    testStream()
-//    testType()
-//    testBound()
-//   testNullUnit()
-//    testTime()
-//    testFuture()
-//    testConf()
-//    testStream2()
-//    testPer()
-//    testTime()
-//    testRandom()
-//    testSortedMap()
-//    testException()
-//    testProxy
-//    testJsonToOther()
-//    testMatch
-//    testTake()
-//    testSortedMap()
-//    testMethod()
-//    testJson()
-//    testPartialFunction()
-//    testAndThen()
-//    testListMatch()
-//    testWithTimeOfTodayStartOfDay()
-//    testQueue()
-//    testShutDownHook()
-//    testPrivate()
-//    getTime()
-//    testSychnorized()
-//    testFunction()
-//    testWhile()
-//      testVolatile()
+    //    testTypeVariable()
+    //    testList
+    //    testCaseClass()
+    //    testSort()
+    //    testEq()
+    //    testLazy()
+    //    testStream()
+    //    testType()
+    //    testBound()
+    //   testNullUnit()
+    //    testTime()
+    //    testFuture()
+    //    testConf()
+    //    testStream2()
+    //    testPer()
+    //    testTime()
+    //    testRandom()
+    //    testSortedMap()
+    //    testException()
+    //    testProxy
+    //    testJsonToOther()
+    //    testMatch
+    //    testTake()
+    //    testSortedMap()
+    //    testMethod()
+    //    testJson()
+    //    testPartialFunction()
+    //    testAndThen()
+    //    testListMatch()
+    //    testWithTimeOfTodayStartOfDay()
+    //    testQueue()
+    //    testShutDownHook()
+    //    testPrivate()
+    //    getTime()
+    //    testSychnorized()
+    //    testFunction()
+    //    testWhile()
+    //      testVolatile()
   }
 
-  def testTake(){
-    List(1,2,3).take(10).foreach(println _)
+  def testTake() {
+    List(1, 2, 3).take(10).foreach(println _)
   }
 
-  def testMatch(): Unit ={
-    val ss ="Hello"
-    ss match{
-      case  str if (List("Hello","ss").contains[String](str)) =>{println(str)}
+  def testMatch(): Unit = {
+    val ss = "Hello"
+    ss match {
+      case str if (List("Hello", "ss").contains[String](str)) => {println(str)}
     }
 
     println("/morenfenlei/903908288413833".matches(".*903908288413833.*"))
@@ -793,32 +830,33 @@ def isRight(data:String,statue:Boolean): Boolean= {
 
     Nil match {
       case Nil => println("--111-")
-      case x => println("---"+x)
+      case x => println("---" + x)
     }
 
     val str = "2222"
     println(str.matches("(.*上海2.*|.*222.*)"))
 
   }
-//master  test1
-//master  test2
-//master  test3
-//  1.1 test1
+
+  //master  test1
+  //master  test2
+  //master  test3
+  //  1.1 test1
   //1.1 test4
 
   import play.api.libs.json._
   import play.api.libs.json.Reads._
   import play.api.libs.functional.syntax._
 
-//  implicit val formatQA = Json.format[QA]
+  //  implicit val formatQA = Json.format[QA]
 
-  def testJsonToOther(): Unit ={
-    println(Json.toJson(List("aaa","bbb","ccc")))
-//    println(Json.toJson(List(QA("JACK",List("sss","sdsd"),"sss"))))
-    println(Json.toJson(Map("aaa"->111,"bbb"->2222,"ccc"->3333)))
-    println(Json.toJson(Map("aaa"->List("aaa","bbb","ccc"))))
-//    println(Json.toJson(HHH("JACK",QA(List("问题1","问题2","问题3"),"123456"))))
-//    println(Json.toJson(HHH("JACK",List(QA(List("问题1","问题2","问题3"),"123456")))))
+  def testJsonToOther(): Unit = {
+    println(Json.toJson(List("aaa", "bbb", "ccc")))
+    //    println(Json.toJson(List(QA("JACK",List("sss","sdsd"),"sss"))))
+    println(Json.toJson(Map("aaa" -> 111, "bbb" -> 2222, "ccc" -> 3333)))
+    println(Json.toJson(Map("aaa" -> List("aaa", "bbb", "ccc"))))
+    //    println(Json.toJson(HHH("JACK",QA(List("问题1","问题2","问题3"),"123456"))))
+    //    println(Json.toJson(HHH("JACK",List(QA(List("问题1","问题2","问题3"),"123456")))))
   }
 
   private def testProxy = {
@@ -828,46 +866,50 @@ def isRight(data:String,statue:Boolean): Boolean= {
     }
   }
 
-  object MyEnum extends Enumeration{
+  object MyEnum extends Enumeration {
     val SS = Value
   }
 
-def testException(): Unit ={
-  println(getRes())
-}
-  def getRes():Int ={
+  def testException(): Unit = {
+    println(getRes())
+  }
+
+  def getRes(): Int = {
     try {
       10 / 2
     } catch {
-      case ex:Exception =>println("-----");10
+      case ex: Exception => println("-----"); 10
     }
   }
 
-  def testSortedMap(): Unit ={
-    val res = mutable.SortedMap.empty[String,Int]
-    res +=("d"->132)
-    res +=("a"->122)
-    res +=("c"->42)
+  def testSortedMap(): Unit = {
+    val res = mutable.SortedMap.empty[String, Int]
+    res += ("d" -> 132)
+    res += ("a" -> 122)
+    res += ("c" -> 42)
     res.foreach(println _)
   }
-  def testRandom(): Unit ={
-    for(i <-1 to 100){
+
+  def testRandom(): Unit = {
+    for (i <- 1 to 100) {
       println(getIp)
     }
   }
+
   private def getIp = {
-    val temp1 = new Random().nextInt(100)+100
-    val temp2 = new Random().nextInt(100)+100
+    val temp1 = new Random().nextInt(100) + 100
+    val temp2 = new Random().nextInt(100) + 100
     val numIp = new Random().nextInt(240) % (240 - 5 + 1) + 5;
-    val ip = "10."+temp1+"."+temp2+"." + numIp
+    val ip = "10." + temp1 + "." + temp2 + "." + numIp
     ip
   }
-/*  class Not extends Nothing{
-    def showInfo= println("i am Not")
-  }*/
 
-  def testSort()={
-    val map = Map(10481 -> 3.0, 5900 -> 5.0, 5395 -> 1.0).toList.sortWith(_._2>_._2).take(2)
+  /*  class Not extends Nothing{
+      def showInfo= println("i am Not")
+    }*/
+
+  def testSort() = {
+    val map = Map(10481 -> 3.0, 5900 -> 5.0, 5395 -> 1.0).toList.sortWith(_._2 > _._2).take(2)
     println(map)
   }
 
@@ -919,26 +961,32 @@ def testException(): Unit ={
     Sorting.quickSort(tempArray)
 
     tempArray.foreach(item => println("-----" + item))
-   /* val jarray = new util.ArrayList[String]();
-    jarray.add("hello")
-    import scala.collection.JavaConverters._
-    jarray.asScala.foreach(println(_))
-    jarray.asScala.asJava.forEach((str: String) => println(str))*/
+    /* val jarray = new util.ArrayList[String]();
+     jarray.add("hello")
+     import scala.collection.JavaConverters._
+     jarray.asScala.foreach(println(_))
+     jarray.asScala.asJava.forEach((str: String) => println(str))*/
   }
 
 }
 
-package com{
+package com {
 
-  class Demo2{
-    import  com.zpj.demo.Demo4
-    val name=new Demo4()
+  class Demo2 {
+
+    import com.zpj.demo.Demo4
+
+    val name = new Demo4()
   }
-  package zpj{
-    package demo{
-      class Demo1{
+  package zpj {
+    package demo {
+
+      class Demo1 {
         val d2 = new Demo3
       }
+
     }
+
   }
+
 }
