@@ -64,10 +64,10 @@ libraryDependencies += "org.apache.poi" % "poi-ooxml" % "3.17"
 // https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
 libraryDependencies += "org.mongodb" % "mongo-java-driver" % "3.6.3"
 // https://mvnrepository.com/artifact/junit/junit
-libraryDependencies += "junit" % "junit" % "4.12" % Test
+libraryDependencies += "junit" % "junit" % "4.12"
 
 // https://mvnrepository.com/artifact/org.mockito/mockito-all
-libraryDependencies += "org.mockito" % "mockito-all" % "2.0.2-beta" % Test
+libraryDependencies += "org.mockito" % "mockito-all" % "2.0.2-beta"
 // https://mvnrepository.com/artifact/org.scalaz/scalaz-core
 libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.3.0-M22"
 
@@ -77,3 +77,15 @@ libraryDependencies += "org.typelevel" %% "cats-core" % "1.1.0"
 scalacOptions += "-Ypartial-unification"
 
 libraryDependencies += "cn.playscala" % "play-mongo_2.12" % "0.1.0"
+
+// https://mvnrepository.com/artifact/com.carrotsearch/junit-benchmarks
+libraryDependencies += "com.carrotsearch" % "junit-benchmarks" % "0.2.1"
+// https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-core
+libraryDependencies += "org.openjdk.jmh" % "jmh-core" % "1.21"
+// https://mvnrepository.com/artifact/org.openjdk.jmh/jmh-generator-annprocess
+libraryDependencies += "org.openjdk.jmh" % "jmh-generator-annprocess" % "1.21"
+// https://mvnrepository.com/artifact/com.h2database/h2
+libraryDependencies += "com.h2database" % "h2" % "1.4.197"
+
+
+enablePlugins(JmhPlugin)

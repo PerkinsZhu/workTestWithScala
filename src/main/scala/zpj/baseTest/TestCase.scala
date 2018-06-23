@@ -633,4 +633,9 @@ class UtilTest {
     println(temp)
   }
 
+  @Test
+  def testZipWithIndex(): Unit ={
+(1 to 100).map(i => s"--$i--").zipWithIndex.foreach(println)
+  }
+
 }

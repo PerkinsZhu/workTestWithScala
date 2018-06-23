@@ -11,6 +11,7 @@ import akka.http.scaladsl.model.Uri.Query.Cons
 import akka.stream.javadsl.Flow
 import akka.stream.scaladsl.JavaFlowSupport.Source
 import org.joda.time.{DateTime, DateTimeZone}
+import org.junit.Test
 import play.api.libs.json.{JsArray, Json}
 import zpj.tools.WSClientTool
 
@@ -191,6 +192,7 @@ object BaseTest {
     print(time.centuryOfEra().addToCopy(10))
   }
 
+  @Test
   def testTime(): Unit = {
     /*    println(System.currentTimeMillis)
         println(new DateTime().getMillis)
@@ -206,6 +208,15 @@ object BaseTest {
     val time2 = new DateTime()
     println(time)
     println(time2)
+
+
+    println("=====")
+    val time3 = 1529492400L
+    println(new DateTime(time3).withZone(DateTimeZone.forOffsetHours(8)).toString("yyyy-MM-dd HH:mm:ss"))
+    println(new DateTime(time3).toString("yyyy-MM-dd HH:mm:ss"))
+
+    println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2018-06-20 19:00:000").getTime)
+
 
   }
 
@@ -745,25 +756,59 @@ object BaseTest {
     Future {
       Thread.sleep(10)
       10
-    }.map(i =>{
+    }.map(i => {
       println(DateTime.now().getMillis)
       i
-    }).map(i =>{
+    }).map(i => {
       println(DateTime.now().getMillis)
       i
-    }).map(i =>{
+    }).map(i => {
       println(DateTime.now().getMillis)
       i
-    }).map(i =>{
+    }).map(i => {
       println(DateTime.now().getMillis)
       i
     })
 
-Thread.sleep(1000)
+    Thread.sleep(1000)
+  }
+
+  def testWhileAndFor(): Unit = {
+    val num = 1000000
+    val list  = 1 to num
+    val s1 = System.nanoTime()
+    val result = for (i <- list) {
+      i * i
+    }
+    println(System.nanoTime() - s1)
+    val s2 = System.nanoTime()
+    var i = 0
+    val res = do {
+      i * i
+      i += 1
+    } while (i < num)
+    println(System.nanoTime() - s2)
+
+    val s3 = System.nanoTime()
+    var j = 0
+    val resu = while ( j < num) {
+      j * j
+      j += 1
+    }
+    println(System.nanoTime() - s3)
+
+
+    val s4 = System.nanoTime()
+    (1 to num).map(i => i * i)
+    println(System.nanoTime() - s4)
+
   }
 
   def main(args: Array[String]): Unit = {
-    testFutre()
+
+    testWhileAndFor()
+    //    testTime()
+    //    testFutre()
     //    testLoop()
     //    println(Json.obj("name" -> "<p><td width=\"59\" valign=\"top\" style=\"word-break: break-all;\">这是一个图文本答案</td></p>"))
     //    testNil("234手动阀")
