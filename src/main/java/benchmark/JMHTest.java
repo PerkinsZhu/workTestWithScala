@@ -11,21 +11,21 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since 2018/1/7
  */
-@BenchmarkMode(Mode.Throughput)
+@BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 3)
 @Measurement(iterations = 10, time = 5, timeUnit = TimeUnit.SECONDS)
 @Threads(8)
 @Fork(2)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class JMHTest {
 
     @Benchmark
     public void testStringAdd() {
-        String a = "";
-        for (int i = 0; i < 10; i++) {
-            a += i;
+//        String a = "";
+        for (int i = 0; i < 10000000; i++) {
+            int a  = 1 + i;
         }
-        print(a);
+//        print(a);
     }
 
     @Benchmark
