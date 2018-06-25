@@ -1,6 +1,7 @@
 package zpj.baseTest
 
 import java.io.{File, IOException}
+import java.lang.management.{ManagementFactory, MemoryPoolMXBean, MemoryType, MemoryUsage}
 import java.text.SimpleDateFormat
 import java.util
 import java.util.concurrent.Executors
@@ -711,8 +712,8 @@ object BaseTest {
 
     JsArray().value.map(println _)
     println("========")
-    System.out.println("年后是的发送到....。。ewr 。。2".replaceAll("(?<!。)。*$", ""))
-    System.out.println("年后是的发送到.  &nbsp;&nbsp;.。。ewr 。&nbsp;&nbsp;".replaceAll("(&nbsp;)+$", "-"))
+    println("年后是的发送到....。。ewr 。。2".replaceAll("(?<!。)。*$", ""))
+    println("年后是的发送到.  &nbsp;&nbsp;.。。ewr 。&nbsp;&nbsp;".replaceAll("(&nbsp;)+$", "-"))
 
 
     println("/morenfenlei/1169104780157830".contains("69104780"))
@@ -775,7 +776,7 @@ object BaseTest {
 
   def testWhileAndFor(): Unit = {
     val num = 1000000
-    val list  = 1 to num
+    val list = 1 to num
     val s1 = System.nanoTime()
     val result = for (i <- list) {
       i * i
@@ -791,22 +792,54 @@ object BaseTest {
 
     val s3 = System.nanoTime()
     var j = 0
-    val resu = while ( j < num) {
+    val resu = while (j < num) {
       j * j
       j += 1
     }
     println(System.nanoTime() - s3)
-
-
     val s4 = System.nanoTime()
     (1 to num).map(i => i * i)
     println(System.nanoTime() - s4)
 
   }
 
+  def testJVMInfo(): Unit = {
+    val memoryMXBean = ManagementFactory.getMemoryMXBean();
+    val usage = memoryMXBean.getHeapMemoryUsage();
+    println("INT HEAP:" + usage.getInit() / 1024 / 1024 + "Mb");
+    println("MAX HEAP:" + usage.getMax() / 1024 / 1024 + "Mb");
+    println("USED HEAP:" + usage.getUsed() / 1024 / 1024 + "Mb");
+
+    println("\nFull Information:");
+    println("Heap Memory Usage:" + memoryMXBean.getHeapMemoryUsage());
+    println("Non-Heap Memory Usage:" + memoryMXBean.getNonHeapMemoryUsage());
+
+    val inputArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+    println("=====================java options==================");
+    println(inputArguments);
+
+    println("=====================通过java来获取相关系统状态====================");
+    val i = Runtime.getRuntime().totalMemory() / 1024 / 1024; //Java 虚拟机中的内存总量，以字节为单位
+    println("总的内存量为:" + i + "Mb");
+    val j = Runtime.getRuntime().freeMemory() / 1024 / 1024; //Java 虚拟机中的空闲内存量
+    println("空闲内存量:" + j + "Mb");
+    val k = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+    println("最大可用内存量:" + k + "Mb");
+
+    ManagementFactory.getMemoryPoolMXBeans().forEach((bean: MemoryPoolMXBean) => {
+      val kind = if (bean.getType == MemoryType.HEAP) {"heap"} else {"nonheap"}
+      val usage = bean.getUsage();
+      println("kind is " + kind + ", pool name is " + bean.getName() + ", jvm." + bean.getName() + ".init is " + usage.getInit());
+      println("kind is " + kind + ", pool name is " + bean.getName() + ", jvm." + bean.getName() + ".used is " + usage.getUsed());
+      println("kind is " + kind + ", pool name is " + bean.getName() + ", jvm." + bean.getName() + ".committed is " + usage.getCommitted());
+      println("kind is " + kind + ", pool name is " + bean.getName() + ", jvm." + bean.getName() + ".max is " + usage.getMax());
+    })
+
+  }
+
   def main(args: Array[String]): Unit = {
 
-    testWhileAndFor()
+    testJVMInfo()
     //    testTime()
     //    testFutre()
     //    testLoop()

@@ -1,5 +1,6 @@
 package zpj.baseTest
 
+import java.lang.management.{ManagementFactory, MemoryMXBean, MemoryUsage}
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util.concurrent.TimeUnit
@@ -626,16 +627,26 @@ class UtilTest {
       println("----")
     }
   }
+
   @Test
-  def testString02(): Unit ={
+  def testString02(): Unit = {
     val temp = "替你还产^品分?为|1-4周，]利率：[&一周0%-(0.6%、二周0)%-1.3%、三周0%-2.0%、四周0%-2.7%，如按时还款不会产生其他费用；如逾期，罚息为贷款余额*罚息费率*逾期天数，罚息费率：逾期1-30天（含）-0.06%/日，逾期30天以上-0.1%/日，若日息低于1元的，则按照1元收取"
-      .replaceAll("[%*/()\\[\\]\\^\\|\\.\\{\\}\\&\\?]","")
+      .replaceAll("[%*/()\\[\\]\\^\\|\\.\\{\\}\\&\\?]", "")
     println(temp)
   }
 
   @Test
-  def testZipWithIndex(): Unit ={
-(1 to 100).map(i => s"--$i--").zipWithIndex.foreach(println)
+  def testZipWithIndex(): Unit = {
+    (1 to 100).map(i => s"--$i--").zipWithIndex.foreach(println)
   }
+
+  @Test
+  def isPalindrome() = {
+    println(List.fill[Int](10, 4)(101))
+    println(List.range(10, 100, 10))
+    println(0 until(100, 10) toList)
+    10
+  }
+
 
 }
