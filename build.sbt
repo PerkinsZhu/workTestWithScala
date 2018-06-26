@@ -89,3 +89,12 @@ libraryDependencies += "com.h2database" % "h2" % "1.4.197"
 
 
 enablePlugins(JmhPlugin)
+
+
+// https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "6.3.0"
+// https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-high-level-client
+libraryDependencies += "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.3.0"
+
+// https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.11.0"
