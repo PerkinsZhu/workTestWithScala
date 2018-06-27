@@ -4,6 +4,7 @@ import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.analyzers.StopAnalyzer
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
 import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.searches.SearchDefinition
 import org.apache.http.HttpHost
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.alias.Alias
@@ -79,10 +80,18 @@ class ElasticSearchTestWithJava {
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-class ElasticSearchTestWithScala extends ElasticDsl {
+object ElasticSearchTestWithScala extends ElasticDsl {
   //  使用文档：https://sksamuel.github.io/elastic4s/docs/document/index.html
 
-  val client = HttpClient.apply(ElasticsearchClientUri("127.0.0.1", 9200))
+  implicit val client = HttpClient.apply(ElasticsearchClientUri("127.0.0.1", 9200))
+
+  implicit class SearchDefinitionOps(val definition: SearchDefinition) {
+    def run()(implicit client: HttpClient) = client.execute(definition).map({
+      case Left(ex) => println(ex.body)
+      case Right(data) => println(data.body)
+    })
+  }
+
 
   /*val uri = ElasticsearchClientUri("elasticsearch://foo:1234,boo:9876?cluster.name=mycluster")
   val client = HttpClient.apply(uri)*/
@@ -119,13 +128,12 @@ class ElasticSearchTestWithScala extends ElasticDsl {
 
   @Test
   def testQuery(): Unit = {
-    //TODO 如何使用cats 可以直接使用query start 来执行请求动作
     //各种查询语法见：https://github.com/sksamuel/elastic4s
-    val query = searchWithType("places" / "cities").query("London") start 0 limit 10
-    client.execute(query).map({
-      case Left(ex) => println(ex.body)
-      case Right(data) => println(data.body)
-    })
+    searchWithType("places" / "cities").query("London") start 0 limit 10 run
+  }
+
+  def main(args: Array[String]): Unit = {
+    testQuery()
   }
 
 
