@@ -98,3 +98,7 @@ libraryDependencies += "org.elasticsearch.client" % "elasticsearch-rest-high-lev
 
 // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
 libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.11.0"
+
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-http-streams_2.12" % "6.2.9"
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-http_2.12" % "6.2.9"
+libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-core_2.12" % "6.2.9"
