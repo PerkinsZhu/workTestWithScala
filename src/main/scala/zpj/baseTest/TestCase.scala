@@ -15,6 +15,7 @@ import zpj.catsTest.chapter01.JsObject
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.collection.parallel.{ForkJoinTaskSupport, ThreadPoolTaskSupport}
 import scala.concurrent.Future
 import scala.util.Try
 
@@ -645,7 +646,62 @@ class UtilTest {
     println(List.fill[Int](10, 4)(101))
     println(List.range(10, 100, 10))
     println(0 until(100, 10) toList)
-    10
+  }
+
+  @Test
+  def testIterator(): Unit = {
+    val iterator = (1 to 20).toList.grouped(10)
+  }
+
+  val add1 = (a: Int) => {
+    println("add--" + a)
+    a + 1
+  }
+  val mul = (a: Int) => {
+    println("mul--" + a)
+    a * 10
+  }
+
+  @Test
+  def testView(): Unit = {
+    val list = (1 to 10).toList
+    // list.map(add1).map(mul)
+    val view = list.view.map(add1).map(mul).takeWhile(_ < 40).force
+    println(view)
+    val temp = list.toStream.map(add1).map(mul).takeWhile(_ < 40).force
+    println(temp)
+  }
+
+  @Test
+  def testNone(): Unit = {
+    println(List(Some("111"), None).filterNot(_.isEmpty).map(_.get))
+  }
+
+  @Test
+  def testPar(): Unit = {
+    val set = mutable.Set[String]()
+    // 多线程并行处理集合
+    val par = (1 to 1000000).toList.par
+    par.tasksupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(10))
+    val total = par.map(i => {
+      val name = Thread.currentThread().getName
+      set.add(name)
+      i * i
+    }).sum
+    println(set)
+    println(total)
+  }
+
+  @Test
+  def testParArray(): Unit = {
+    //    (1 to 100).toArray.par.foreach(println)
+    val pa = scala.collection.parallel.mutable.ParArray.tabulate(1000)(x => 2 * x + 1)
+    //    println(pa.reduce(_ + _))
+    //    并行向量
+    val pv = scala.collection.parallel.immutable.ParVector.tabulate(1000)(x => x)
+    //    pv.filter(_ % 2 == 0).foreach(println)
+    //    并行范围
+    //    (1 to 10).par.foreach(println)
   }
 
 
