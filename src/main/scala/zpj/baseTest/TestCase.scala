@@ -705,4 +705,10 @@ class UtilTest {
   }
 
 
+  @Test
+  def testLoopForeever(): Unit ={
+    while(true){
+      Thread.sleep(1000)
+    }
+  }
 }

@@ -11,7 +11,7 @@ case class Beans()
 case class Person(_id: String, name: String, age: Option[Int])
 
 @Entity("common-article")
-case class Article(_id: String, title: String, content: String, authorId: List[String])
+case class Article(_id: String, title: String, content: String, authorId: String)
 
 @Entity("common-author")
 case class Author(_id: String, name: String)
