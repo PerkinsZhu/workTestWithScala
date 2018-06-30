@@ -711,4 +711,18 @@ class UtilTest {
       Thread.sleep(1000)
     }
   }
+
+  @Test
+  def testColletctions(): Unit ={
+    List(1,2,3)
+    show(1,2,3,3)
+    show("a","b","c","d")
+
+  }
+  def show[A](a:A*): Unit ={
+    a.toList
+    println(a.getClass)
+  }
+
+
 }
