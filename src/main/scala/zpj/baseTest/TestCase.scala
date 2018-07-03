@@ -10,8 +10,7 @@ import cats.Monoid
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
-import zpj.catsTest.chapter01.JsObject
+import play.api.libs.json._
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -724,5 +723,17 @@ class UtilTest {
     println(a.getClass)
   }
 
+  @Test
+  def testJsNull(): Unit ={
+    println(Json.obj("name" ->JsNull))
+    println(Seq().head)
+  }
+
+
+  @Test
+  def testMailMatch(): Unit ={
+    val mail = "zpjtest_04@chatbot.cn"
+    println(mail.matches("^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9\\u4e00-\\u9fa5]+(\\.[a-zA-Z0-9\\u4e00-\\u9fa5]+)+$"))
+  }
 
 }
