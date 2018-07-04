@@ -726,7 +726,13 @@ class UtilTest {
   @Test
   def testJsNull(): Unit ={
     println(Json.obj("name" ->JsNull))
-    println(Seq().head)
+//    println(Seq().head)
+    println(Nil.nonEmpty)
+    println(Nil.isEmpty)
+
+     val list = List.range(1 ,10 ,1)
+    println(list)
+    println(list.slice(100,200))
   }
 
 
