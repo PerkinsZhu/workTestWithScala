@@ -733,6 +733,8 @@ class UtilTest {
      val list = List.range(1 ,10 ,1)
     println(list)
     println(list.slice(100,200))
+
+    println(list.contains(1,2))
   }
 
 
@@ -741,5 +743,11 @@ class UtilTest {
     val mail = "zpjtest_04@chatbot.cn"
     println(mail.matches("^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9\\u4e00-\\u9fa5]+(\\.[a-zA-Z0-9\\u4e00-\\u9fa5]+)+$"))
   }
+
+  @Test
+  def testString03(): Unit ={
+    println("".nonEmpty)
+  }
+
 
 }
