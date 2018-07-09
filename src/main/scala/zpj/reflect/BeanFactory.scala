@@ -39,7 +39,7 @@ object BeanFactory {
              null
            }
          }*/
-        par.typeSignature.typeSymbol.asClass match {
+ /*       par.typeSignature.typeSymbol.asClass match {
           case ru.definitions.IntClass => 0
           case ru.definitions.CharClass => ""
           case ru.definitions.LongClass => 0.0
@@ -57,7 +57,7 @@ object BeanFactory {
             println(item)
             null
           }
-        }
+        }*/
         /*if (par.typeSignature =:= typeOf[Int]) {
           0
         } else {

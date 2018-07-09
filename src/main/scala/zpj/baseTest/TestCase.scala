@@ -747,6 +747,8 @@ class UtilTest {
   @Test
   def testString03(): Unit ={
     println("".nonEmpty)
+
+    println("Global_Admin|Robot_Admin".contains("Robot_Admin"))
   }
 
 
