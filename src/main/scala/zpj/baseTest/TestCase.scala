@@ -800,12 +800,13 @@ class UtilTest {
     println(person.sex)
 
 
-    class FF(private val name:String)
-    class EE(private[this] val name:String)
-    class AA(name:String)
-    class BB(val name:String)
-    case class CC(name:String)
-    case class DD(val name:String)
+    class FF(private val name: String)
+    class EE(private[this] val name: String)
+    class AA(name: String)
+    class BB(val name: String)
+    case class CC(name: String)
+    case class DD(val name: String)
+    case class GG(var name: String)
 
     val a = new AA("JACK")
     val b = new BB("JACK")
@@ -813,13 +814,20 @@ class UtilTest {
     val d = new BB("JACK")
     val e = new EE("JACK")
     val f = new FF("JACK")
+    val g = new GG("JACK")
 
-    println(a.name)
+/*    println(a.name)
     println(b.name)
     println(c.name)
     println(d.name)
     println(e.name)
     println(f.name)
+    println(g.name)
+    g.name = "tom"
+    println(g.name)*/
+
+    //
+    println(List(1,2,3,3,4,5).productElement(2))
   }
 }
 
