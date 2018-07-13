@@ -3,7 +3,7 @@ package zpj.baseTest
 import java.lang.management.{ManagementFactory, MemoryMXBean, MemoryUsage}
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
 import java.util.{Comparator, Date}
 
 import cats.Monoid
@@ -705,50 +705,71 @@ class UtilTest {
 
 
   @Test
-  def testLoopForeever(): Unit ={
-    while(true){
+  def testLoopForeever(): Unit = {
+    while (true) {
       Thread.sleep(1000)
     }
   }
 
   @Test
-  def testColletctions(): Unit ={
-    List(1,2,3)
-    show(1,2,3,3)
-    show("a","b","c","d")
+  def testColletctions(): Unit = {
+    List(1, 2, 3)
+    show(1, 2, 3, 3)
+    show("a", "b", "c", "d")
 
   }
-  def show[A](a:A*): Unit ={
+
+  def show[A](a: A*): Unit = {
     a.toList
     println(a.getClass)
   }
 
   @Test
-  def testJsNull(): Unit ={
-    println(Json.obj("name" ->JsNull))
-//    println(Seq().head)
+  def testJsNull(): Unit = {
+    println(Json.obj("name" -> JsNull))
+    //    println(Seq().head)
     println(Nil.nonEmpty)
     println(Nil.isEmpty)
 
-     val list = List.range(1 ,10 ,1)
+    val list = List.range(1, 10, 1)
     println(list)
-    println(list.slice(100,200))
+    println(list.slice(100, 200))
 
-    println(list.contains(1,2))
+    println(list.contains(1, 2))
   }
 
 
   @Test
-  def testMailMatch(): Unit ={
+  def testMailMatch(): Unit = {
     val mail = "zpjtest_04@chatbot.cn"
     println(mail.matches("^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9\\u4e00-\\u9fa5]+(\\.[a-zA-Z0-9\\u4e00-\\u9fa5]+)+$"))
   }
 
   @Test
-  def testString03(): Unit ={
+  def testString03(): Unit = {
     println("".nonEmpty)
 
     println("Global_Admin|Robot_Admin".contains("Robot_Admin"))
+
+    println(10 / 2 * 3)
+
+    val map = new ConcurrentHashMap[String, String](10)
+
+  }
+
+  @Test
+  def testBread(): Unit = {
+    import scala.util.control.Breaks._
+    breakable {
+      for (i <- 1 to 10000) {
+        if (i > 1000) {
+          break;
+        }
+        println(i)
+      }
+    }
+
+
   }
 
 
