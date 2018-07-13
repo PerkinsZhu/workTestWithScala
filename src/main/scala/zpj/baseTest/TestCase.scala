@@ -11,8 +11,10 @@ import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
 import play.api.libs.json._
+import zpj.catsTest.chapter01.Person
 
 import scala.annotation.tailrec
+import scala.beans.BeanProperty
 import scala.collection.mutable
 import scala.collection.parallel.{ForkJoinTaskSupport, ThreadPoolTaskSupport}
 import scala.concurrent.Future
@@ -136,7 +138,7 @@ class UtilTest {
 
     println(l1.reduceLeft(_ * _))
 
-
+    l1.reverse
   }
 
   @Test
@@ -754,7 +756,8 @@ class UtilTest {
     println(10 / 2 * 3)
 
     val map = new ConcurrentHashMap[String, String](10)
-
+    import scala.collection.JavaConverters._
+    print(System.getProperties.asScala.mkString("\t\n"))
   }
 
   @Test
@@ -768,9 +771,55 @@ class UtilTest {
         println(i)
       }
     }
-
-
   }
 
+  @Test
+  def testBean(): Unit = {
+    class Person(@BeanProperty  var name: String) {
+      @BeanProperty var age: Int = 10
+      private var privSex = "boy"
+      private[this] var selay = 10
 
+      def sex = privSex
+
+      def sex_=(newSex: String): Unit = {
+        println("i am sex_")
+        privSex = newSex
+      }
+      def comper(that:Person): Unit ={
+//        that.selay = 222  //该字段只能在自己的类中使用
+      }
+
+
+    }
+    val person = new Person("jack")
+    println(person.getName)
+    println(person.getAge)
+    println(person.sex)
+    person.sex = "girl"
+    println(person.sex)
+
+
+    class FF(private val name:String)
+    class EE(private[this] val name:String)
+    class AA(name:String)
+    class BB(val name:String)
+    case class CC(name:String)
+    case class DD(val name:String)
+
+    val a = new AA("JACK")
+    val b = new BB("JACK")
+    val c = new BB("JACK")
+    val d = new BB("JACK")
+    val e = new EE("JACK")
+    val f = new FF("JACK")
+
+    println(a.name)
+    println(b.name)
+    println(c.name)
+    println(d.name)
+    println(e.name)
+    println(f.name)
+  }
 }
+
