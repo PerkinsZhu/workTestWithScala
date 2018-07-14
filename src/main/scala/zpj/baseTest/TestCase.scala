@@ -841,6 +841,15 @@ class UtilTest {
     override val range: Int = 2
   }
 
+  trait Bnt extends Creature {
+    override val range: Int = 2
+  }
+
+
+  class  Tigger extends  Ant with Bnt {
+
+  }
+
   @Test
   def testExtends(): Unit = {
     val ant = new Ant
