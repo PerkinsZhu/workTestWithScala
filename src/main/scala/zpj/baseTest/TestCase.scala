@@ -775,7 +775,7 @@ class UtilTest {
 
   @Test
   def testBean(): Unit = {
-    class Person(@BeanProperty  var name: String) {
+    class Person(@BeanProperty var name: String) {
       @BeanProperty var age: Int = 10
       private var privSex = "boy"
       private[this] var selay = 10
@@ -786,8 +786,9 @@ class UtilTest {
         println("i am sex_")
         privSex = newSex
       }
-      def comper(that:Person): Unit ={
-//        that.selay = 222  //该字段只能在自己的类中使用
+
+      def comper(that: Person): Unit = {
+        //        that.selay = 222  //该字段只能在自己的类中使用
       }
 
 
@@ -816,18 +817,36 @@ class UtilTest {
     val f = new FF("JACK")
     val g = new GG("JACK")
 
-/*    println(a.name)
-    println(b.name)
-    println(c.name)
-    println(d.name)
-    println(e.name)
-    println(f.name)
-    println(g.name)
-    g.name = "tom"
-    println(g.name)*/
+    /*    println(a.name)
+        println(b.name)
+        println(c.name)
+        println(d.name)
+        println(e.name)
+        println(f.name)
+        println(g.name)
+        g.name = "tom"
+        println(g.name)*/
 
     //
-    println(List(1,2,3,3,4,5).productElement(2))
+    println(List(1, 2, 3, 3, 4, 5).productElement(2))
   }
+
+  class Creature {
+    val range = 10
+    val env = new Array[String](range)
+    println(env.size + "--" + range)
+  }
+
+  class Ant extends Creature {
+    override val range: Int = 2
+  }
+
+  @Test
+  def testExtends(): Unit = {
+    val ant = new Ant
+    println(ant.env.size)
+    println(ant.range)
+  }
+
 }
 

@@ -1,7 +1,4 @@
-import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Test;
-import play.api.libs.json.Json;
-import zpj.baseTest.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +17,9 @@ public class BaseTest {
 
     private void testJVM() {
         List<Object> list = new ArrayList<>();
-        while(true) {
-            list.add(new Object[1024*254]);
-            if(list.size()>1000){
+        while (true) {
+            list.add(new Object[1024 * 254]);
+            if (list.size() > 1000) {
                 list.clear();
             }
         }
@@ -139,5 +136,31 @@ public class BaseTest {
         //        String media_id = json.get("media_id").asText();
     }
 
+    @Test
+    public void testExtends() {
+        Ant ant = new Ant();
+        System.out.println(ant.range + "");
+        System.out.println(ant.array.size() + "");
+    }
+
 }
+
+class Creature {
+    int range = 10;
+    ArrayList<String> array = new ArrayList<>(range);
+
+    public Creature() {
+        System.out.println(range + "  creature ");
+        System.out.println(array.size() + "  creature ");
+    }
+}
+
+class Ant extends Creature {
+    int range = 2;
+
+    public Ant() {
+        System.out.println(range + "  Ant ");
+    }
+}
+
 
