@@ -849,6 +849,10 @@ class UtilTest {
   class  Tigger extends  Ant with Bnt {
 
   }
+  class  Pandar extends Bnt {
+
+  }
+  case object AA{}
 
   @Test
   def testExtends(): Unit = {

@@ -31,4 +31,6 @@ class TestJsoup {
     println(HTMLSpirit.delHTMLTag(str).split("\n").map(_.trim).mkString(""))
   }
 
+
+
 }
