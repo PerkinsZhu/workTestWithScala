@@ -105,3 +105,6 @@ libraryDependencies += "com.sksamuel.elastic4s" % "elastic4s-core_2.12" % "6.2.9
 
 // https://mvnrepository.com/artifact/org.jsoup/jsoup
 libraryDependencies += "org.jsoup" % "jsoup" % "1.11.3"
+
+// https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+libraryDependencies += "org.jetbrains.kotlin" % "kotlin-stdlib" % "1.2.51"
