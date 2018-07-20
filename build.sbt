@@ -108,3 +108,7 @@ libraryDependencies += "org.jsoup" % "jsoup" % "1.11.3"
 
 // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
 libraryDependencies += "org.jetbrains.kotlin" % "kotlin-stdlib" % "1.2.51"
+
+// https://mvnrepository.com/artifact/javax.mail/mail
+libraryDependencies += "javax.mail" % "mail" % "1.4.7"
+
