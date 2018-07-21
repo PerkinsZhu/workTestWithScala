@@ -718,7 +718,26 @@ class UtilTest {
     List(1, 2, 3)
     show(1, 2, 3, 3)
     show("a", "b", "c", "d")
+    val list = new ::(1, Nil)
+    println(list)
+    val list2 = (1 :: 2 :: 3 :: Nil)
 
+    list2 match {
+      case head :: tail => println("i am  head:" + head)
+      case Nil => println("i am  nil")
+    }
+    val builder = List.newBuilder[Int]
+    builder.+=(10)
+    builder.+=(11, 12, 13, 14, 15)
+
+    println(builder.result())
+    val temp = builder.+("qqqqqq")
+    println(builder.result())
+    println(temp)
+    println(100 + "2")
+    val stream = builder.result().toStream
+    stream.print("==")
+    println(stream.force)
   }
 
   def show[A](a: A*): Unit = {
@@ -846,13 +865,15 @@ class UtilTest {
   }
 
 
-  class  Tigger extends  Ant with Bnt {
+  class Tigger extends Ant with Bnt {
 
   }
-  class  Pandar extends Bnt {
+
+  class Pandar extends Bnt {
 
   }
-  case object AA{}
+
+  case object AA {}
 
   @Test
   def testExtends(): Unit = {
