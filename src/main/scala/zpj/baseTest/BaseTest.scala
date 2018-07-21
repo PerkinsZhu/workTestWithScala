@@ -837,9 +837,16 @@ object BaseTest {
 
   }
 
+//  -XX:+PrintCompilation -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining
+  def testInline(): Unit = {
+    1 to 10000 foreach(println(_))
+
+  }
+
   def main(args: Array[String]): Unit = {
 
-    testJVMInfo()
+    testInline()
+//    testJVMInfo()
     //    testTime()
     //    testFutre()
     //    testLoop()
