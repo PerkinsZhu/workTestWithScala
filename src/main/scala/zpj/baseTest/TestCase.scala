@@ -714,7 +714,7 @@ class UtilTest {
   }
 
   @Test
-  def testColletctions(): Unit = {
+  def testCollections(): Unit = {
     List(1, 2, 3)
     show(1, 2, 3, 3)
     show("a", "b", "c", "d")
@@ -738,6 +738,23 @@ class UtilTest {
     val stream = builder.result().toStream
     stream.print("==")
     println(stream.force)
+
+    println(stream.toList.init)
+    println(stream.init)
+    val list3 =stream.toList
+    println(list3)
+    val list4 =list3.dropWhile(_ >11)
+    println(list4)
+    val list5 = Range.apply(1,10).toList
+    println(list5)
+
+    //dropWhile在第一个不满足条件的地方结束，并返回结果。因此，不能跳元素，必须从左向右判断，直至第一个不满足条件的结果。
+    println(list5.dropWhile(_ < 5))
+    println(list5.dropWhile(_ > 5))
+    println(list5.dropWhile(_ == 5))
+
+    println(Stream.iterate(1)(_ * 10).take(10).toList)
+
   }
 
   def show[A](a: A*): Unit = {
