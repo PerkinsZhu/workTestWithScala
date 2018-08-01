@@ -6,7 +6,7 @@ import cats.{Monoid, Semigroup}
 import org.junit.Test
 
 import scala.concurrent.{ExecutionContext, Future}
-import scalaz.Apply
+import scalaz.{Apply, syntax}
 
 /**
   * Created by PerkinsZhu on 2018/5/12 13:35
@@ -227,7 +227,20 @@ class ScalazTest {
 
 //  def traverseFuture[A, B](as: List[A])(f: A => Future[B])(implicit ec: ExecutionContext): Future[List[B]] = Future.traverse(as)(f)
 
+
+
+  @Test
+  def testEq(): Unit ={
+    import scalaz.Equal
+    import scalaz.Scalaz.ToEqualOps
+    case class Person(name: String, age: Int)
+    implicit val personEqual: Equal[Person] = Equal.equal{(a,b) => a.name == b.name && a.age == b.age}
+    println(Person("Jone",23) === Person("Jone",23))
+
+  }
 }
+
+
 
 trait Functor[F[_]] {
   def map[A, B](fa: F[A])(f: A => B): F[B]

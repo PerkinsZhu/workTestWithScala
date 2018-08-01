@@ -11,10 +11,12 @@ import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
 import play.api.libs.json._
+import zpj.baseTest.Color.Color
 import zpj.catsTest.chapter01.Person
 
 import scala.annotation.tailrec
 import scala.beans.BeanProperty
+import scala.collection.immutable.{HashMap, Queue, Stack}
 import scala.collection.mutable
 import scala.collection.parallel.{ForkJoinTaskSupport, ThreadPoolTaskSupport}
 import scala.concurrent.Future
@@ -741,11 +743,11 @@ class UtilTest {
 
     println(stream.toList.init)
     println(stream.init)
-    val list3 =stream.toList
+    val list3 = stream.toList
     println(list3)
-    val list4 =list3.dropWhile(_ >11)
+    val list4 = list3.dropWhile(_ > 11)
     println(list4)
-    val list5 = Range.apply(1,10).toList
+    val list5 = Range.apply(1, 10).toList
     println(list5)
 
     //dropWhile在第一个不满足条件的地方结束，并返回结果。因此，不能跳元素，必须从左向右判断，直至第一个不满足条件的结果。
@@ -899,5 +901,88 @@ class UtilTest {
     println(ant.range)
   }
 
+  @Test
+  def testSubType(): Unit = {
+    val animal = new Animal("tigger")
+    showInfo(Animal("tigger"))
+    showInfo(new {val name: String = "HHH"})
+    showInfo(new {val name: String = "world"})
+
+    def showInfo(a: {val name: String}): Unit = {
+      println(a.name)
+    }
+  }
+
+  case class Animal(val name: String)
+
+  @Test
+  def testEnmu(): Unit = {
+    showColor(Color.BLUE)
+
+    def showColor(color: Color): Unit = {
+      color match {
+        case Color.RED => println("red")
+        case Color.BLUE => println("blue")
+      }
+    }
+
+  }
+
+  @Test
+  def testEnter() {
+    // \r是回车，光标回到本行初始位置；\n是换行，光标回到下一行的同一列
+    println("a\nb\r\nc\\nd")
+    println("hello")
+  }
+
+  @Test
+  def testArray(): Unit = {
+    val array = Array(1, 2, 3, 4)
+    val array2 = new Array[Int](5)
+    array.length
+    println(array2.apply(5))
+    val set = Set(1, 2, 3, 4)
+    set.+(23)
+  }
+
+  @Test
+  def testQueue(): Unit = {
+    val queue = Queue.empty[Int]
+    val newQueue = queue.enqueue(12).enqueue(13).enqueue(14)
+    newQueue.foreach(println)
+    val list = List.empty[Int].+:(2).+:(3).+:(4)
+    println(list)
+    println(list.:+(5))
+    println(list.:+(5).::(6))
+    list.foreach(println)
+    //可用list 替代
+    val stack = new Stack()
+
+    val index = IndexedSeq.range(10, 50)
+    println(index)
+
+    val map = Map(("a", 1), ("b", 2))
+    map.+(("c", 3))
+
+    val hashMap = HashMap(("a", 1))
+    hashMap.+(("b", 2))
+
+    12 match {
+      case a@(12 | 13) => println(s"---$a---")
+    }
+
+
+  }
+
+
 }
+
+
+object Color extends Enumeration {
+  type Color = Value
+  val RED, BLUE = Value
+}
+
+
+
 

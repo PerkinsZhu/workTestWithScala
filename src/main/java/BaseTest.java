@@ -1,7 +1,15 @@
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -141,6 +149,52 @@ public class BaseTest {
         Ant ant = new Ant();
         System.out.println(ant.range + "");
         System.out.println(ant.array.size() + "");
+    }
+
+    @Test
+    public void testNetWork() throws IOException {
+        //        URL url = new URL("http://www.baidu.com");
+        URL url = new URL("http://www.ddd.com");
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+        }
+    }
+
+    @Test
+    public void testHashTable() {
+        Hashtable table = new Hashtable(10);
+        table.put("a", 1);
+        table.put("b", 2);
+        table.forEach((Object k, Object v) -> {
+            System.out.println(k + "-->" + v);
+        });
+        Enumeration itreator = table.keys();
+        while (itreator.hasMoreElements()) {
+            System.out.println(itreator.nextElement());
+        }
+        // System.out.println(table.get(null));
+        System.out.println("===========");
+        System.out.println(table.put("c", 3));
+        System.out.println(table.put("b", 3));
+        System.out.println(table.get("b"));
+        System.out.println(table);
+        System.out.println(table.toString());
+        Hashtable table2 = (Hashtable) table.clone();
+        System.out.println(table2);
+        System.out.println(table2.equals(table));
+        table2.replace("c",4);
+        System.out.println(table2.equals(table));
+        System.out.println(table.equals(table2));
+        ConcurrentHashMap chm = new ConcurrentHashMap(10);
+        chm.put("a",1);
+        chm.put("b",2);
+        chm.put("c",3);
+        System.out.println(chm);
+
+
     }
 
 }
