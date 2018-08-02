@@ -6,12 +6,10 @@ package ehcache;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.search.Attribute;
 import net.sf.ehcache.search.Query;
 import net.sf.ehcache.search.Result;
 import net.sf.ehcache.search.Results;
-import net.sf.ehcache.store.ElementIdAssigningStore;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +17,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
-import static jdk.nashorn.internal.objects.Global.println;
+//import static jdk.nashorn.internal.objects.Global.println;
 
 public class EhcacheTest {
 
@@ -31,7 +29,7 @@ public class EhcacheTest {
         CacheManager cm = CacheManager.create(in);
         Cache cache = cm.getCache("task-cache");
         Element element = cache.get("cache.task");
-        println(element);
+        System.out.println(element);
     }
 
     @Test
