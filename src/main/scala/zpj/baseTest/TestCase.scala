@@ -974,6 +974,15 @@ class UtilTest {
 
   }
 
+  case class A(b:B)
+  case class B(a:A)
+
+  @Test
+  def testDepend(): Unit ={
+    val b:Nothing = throw new Exception();
+    val a = A(b)
+  }
+
 
 }
 
