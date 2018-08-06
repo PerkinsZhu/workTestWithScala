@@ -3,7 +3,7 @@ package zpj.baseTest
 import java.lang.management.{ManagementFactory, MemoryMXBean, MemoryUsage}
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
-import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
+import java.util.concurrent.{ConcurrentHashMap, Executors, TimeUnit}
 import java.util.{Comparator, Date}
 
 import cats.Monoid
@@ -17,7 +17,7 @@ import zpj.catsTest.chapter01.Person
 import scala.annotation.tailrec
 import scala.beans.BeanProperty
 import scala.collection.immutable.{HashMap, Queue, Stack}
-import scala.collection.mutable
+import scala.collection.{AbstractMap, mutable}
 import scala.collection.parallel.{ForkJoinTaskSupport, ThreadPoolTaskSupport}
 import scala.concurrent.Future
 import scala.util.Try
@@ -121,6 +121,10 @@ class UtilTest {
   @Test
   def testMap(): Unit = {
     List(("a", List(1, 2, 3, 4)), ("a", List(11, 22, 33, 44)), ("b", List(1, 2, 3, 4))).toMap.foreach(println _)
+    val map = Map("a:" -> 1, "b" -> 2)
+    val hashMap = HashMap(("a", 1))
+
+
   }
 
   @Test
@@ -799,7 +803,7 @@ class UtilTest {
   }
 
   @Test
-  def testBread(): Unit = {
+  def testBreak(): Unit = {
     import scala.util.control.Breaks._
     breakable {
       for (i <- 1 to 10000) {
@@ -974,13 +978,39 @@ class UtilTest {
 
   }
 
-  case class A(b:B)
-  case class B(a:A)
+  case class A(b: B)
+
+  case class B(a: A)
 
   @Test
-  def testDepend(): Unit ={
-    val b:Nothing = throw new Exception();
+  def testDepend(): Unit = {
+    val b: Nothing = throw new Exception();
     val a = A(b)
+  }
+
+  @Test
+  def testTrait(): Unit = {
+    println(new DD().show())
+  }
+
+  class BB extends AA {
+    override def show(): String = " i am B"
+  }
+
+  class CC extends AA {
+    override def show(): String = "I AM  CC"
+  }
+
+  trait EE extends AA {
+    override def show(): String = "i am EE"
+  }
+
+  class DD extends BB with AA with EE {
+    //     override def show(): String = "i am DD"
+  }
+
+  trait AA {
+    def show(): String
   }
 
 
@@ -993,5 +1023,21 @@ object Color extends Enumeration {
 }
 
 
+object UtilTestObject {
+  def testJavaThread(): Unit = {
+    val executor = Executors.newFixedThreadPool(2)
+    executor.submit(new Runnable {
+      override def run(): Unit = {
+        while (true) {
+          Thread.sleep(100)
+          println("-------")
+        }
+      }
+    })
+  }
 
+  def main(args: Array[String]): Unit = {
+    testJavaThread()
+  }
+}
 
