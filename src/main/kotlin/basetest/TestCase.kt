@@ -28,3 +28,8 @@ class BaseTestKotlin {
 
     }
 }
+
+class KotlinPerson{
+    val name = "jack"
+
+}

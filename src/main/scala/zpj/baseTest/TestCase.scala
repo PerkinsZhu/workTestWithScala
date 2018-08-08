@@ -4,9 +4,11 @@ import java.lang.management.{ManagementFactory, MemoryMXBean, MemoryUsage}
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util.concurrent.{ConcurrentHashMap, Executors, TimeUnit}
+import java.util.zip.ZipError
 import java.util.{Comparator, Date}
 
 import cats.Monoid
+import org.apache.commons.lang3.StringUtils
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
@@ -21,6 +23,7 @@ import scala.collection.{AbstractMap, mutable}
 import scala.collection.parallel.{ForkJoinTaskSupport, ThreadPoolTaskSupport}
 import scala.concurrent.Future
 import scala.util.Try
+import scala.util.control.NonFatal
 
 /**
   * Created by PerkinsZhu on 2017/12/14 19:21.
@@ -1011,6 +1014,55 @@ class UtilTest {
 
   trait AA {
     def show(): String
+  }
+
+
+  @Test
+  def testString2(): Unit = {
+    val name = "jack"
+    println(f"i am $name")
+    println(s"i am $name")
+  }
+
+
+  @Test
+  def testNonFatal(): Unit = {
+    try {
+      //      throw new OutOfMemoryError("2222")
+      throw new NullPointerException("2222")
+
+    } catch {
+      case NonFatal(a) => {
+        println("---nonfatal----")
+        //        a.printStackTrace()
+      }
+      case th: Throwable => println("--Throw--")
+      case ex: Exception => print("--exce--")
+      case ex: Error => print("--error--")
+    }
+
+  }
+
+  @Test
+  def testEither(): Unit = {
+    str2Int("1111") match {
+      case Left(value) => print("errr because:" + value)
+      case Right(value) => print("result is :" + value)
+    }
+    val result = str2Int("")
+    print(result.isLeft)
+    print(result.isRight)
+
+
+
+  }
+
+  def str2Int(str: String): Either[String, Int] = {
+    if (StringUtils.isBlank(str)) {
+      Left("无效的参数")
+    } else {
+      Right(str.toInt)
+    }
   }
 
 

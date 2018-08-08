@@ -57,4 +57,19 @@ public class TestCase {
         IntStream.iterate(1, i -> i < 100, i -> i + 1).filter(i -> i % 2 == 0).map(i -> i * 10).flatMap(i -> IntStream.range(i, i * 2)).forEach(System.out::println);
     }
 
+    @Test
+    public void testError() {
+        try {
+            throw new OutOfMemoryError("aaaa");
+            // throw new RuntimeException("aaaa");
+        } catch (Exception e) {
+            System.out.println("----exception----");
+            e.printStackTrace();
+        } catch (Error er){
+            System.out.println("----error----");
+            er.printStackTrace();
+        }
+    }
+
+
 }
