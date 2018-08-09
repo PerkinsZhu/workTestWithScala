@@ -15,6 +15,7 @@ import org.scalatest.FlatSpec
 import play.api.libs.json._
 import zpj.baseTest.Color.Color
 import zpj.catsTest.chapter01.Person
+import zpj.proxy.User
 
 import scala.annotation.tailrec
 import scala.beans.BeanProperty
@@ -22,7 +23,7 @@ import scala.collection.immutable.{HashMap, Queue, Stack}
 import scala.collection.{AbstractMap, mutable}
 import scala.collection.parallel.{ForkJoinTaskSupport, ThreadPoolTaskSupport}
 import scala.concurrent.Future
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 import scala.util.control.NonFatal
 
 /**
@@ -1009,7 +1010,7 @@ class UtilTest {
   }
 
   class DD extends BB with AA with EE {
-    //     override def show(): String = "i am DD"
+    // override def show(): String = "i am DD"
   }
 
   trait AA {
@@ -1028,7 +1029,7 @@ class UtilTest {
   @Test
   def testNonFatal(): Unit = {
     try {
-      //      throw new OutOfMemoryError("2222")
+      // throw new OutOfMemoryError("2222")
       throw new NullPointerException("2222")
 
     } catch {
@@ -1049,12 +1050,17 @@ class UtilTest {
       case Left(value) => print("errr because:" + value)
       case Right(value) => print("result is :" + value)
     }
-    val result = str2Int("")
-    print(result.isLeft)
-    print(result.isRight)
+    val result = str2Int("10")
+    println(result.isLeft)
+    println(result.isRight)
+    println(result.right.map(_ * 10))
+    None
 
+  }
 
-
+  def testEther(): (String, User) = {
+    Failure(new RuntimeException)
+    Tuple2("", null)
   }
 
   def str2Int(str: String): Either[String, Int] = {
@@ -1065,6 +1071,25 @@ class UtilTest {
     }
   }
 
+  @Test
+  def testEither(): Unit = {
+    /*getUserByEmail("xxx@sina.com") match {
+      case Right(user) => ???
+      case Left(msg) => println("查询用户失败，原因:" + msg)
+    }*/
+  }
+
+  /*def getUserByEmail(email: String): Either[String, User] = {
+    if (email无效) {
+      return Left("邮箱格式错误")
+    } else {
+      if (未查询到注册邮箱) {
+        return Left("该用户不存在")
+      } else {
+        return Right(user)
+      }
+    }
+  }*/
 
 }
 
