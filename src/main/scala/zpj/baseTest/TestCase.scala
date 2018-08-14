@@ -1,11 +1,9 @@
 package zpj.baseTest
 
-import java.lang.management.{ManagementFactory, MemoryMXBean, MemoryUsage}
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
+import java.util.Date
 import java.util.concurrent.{ConcurrentHashMap, Executors, TimeUnit}
-import java.util.zip.ZipError
-import java.util.{Comparator, Date}
 
 import cats.Monoid
 import org.apache.commons.lang3.StringUtils
@@ -13,17 +11,16 @@ import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
 import play.api.libs.json._
-import zpj.baseTest.Color.Color
-import zpj.catsTest.chapter01.Person
 import zpj.proxy.User
+import zpj.scalazTest.Color
 
 import scala.annotation.tailrec
 import scala.beans.BeanProperty
 import scala.collection.immutable.{HashMap, Queue, Stack}
-import scala.collection.{AbstractMap, mutable}
-import scala.collection.parallel.{ForkJoinTaskSupport, ThreadPoolTaskSupport}
+import scala.collection.mutable
+import scala.collection.parallel.ForkJoinTaskSupport
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.util.Failure
 import scala.util.control.NonFatal
 
 /**
@@ -518,9 +515,10 @@ class UtilTest {
     println("wwekUIOHLkj".slice(2, 5))
 
 
-    import sys.process._
-    import java.net.URL
     import java.io.File
+    import java.net.URL
+
+    import sys.process._
     new URL("https://my.oschina.net/joymufeng/blog/353654") #> new File("G:\\test\\abc.html") !!
   }
 
@@ -927,7 +925,7 @@ class UtilTest {
   def testEnmu(): Unit = {
     showColor(Color.BLUE)
 
-    def showColor(color: Color): Unit = {
+    def showColor(color: Color.Value): Unit = {
       color match {
         case Color.RED => println("red")
         case Color.BLUE => println("blue")
@@ -1058,6 +1056,13 @@ class UtilTest {
 
   }
 
+  @Test
+  def testJson(): Unit = {
+    val json = Json.obj("data" -> Json.obj("slot" -> Json.obj()))
+
+    println(json \ "data.slot")
+  }
+
   def testEther(): (String, User) = {
     Failure(new RuntimeException)
     Tuple2("", null)
@@ -1071,50 +1076,36 @@ class UtilTest {
     }
   }
 
-  @Test
-  def testEither(): Unit = {
-    /*getUserByEmail("xxx@sina.com") match {
-      case Right(user) => ???
-      case Left(msg) => println("查询用户失败，原因:" + msg)
-    }*/
+
+  object Color extends Enumeration {
+    type Color = Value
+    val RED, BLUE = Value
   }
 
-  /*def getUserByEmail(email: String): Either[String, User] = {
-    if (email无效) {
-      return Left("邮箱格式错误")
-    } else {
-      if (未查询到注册邮箱) {
-        return Left("该用户不存在")
-      } else {
-        return Right(user)
-      }
-    }
-  }*/
 
-}
-
-
-object Color extends Enumeration {
-  type Color = Value
-  val RED, BLUE = Value
-}
-
-
-object UtilTestObject {
-  def testJavaThread(): Unit = {
-    val executor = Executors.newFixedThreadPool(2)
-    executor.submit(new Runnable {
-      override def run(): Unit = {
-        while (true) {
-          Thread.sleep(100)
-          println("-------")
+  object UtilTestObject {
+    def testJavaThread(): Unit = {
+      val executor = Executors.newFixedThreadPool(2)
+      executor.submit(new Runnable {
+        override def run(): Unit = {
+          while (true) {
+            Thread.sleep(100)
+            println("-------")
+          }
         }
-      }
-    })
+      })
+    }
+
+    def main(args: Array[String]): Unit = {
+      testJavaThread()
+    }
   }
 
-  def main(args: Array[String]): Unit = {
-    testJavaThread()
+  @Test
+  def testJson2(): Unit ={
+    val json = Json.obj("data"->Json.obj("slot" ->Json.obj()))
+
+    println(json \ "data" \ "slot")
   }
 }
 
