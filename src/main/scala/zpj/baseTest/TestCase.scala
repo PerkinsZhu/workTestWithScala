@@ -1102,10 +1102,42 @@ class UtilTest {
   }
 
   @Test
-  def testJson2(): Unit ={
-    val json = Json.obj("data"->Json.obj("slot" ->Json.obj()))
+  def testJson2(): Unit = {
+    val json = Json.obj("data" -> Json.obj("slot" -> Json.obj()))
 
     println(json \ "data" \ "slot")
   }
+
+  @Test
+  def testRturn(): Unit = {
+    1 to 10 foreach (i => {
+      1 to 5 foreach (j => {
+        if (i + j == 8) {
+          return;
+        }
+        println(i + "--" + j)
+      })
+      println(i)
+
+    })
+  }
+
+
+  @Test
+  def testPar2(): Unit = {
+    //par 也是阻塞进行的
+    1 to 10 foreach (i => {
+      Thread.sleep(100)
+      println(i)
+    })
+    println("over1")
+
+    (1 to 10).toList.par foreach (i => {
+      Thread.sleep(100)
+      println(i)
+    })
+    println("over2")
+  }
+
 }
 
