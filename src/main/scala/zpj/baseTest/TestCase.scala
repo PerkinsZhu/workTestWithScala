@@ -1139,5 +1139,9 @@ class UtilTest {
     println("over2")
   }
 
+  @Test
+  def testSum(): Unit = {
+    println(List(1, 2, 3).sum)
+  }
 }
 
