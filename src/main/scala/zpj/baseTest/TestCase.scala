@@ -1143,5 +1143,75 @@ class UtilTest {
   def testSum(): Unit = {
     println(List(1, 2, 3).sum)
   }
+
+  /**
+    * scala 泛型测试
+    * 上界 T <: V 下界 T >:V
+    * 视图界定 T<% V  存在一个T到V的隐式转换
+    * 上下文界定(上下文绑定)  T：V 存在一个V[T]的隐式值
+    * 多重界定
+    * 类型约束 T=:=V  T<:<V  T<%<V
+    * 不变、协变，逆变 T +T  -T
+    * 类型通配符 _
+    */
+
+  @Test
+  def testT(): Unit = {
+    class B {
+      def show(): Unit = {
+        println(" i am B..")
+      }
+    }
+    class BB extends B {}
+    class BBB extends B {}
+
+    //  上界 父类为B
+    def demo1[T <: B](a: T): Unit = a.show()
+
+    import scala.reflect.runtime.universe._
+    //下界 父类为T
+    def demo2[T >: B](a: T): Unit = {
+      //这里的T 应该是一个AnyRef类型的
+      import scala.reflect.runtime.{universe => ru}
+      // a.show()  这里是编译通不过的
+      //      println(ru.typeOf[a.type])
+      println(a.getClass)
+    }
+
+    demo1(new B)
+    demo1(new BB)
+    demo1(new BBB)
+
+    //下面的调用应该是按照 AnyRef 类型传入的
+    demo2(new B)
+    demo2(new BB)
+    demo2(new BBB)
+    demo2(new AnyRef)
+    demo2(AnyRef)
+    demo2(new Object)
+    demo2(1)
+    demo2(List(1, 2, 4))
+    demo2(this)
+
+    def demo3[T >: B](a: Any): T = {
+      // a.show()  这里是编译通不过的
+      //这里的T是一个AnyRef类型的
+      println(a.getClass)
+      val temp = a.asInstanceOf[T]
+      println(temp.getClass)
+      temp
+    }
+
+    println("===TEST DEMO3=====")
+    demo3(new B)
+    demo3(new BB)
+    demo3(new BBB)
+    demo3(1)
+    demo3(new Integer(1))
+    demo3(12.6)
+
+  }
+
+
 }
 
