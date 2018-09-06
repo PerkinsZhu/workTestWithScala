@@ -1212,6 +1212,37 @@ class UtilTest {
 
   }
 
+  @Test
+  def testOther2(): Unit = {
+    var str: String = ""
+    println(str)
+    val builder = new StringBuilder("")
+    builder.+:("hello")
+    builder.+:(" world")
+    builder.append("jjjjwjjjejjejj")
+    println(builder.toString())
+  }
 
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  @Test
+  def testRecover(): Unit = {
+    val future = Future {
+      10 / 0
+    }.map(_ - 10).map(_ * 100).recover({
+      case ex: Exception => {
+        //exception中的信息会被一致传递过来
+        println("exception")
+        ex.printStackTrace()
+        10
+      }
+      case _ => {
+        println("other")
+        20
+      }
+    })
+    Thread.sleep(100)
+    println(future)
+  }
 }
 

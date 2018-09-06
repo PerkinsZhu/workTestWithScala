@@ -5,7 +5,6 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -54,7 +53,7 @@ public class TestCase {
 
     @Test
     public void testArray() {
-        IntStream.iterate(1, i -> i < 100, i -> i + 1).filter(i -> i % 2 == 0).map(i -> i * 10).flatMap(i -> IntStream.range(i, i * 2)).forEach(System.out::println);
+//        IntStream.iterate(1, i -> i < 100, i -> i + 1).filter(i -> i % 2 == 0).map(i -> i * 10).flatMap(i -> IntStream.range(i, i * 2)).forEach(System.out::println);
     }
 
     @Test
