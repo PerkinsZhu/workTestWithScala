@@ -1244,5 +1244,15 @@ class UtilTest {
     Thread.sleep(100)
     println(future)
   }
+
+  @Test
+  def testSeq(): Unit ={
+    Seq(1,2,3).:+(6).foreach(println _)
+    println("----")
+    Seq(1,2,3).+:(6).foreach(println _)
+    println("----")
+    Seq(1,2,3).++(Seq(5,6,7)).foreach(println _)
+  }
+
 }
 
