@@ -2,6 +2,7 @@ package zpj.http4s
 
 import cats.effect.{Effect, IO}
 import fs2.StreamApp
+import org.http4s.{HttpService, Response, Status}
 import org.http4s.server.blaze.BlazeBuilder
 
 import scala.concurrent.ExecutionContext
@@ -20,5 +21,7 @@ object ServerStream {
     BlazeBuilder[F]
       .bindHttp(8081, "0.0.0.0")
       .mountService(helloWorldService, "/")
+      .mountService(helloWorldService, "/")
       .serve
+
 }
