@@ -38,7 +38,12 @@ import java.security.MessageDigest;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-//详细使用见链接:https://blog.csdn.net/ywb201314/article/details/72830132
+/**
+ * 详细使用见链接:https://blog.csdn.net/ywb201314/article/details/72830132
+ *  命令  可以带端口号  java InstallCert www.twitter.com
+ *  然后 sudo cp ./jssecacerts $JAVA_HOEM/jre/lib/security/
+ */
+
 public class InstallCert {
 
     public static void main(String[] args) throws Exception {
