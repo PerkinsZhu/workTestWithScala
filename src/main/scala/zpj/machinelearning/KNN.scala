@@ -1,5 +1,7 @@
 package zpj.machinelearning
 
+import java.util.Random
+
 import zpj.io.MLTool
 
 /**
@@ -33,7 +35,7 @@ object KNN extends Base {
     val labelList = data.map(ele => ele.last)
     val dataZip = dataList.zip(labelList)
     val result = for (i <- 1 until 50) yield {
-      val ele = dataZip((new util.Random).nextInt(1000))
+      val ele = dataZip((new Random()).nextInt(1000))
       doHandel(ele._1, 50, dataList, labelList) == ele._2
     }
     println("正确率：" + result.count(ele => ele).toDouble / result.size.toDouble)
