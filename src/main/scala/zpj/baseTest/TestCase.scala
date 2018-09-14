@@ -1254,5 +1254,9 @@ class UtilTest {
     Seq(1,2,3).++(Seq(5,6,7)).foreach(println _)
   }
 
+  @Test
+  def testDate(): Unit ={
+    println(new Date().getTime)
+  }
 }
 
