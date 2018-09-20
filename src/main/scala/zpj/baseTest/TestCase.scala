@@ -1,10 +1,13 @@
 package zpj.baseTest
 
+import concurrent.duration._
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util.Date
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{ConcurrentHashMap, Executors, TimeUnit}
 
+import akka.actor.ActorSystem
 import cats.Monoid
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.{DateTime, DateTimeZone}
@@ -19,8 +22,9 @@ import scala.beans.BeanProperty
 import scala.collection.immutable.{HashMap, Queue, Stack}
 import scala.collection.mutable
 import scala.collection.parallel.ForkJoinTaskSupport
+import scala.concurrent
 import scala.concurrent.Future
-import scala.util.Failure
+import scala.util.{Failure, Success}
 import scala.util.control.NonFatal
 
 /**
@@ -1246,17 +1250,141 @@ class UtilTest {
   }
 
   @Test
-  def testSeq(): Unit ={
-    Seq(1,2,3).:+(6).foreach(println _)
+  def testSeq(): Unit = {
+    Seq(1, 2, 3).:+(6).foreach(println _)
     println("----")
-    Seq(1,2,3).+:(6).foreach(println _)
+    Seq(1, 2, 3).+:(6).foreach(println _)
     println("----")
-    Seq(1,2,3).++(Seq(5,6,7)).foreach(println _)
+    Seq(1, 2, 3).++(Seq(5, 6, 7)).foreach(println _)
   }
 
   @Test
-  def testDate(): Unit ={
+  def testDate(): Unit = {
     println(new Date().getTime)
   }
+
+  @Test
+  def testRecoverWith(): Unit = {
+    Future(400 / 0).recoverWith({
+      case data => {
+        println(data)
+        Future.successful(10)
+      }
+    })
+
+    Thread.sleep(Int.MaxValue)
+  }
+
+
+  @Test
+  def testRecoverFailure(): Unit = {
+    val future = Future(10 / 0).recoverWith({
+      case _ => {
+        println("----1")
+        Future.successful(10 / 0)
+      }
+    }).recoverWith({
+      case _ => {
+        println("----2")
+        Future.successful(10 / 0)
+      }
+    }).recoverWith({
+      case _ => {
+        println("----3")
+        Future.successful(10 / 0)
+      }
+    }).recoverWith({
+      case _ => {
+        println("----4")
+        Future.successful(10 / 0)
+      }
+    }).recoverWith({
+      case _ => {
+        println("----5")
+        Future.successful(10 / 0)
+      }
+    })
+    println(concurrent.Await.result(future, 10 seconds))
+
+  }
+
+  import akka.pattern.after
+
+
+  def getFuture(): Future[Int] = {
+    Future {
+      println("--0--")
+      10
+    }
+  }
+
+  @Test
+  def testFutureAfter(): Unit = {
+    val fu = after(2 seconds, ActorSystem.create().scheduler)({
+      println("--------")
+      getFuture()
+    })
+
+    println(concurrent.Await.result(fu, 10 seconds))
+    Thread.sleep(100000)
+  }
+
+
+  @Test
+  def testCycle(): Unit = {
+    val i = new AtomicInteger(0)
+    val f = () => Future {
+      println("i---" + i.get())
+      if (i.get() == 3) {
+        10 / 0
+      }
+      Future.successful(i.addAndGet(1))
+    }
+    //    cycle(0, f)
+    cycle2(5, f)
+    Thread.sleep(Int.MaxValue)
+  }
+
+  def cycle[T](num: Int, data: () => Future[T]): Future[T] = {
+    Thread.sleep(1000)
+    val f = data()
+    f.flatMap(i => {
+      println("=====" + num)
+      if (num < 5) {
+        cycle(num + 1, data)
+      } else {
+        f
+      }
+    }).recoverWith({
+      case _ => {
+        if (num < 7) {
+          println("-------" + num)
+          cycle(num + 1, data)
+        } else {
+          println("--over ----")
+          f
+        }
+      }
+    })
+  }
+
+
+  def cycle2[T](num: Int, fu: () => Future[T]): Future[T] = {
+    println("num--->" + num)
+    val f = fu()
+    Thread.sleep(1000)
+    if (num < 0) {
+      println("---over--")
+      f
+    } else {
+      f.recoverWith({
+        case _ => {
+          println("recover -->" + num)
+          cycle2(num - 1, fu)
+        }
+      })
+    }
+  }
+
 }
 

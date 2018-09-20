@@ -1,3 +1,4 @@
+
 name := "workTestWithScala"
 
 version := "1.0"
@@ -129,3 +130,6 @@ libraryDependencies ++= Seq(
 // https://mvnrepository.com/artifact/org.http4s/http4s-twirl
 libraryDependencies += "org.http4s" %% "http4s-twirl" % "0.18.16"
 
+libraryDependencies += "cn.playscala" %% "play-utils" % "0.1.0"
+libraryDependencies += "com.typesafe.play" %% "play-guice" % "2.6.5"
+libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2"
