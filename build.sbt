@@ -116,7 +116,7 @@ libraryDependencies += "javax.mail" % "mail" % "1.4.7"
 // https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper
 libraryDependencies += "org.apache.zookeeper" % "zookeeper" % "3.4.13"
 
-val Http4sVersion = "0.18.17"
+val Http4sVersion = "0.19.0-SNAPSHOT"
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
 
@@ -125,7 +125,8 @@ libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-circe" % Http4sVersion,
   "org.http4s" %% "http4s-dsl" % Http4sVersion,
   "org.specs2" %% "specs2-core" % Specs2Version % "test",
-  "ch.qos.logback" % "logback-classic" % LogbackVersion
+  "ch.qos.logback" % "logback-classic" % LogbackVersion,
+  "org.http4s" %% "http4s-blaze-client" % Http4sVersion
 )
 // https://mvnrepository.com/artifact/org.http4s/http4s-twirl
 libraryDependencies += "org.http4s" %% "http4s-twirl" % "0.18.16"

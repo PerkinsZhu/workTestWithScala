@@ -1386,5 +1386,15 @@ class UtilTest {
     }
   }
 
+  @Test
+  def testAndThen2(): Unit ={
+    val f = Future{100/0}.andThen({
+      case Failure(exception)=> 0
+      case Success(value) => value
+    })
+
+
+    Thread.sleep(Int.MaxValue)
+  }
 }
 
