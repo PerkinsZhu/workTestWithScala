@@ -40,7 +40,7 @@ object HelloWorldServer extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO]
-      .bindHttp(8080, "localhost")
+      .bindHttp(8080, "192.168.10.192")
       .withHttpApp(service)
       .serve
       .compile

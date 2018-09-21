@@ -292,6 +292,13 @@ class UtilTest {
   @Test
   def testString(): Unit = {
     println("My age is %d".format(100))
+
+    var a = "a"
+    a += "b"
+    println(a)
+    a ++= "asdfasdfas"
+    println(a)
+
   }
 
 
@@ -1396,5 +1403,6 @@ class UtilTest {
 
     Thread.sleep(Int.MaxValue)
   }
+
 }
 
