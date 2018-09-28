@@ -1078,11 +1078,11 @@ object BaseTest {
 
 }
 
-package com {
+package comtest {
 
   class Demo2 {
 
-    import com.zpj.demo.Demo4
+    import comtest.zpj.demo.Demo4
 
     val name = new Demo4()
   }

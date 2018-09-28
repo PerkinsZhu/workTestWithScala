@@ -1,5 +1,7 @@
 package zpj.baseTest
 
+import java.io.File
+
 import concurrent.duration._
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
@@ -9,6 +11,7 @@ import java.util.concurrent.{ConcurrentHashMap, Executors, TimeUnit}
 
 import akka.actor.ActorSystem
 import cats.Monoid
+import com.typesafe.config.Config
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
@@ -1404,5 +1407,12 @@ class UtilTest {
     Thread.sleep(Int.MaxValue)
   }
 
+
+
+  @Test
+  def testConfig(): Unit ={
+    val config = com.typesafe.config.ConfigFactory.parseFile(new File("F:\\myCode\\workTestWithScala\\application.conf"))
+    println(config)
+  }
 }
 

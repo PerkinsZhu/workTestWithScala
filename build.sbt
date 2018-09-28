@@ -134,3 +134,16 @@ libraryDependencies += "org.http4s" %% "http4s-twirl" % "0.18.16"
 libraryDependencies += "cn.playscala" %% "play-utils" % "0.1.0"
 libraryDependencies += "com.typesafe.play" %% "play-guice" % "2.6.5"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2"
+
+
+
+libraryDependencies ++= Seq(
+  "com.typesafe.slick" %% "slick" % "3.2.3",
+//  "org.slf4j" % "slf4j-nop" % "1.6.4",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3"
+)
+
+// https://mvnrepository.com/artifact/postgresql/postgresql
+libraryDependencies += "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+// https://mvnrepository.com/artifact/org.postgresql/postgresql
+libraryDependencies += "org.postgresql" % "postgresql" % "42.2.5"

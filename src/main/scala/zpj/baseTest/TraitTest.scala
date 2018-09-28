@@ -79,7 +79,7 @@ class ConsoleLogger extends Logger {
 trait Logger {
   def log(msg: String): Unit
 }
-package com {
+package comtest {
 
   class Demo3 {
 
