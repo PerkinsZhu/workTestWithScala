@@ -5,6 +5,7 @@ import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
+import org.junit.Test
 
 import scala.concurrent.Future
 import scala.util.Failure
@@ -23,5 +24,26 @@ object Client extends App {
   responseFuture.onComplete {
     case Success(rs) => println(rs._3)
     case Failure(ex) => println(ex.getMessage)
+  }
+}
+
+
+class TestCase {
+  @Test
+  def testClien(): Unit = {
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
+    implicit val executionContext = system.dispatcher
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8080/json",method = HttpMethods.POST))
+
+    responseFuture
+      .onComplete {
+        case Success(res) => println(res)
+        case Failure(_) => sys.error("something wrong")
+      }
+
+    Thread.sleep(Int.MaxValue)
+
   }
 }
