@@ -1,4 +1,4 @@
-package util;
+package utiltool;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

@@ -1,4 +1,4 @@
-package util;
+package utiltool;
 
 /*
  * Copyright 2006 Sun Microsystems, Inc.  All Rights Reserved.

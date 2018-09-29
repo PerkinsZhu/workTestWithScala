@@ -147,3 +147,4 @@ libraryDependencies ++= Seq(
 libraryDependencies += "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
 // https://mvnrepository.com/artifact/org.postgresql/postgresql
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.5"
+

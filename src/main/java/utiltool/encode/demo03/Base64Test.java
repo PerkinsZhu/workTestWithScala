@@ -1,8 +1,7 @@
-package util.encode.demo03;
+package utiltool.encode.demo03;
 
 import org.junit.Test;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
@@ -53,11 +52,11 @@ public class Base64Test {
     // 用jdk实现
     public void jdkBase64() {
         try {
-            BASE64Encoder encoder = new BASE64Encoder();
-            String encode = encoder.encode(src.getBytes());
+            Base64.Encoder encoder = Base64.getEncoder();
+            String encode = encoder.encodeToString(src.getBytes());
             System.out.println("encode:" + encode);
-            BASE64Decoder decoder = new BASE64Decoder();
-            System.out.println("decode:" + new String(decoder.decodeBuffer(encode)));
+            Base64.Decoder decoder = Base64.getDecoder();
+            System.out.println("decode:" + new String(decoder.decode(encode)));
         } catch (Exception e) {
             e.printStackTrace();
         }

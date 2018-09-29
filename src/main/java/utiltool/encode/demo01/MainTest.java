@@ -1,4 +1,4 @@
-package util.encode.demo01;
+package utiltool.encode.demo01;
 
 import org.junit.Test;
 
