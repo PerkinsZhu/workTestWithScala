@@ -4,7 +4,9 @@ package zpj.akka.http
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.headers.BasicHttpCredentials
 import akka.stream.ActorMaterializer
+import akka.util.ByteString
 import org.junit.Test
 
 import scala.concurrent.Future
@@ -35,6 +37,7 @@ class TestCase {
     implicit val materializer = ActorMaterializer()
     implicit val executionContext = system.dispatcher
 
+
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8080/json",method = HttpMethods.POST))
 
     responseFuture
@@ -45,5 +48,33 @@ class TestCase {
 
     Thread.sleep(Int.MaxValue)
 
+  }
+
+
+  def requestExample(): Unit ={
+    import HttpMethods._
+
+    val homeUri = Uri("/abc")
+    HttpRequest(GET, uri = homeUri)
+
+    HttpRequest(GET, uri = "/index")
+
+    val data = ByteString("abc")
+    HttpRequest(POST, uri = "/receive", entity = data)
+
+    import HttpProtocols._
+    import MediaTypes._
+    import HttpCharsets._
+    val userData = ByteString("abc")
+    val authorization = headers.Authorization(BasicHttpCredentials("user", "pass"))
+    HttpRequest(
+      PUT,
+      uri = "/user",
+      entity = HttpEntity(`text/plain` withCharset `UTF-8`, userData),
+      headers = List(authorization),
+      protocol = `HTTP/1.0`)
+
+    import akka.http.scaladsl.model.headers.`Raw-Request-URI`
+    val req = HttpRequest(uri = "/ignored", headers = List(`Raw-Request-URI`("/a/b%2Bc")))
   }
 }

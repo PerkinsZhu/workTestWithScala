@@ -21,7 +21,7 @@ import scala.concurrent.duration._
 import scala.io.StdIn
 import scala.util.Random
 
-object HttpServer {
+class HttpServer {
 
   //  https://doc.akka.io/docs/akka-http/current/introduction.html#using-akka-http
 
@@ -230,4 +230,35 @@ object HttpServer {
   }
 
 
+  def responseExample(): Unit = {
+    import StatusCodes._
+
+    // simple OK response without data created using the integer status code
+    HttpResponse(200)
+
+    // 404 response created using the named StatusCode constant
+    HttpResponse(NotFound)
+
+    // 404 response with a body explaining the error
+    HttpResponse(404, entity = "Unfortunately, the resource couldn't be found.")
+
+    // A redirecting response containing an extra header
+    val locationHeader = headers.Location("http://example.com/other")
+    HttpResponse(Found, headers = List(locationHeader))
+  }
+
+
+  @Test
+  def testStreamWithHttp(): Unit = {
+    val serverSource: Source[Http.IncomingConnection, Future[Http.ServerBinding]] =
+      Http().bind(interface = "localhost", port = 8080)
+    val bindingFuture: Future[Http.ServerBinding] =
+      serverSource.to(Sink.foreach { connection => // foreach materializes the source
+        println("Accepted new connection from " + connection.remoteAddress)
+        // ... and then actually handle the connection
+      }).run()
+  }
+
+
+  Thread.sleep(Int.MaxValue)
 }

@@ -149,3 +149,4 @@ libraryDependencies += "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.5"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.5"
+libraryDependencies += "io.spray" %%  "spray-json" % "1.3.4"
