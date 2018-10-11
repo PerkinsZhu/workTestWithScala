@@ -1397,9 +1397,9 @@ class UtilTest {
   }
 
   @Test
-  def testAndThen2(): Unit ={
-    val f = Future{100/0}.andThen({
-      case Failure(exception)=> 0
+  def testAndThen2(): Unit = {
+    val f = Future {100 / 0}.andThen({
+      case Failure(exception) => 0
       case Success(value) => value
     })
 
@@ -1408,11 +1408,28 @@ class UtilTest {
   }
 
 
-
   @Test
-  def testConfig(): Unit ={
+  def testConfig(): Unit = {
     val config = com.typesafe.config.ConfigFactory.parseFile(new File("F:\\myCode\\workTestWithScala\\application.conf"))
     println(config)
   }
+
+  case class AAA()
+
+  @Test
+  def testEqual(): Unit = {
+    val a = AAA()
+    val aa = AAA()
+
+    println(a == aa)
+    println(a eq aa)
+    println(a equals aa)
+    println(a ne aa)
+    println(null ne null)
+    println(null == null)
+    println(null equals null)
+
+  }
+
 }
 
