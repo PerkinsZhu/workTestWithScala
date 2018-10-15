@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 /**
  * Created by PerkinsZhu on 2018/7/16 17:39
@@ -185,7 +186,35 @@ public class LeetCodeJava {
 
     @Test
     public void testLengthOfLongestSubString() {
-        System.out.println("---" + lengthOfLongestSubstring("abba"));
+        System.out.println("---" + lengthOfLongestSubstringTwo("au"));
+        System.out.println("---" + lengthOfLongestSubstringThree("au"));
+        System.out.println("---" + lengthOfLongestSubstringFour("au"));
+    }
+
+    public int lengthOfLongestSubstringFour(String s) {
+        int n = s.length(), ans = 0;
+        int[] index = new int[128];
+        for (int i = 0, j = 0; j < n; j++) {
+            i = Math.max(i, index[s.charAt(j)]);
+            ans = Math.max(ans, j - i + 1);
+            index[s.charAt(j)] = j + 1;
+        }
+        return ans;
+    }
+
+    public int lengthOfLongestSubstringThree(String s) {
+        int len = s.length();
+        int res = 0, i = 0, j = 0;
+        int[] data = new int[128];
+        while (j < len) {
+            char charr = s.charAt(j);
+            if (data[charr] != 0) {
+                res = Math.max(res, (j - i));
+                i = data[charr] > i ? data[charr] : i;
+            }
+            data[charr] = ++j;
+        }
+        return Math.max(res, (j - i));
     }
 
     public int lengthOfLongestSubstring(String s) {
@@ -221,6 +250,164 @@ public class LeetCodeJava {
             count = temp;
         }
         return count;
+    }
+
+    public int lengthOfLongestSubstringTwo(String s) {
+        int result = 0;
+        int len;
+        String temp = "";
+        char[] data = s.toCharArray();
+        for (int i = 0; i < data.length; i++) {
+            char cchar = data[i];
+            int index = temp.indexOf(cchar);
+            if (index >= 0) {
+                len = temp.length();
+                if (result < len) {
+                    result = len;
+                }
+                temp = temp.substring(index + 1);
+            }
+            temp += cchar;
+        }
+
+        len = temp.length();
+        if (result < len) {
+            result = len;
+        }
+        return result;
+    }
+
+
+    @Test
+    public void test04() {
+        int[] a = new int[3];
+        a[0] = 2;
+        a[1] = 4;
+        a[2] = 6;
+        int[] b = new int[4];
+        b[0] = 4;
+        b[1] = 7;
+        b[2] = 8;
+        b[3] = 10;
+
+        int[] a1 = new int[2];
+        a1[0] = 1;
+        a1[1] = 2;
+        int[] b1 = new int[2];
+        b1[0] = 3;
+        b1[1] = 4;
+
+        System.out.println("\n--->" + findMedianSortedArrays(a1, b1));
+        System.out.println("\n--->" + findMedianSortedArraysTwo(a1, b1));
+    }
+
+    public double findMedianSortedArraysTwo(int[] nums1, int[] nums2) {
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int len3 = len1 + len2;
+        int[] data = new int[len3];
+        double mid = 0.0;
+        //TODO  找到中位数之后就终止，不再对后面的数据进行循环排序
+        if (len3 % 2 == 0) {
+            int m = (len3 / 2) - 1;
+            int n = len3 / 2;
+
+            for (int i = 0, j = 0, k = 0; k < n; k++) {
+                if (i < len1) {
+
+                } else {
+
+                }
+
+                if (nums1[i] > nums2[j]) {
+                    j++;
+                } else {
+                    i++;
+                }
+            }
+
+        } else {
+            int n = len3 / 2;
+        }
+        return mid;
+    }
+
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int len3 = len1 + len2;
+        int[] data = new int[len3];
+        int i = 0, j = 0, k = 0;
+        for (; i < len1 && j < len2; k++) {
+            if (nums1[i] > nums2[j]) {
+                data[k] = nums2[j];
+                j++;
+            } else {
+                data[k] = nums1[i];
+                i++;
+            }
+        }
+
+        if (j < len2) {
+            for (; j < len2; j++) {
+                data[k++] = nums2[j];
+            }
+        } else {
+            for (; i < len1; i++) {
+                data[k++] = nums1[i];
+            }
+        }
+
+        for (int m = 0; m < data.length; m++) {
+            System.out.print("\t" + data[m]);
+        }
+
+        double mid = 0.0;
+
+        if (len3 % 2 == 0) {
+            mid = (data[(len3 / 2) - 1] + data[len3 / 2]) / 2.0;
+        } else {
+            mid = data[len3 / 2] / 1.0;
+        }
+        return mid;
+    }
+
+
+    @Test
+    public void testFive() {
+        String str = "asddsawe";
+        System.out.println("\n--->" + longestPalindrome(str));
+    }
+
+    public String longestPalindrome(String s) {
+
+        return "";
+    }
+
+    @Test
+    public void test53() {
+        int[] a = new int[3];
+        a[0] = 2;
+        a[1] = -4;
+        a[2] = 6;
+        System.out.println("\n--->" + maxSubArray(a));
+        System.out.println("\nresult--->" + result);
+    }
+
+    int result = 0;
+
+    public int maxSubArray(int[] nums) {
+
+        if (nums.length == 1) {
+            return nums[0];
+        } else {
+            if (nums[0] > 0) {
+                result = result + nums[0];
+            }
+            return Math.max(result, maxSubArray(nums));
+        }
+
     }
 
 
