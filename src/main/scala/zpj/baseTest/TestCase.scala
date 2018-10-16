@@ -1431,5 +1431,12 @@ class UtilTest {
 
   }
 
+  @Test
+  def testXX(): Unit = {
+    println(5 / 2)
+    println(4 / 2)
+  }
+
+
 }
 

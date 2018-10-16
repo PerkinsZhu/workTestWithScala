@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 /**
  * Created by PerkinsZhu on 2018/7/16 17:39
@@ -381,34 +380,274 @@ public class LeetCodeJava {
     }
 
     public String longestPalindrome(String s) {
+        int len = s.length();
+        //递归，传入i，j 。 判断是否是回文串 如果是返回长度 ，如果不是 返回0
+        class Task {
+            //TODO
+            public int doTask(int i, int j) {
+                if (s.charAt(i) == s.charAt(j)) return 1;
+                return doTask(i + 1, j - 1);
+            }
+        }
+
 
         return "";
     }
 
+
     @Test
     public void test53() {
-        int[] a = new int[3];
-        a[0] = 2;
-        a[1] = -4;
+        int[] a = new int[5];
+        a[0] = -1;
+        a[1] = -1;
         a[2] = 6;
+        a[3] = -1;
+        a[4] = 8;
         System.out.println("\n--->" + maxSubArray(a));
-        System.out.println("\nresult--->" + result);
+        System.out.println("\n--->" + maxSubArray02(a));
+        System.out.println("\n--->" + maxSubArray03(a));
+        System.out.println("\n--->" + maxSubArray04(a));
     }
 
-    int result = 0;
+
+    public int maxSubArray04(int[] nums) {
+        int sum = nums[0];
+        int ans = sum;
+        for (int i = 1; i < nums.length; i++) {
+            // 每多一个元素A，只需要比较元素A、所有元素(前面的元素+A)、前面元素 三者最大子串和即可
+            sum = sum + nums[i] > nums[i] ? sum + nums[i] : nums[i];
+            ans = ans > sum ? ans : sum;
+        }
+        return ans;
+    }
+
+    public int maxSubArray03(int[] nums) {
+        class Temp {
+            private int doTask(int left, int right) {
+                //                System.out.println(left + "----" + right);
+                if (left == right) {
+                    return nums[left];
+                }
+                int mid = left + right >> 1;
+                int leftMax = doTask(left, mid);
+                int rightMax = doTask(mid + 1, right);
+                //                System.out.println(left + "--" + mid + "--" + right);
+                int midMax01 = nums[mid], sum = 0;
+                for (int i = mid; i >= left; i--) {
+                    sum += nums[i];
+                    midMax01 = Math.max(sum, midMax01);
+                }
+
+                sum = 0;
+                int midMax02 = nums[mid + 1];
+                for (int i = mid + 1; i <= right; i++) {
+                    sum += nums[i];
+                    midMax02 = Math.max(sum, midMax02);
+                }
+
+                int midMax = midMax01 + midMax02;
+                //                System.out.println(leftMax + "--" + midMax + "(" + midMax01 + "、" + midMax02 + ")" + "--" + rightMax);
+                return Math.max(midMax, Math.max(leftMax, rightMax));
+            }
+        }
+        return new Temp().doTask(0, nums.length - 1);
+    }
+
+    public int maxSubArray02(int[] nums) {
+        int[] sum = new int[nums.length];
+        sum[0] = nums[0];
+        int ans = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            sum[i] = sum[i - 1] + nums[i];
+            if (ans < sum[i]) {
+                ans = sum[i];
+            }
+        }
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                int s = sum[j] - sum[i - 1];
+                if (s > ans) {
+                    ans = s;
+                }
+            }
+        }
+        return ans;
+    }
 
     public int maxSubArray(int[] nums) {
-
-        if (nums.length == 1) {
-            return nums[0];
-        } else {
-            if (nums[0] > 0) {
-                result = result + nums[0];
+        int ans = nums[0];
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i; j < nums.length; j++) {
+                int s = 0;
+                for (int k = i; k <= j; k++) {
+                    s += nums[k];
+                }
+                if (s > ans) {
+                    ans = s;
+                }
             }
-            return Math.max(result, maxSubArray(nums));
         }
-
+        return ans;
     }
 
 
+    @Test
+    public void test70() {
+        System.out.println("\n--->" + climbStairs(44));
+        System.out.println("\n--->" + climbStairs02(44));
+    }
+
+    public int climbStairs02(int n) {
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        int[] data = new int[n];
+        data[0] = 1;
+        data[1] = 2;
+        for (int i = 2; i < n; i++) {
+            data[i] = data[i - 1] + data[i - 2];
+        }
+        return data[n - 1];
+    }
+
+    public int climbStairs(int n) {
+        if (n == 1) return 1;
+        if (n == 2) return 2;
+        return climbStairs(n - 1) + climbStairs(n - 2);
+    }
+
+    @Test
+    public void test121() {
+        int[] a = new int[5];
+        a[0] = 7;
+        a[1] = 3;
+        a[2] = 6;
+        a[3] = 9;
+        a[4] = 2;
+        System.out.println("\n--->" + maxProfit(a));
+        System.out.println("\n--->" + maxProfit02(a));
+    }
+
+    public int maxProfit02(int[] prices) {
+        int res = 0, len = prices.length, sum = 0;
+        for (int i = 1; i < len; i++) {
+            int temp = prices[i] - prices[i - 1];
+            sum = sum >= 0 ? sum + temp : temp;
+            res = Math.max(res, sum);
+        }
+        return res < 0 ? 0 : res;
+    }
+
+
+    public int maxProfit(int[] prices) {
+        int res = 0, len = prices.length, sum = 0;
+        if (len < 2) return 0;
+
+        int[] data = new int[len - 1];
+        for (int i = 1; i < len; i++) {
+            data[i - 1] = prices[i] - prices[i - 1];
+        }
+
+        sum = data[0];
+        res = sum;
+        int dl = data.length;
+        for (int i = 1; i < dl; i++) {
+            sum = sum > 0 ? sum + data[i] : data[i];
+            res = Math.max(res, sum);
+        }
+        return res < 0 ? 0 : res;
+    }
+
+
+    @Test
+    public void test198() {
+        int[] a = new int[0];
+        //        a[0] = 7;
+        //        a[1] = 3;
+        //        a[2] = 6;
+        //        a[3] = 9;
+        //        a[4] = 2;
+        System.out.println("\n--->" + rob(a));
+    }
+
+    public int rob(int[] nums) {
+        int len = nums.length;
+        if (len == 0) return 0;
+        if (len == 1) return nums[0];
+        if (len == 2) return Math.max(nums[0], nums[1]);
+
+        int a = nums[0];
+        int b = Math.max(nums[0], nums[1]);
+        for (int i = 2; i < len; i++) {
+            int temp = Math.max(a + nums[i], b);
+            a = b;
+            b = temp;
+        }
+        return Math.max(a, b);
+    }
+
+    @Test
+    public void test303() {
+        int[] a = new int[6];
+        a[0] = -2;
+        a[1] = 0;
+        a[2] = 3;
+        a[3] = -5;
+        a[4] = 2;
+        a[5] = -1;
+        NumArray obj = new NumArray(a);
+        System.out.println("\n--->" + obj.sumRange(0, 2));
+        System.out.println("\n--->" + obj.sumRange(2, 5));
+        System.out.println("\n--->" + obj.sumRange(0, 5));
+    }
+
+    class NumArray {
+        private int[] data;
+
+        public NumArray(int[] nums) {
+            if (nums == null || nums.length < 1) return;
+            int len = nums.length;
+            if (len > 0) {
+                data = new int[len + 1];
+                for (int i = 0; i < len; i++) {
+                    data[i + 1] = data[i] + nums[i];
+                }
+            }
+        }
+
+        public int sumRange(int i, int j) {
+            return data[j + 1] - data[i];
+        }
+    }
+
+
+    @Test
+    public void test746() {
+        int[] a = new int[10];
+        a[0] = 1;
+        a[1] = 100;
+        a[2] = 1;
+        a[3] = 1;
+        a[4] = 1;
+        a[5] = 100;
+        a[6] = 1;
+        a[7] = 1;
+        a[8] = 100;
+        a[9] = 1;
+        System.out.println("\n--->" + minCostClimbingStairs(a));
+    }
+
+    public int minCostClimbingStairs(int[] cost) {
+        int len = cost.length;
+        if (len == 1) return cost[0];
+        if (len == 2) return Math.min(cost[0], cost[1]);
+
+        int a = cost[0];
+        int b = cost[1];
+        for (int i = 2; i < len; i++) {
+            int temp = Math.min(a, b) + cost[i];
+            a = b;
+            b = temp;
+        }
+        return Math.min(a, b);
+    }
 }
