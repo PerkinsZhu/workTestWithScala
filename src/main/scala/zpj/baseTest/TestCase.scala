@@ -1242,7 +1242,7 @@ class UtilTest {
   @Test
   def testRecover(): Unit = {
     val future = Future {
-      10 / 0
+      10 / 2
     }.map(_ - 10).map(_ * 100).recover({
       case ex: Exception => {
         //exception中的信息会被一致传递过来

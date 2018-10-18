@@ -375,23 +375,135 @@ public class LeetCodeJava {
 
     @Test
     public void testFive() {
-        String str = "asddsawe";
-        System.out.println("\n--->" + longestPalindrome(str));
+        //                        String str = "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd";
+        //                                                        String str = "ewwktkwlwlk23";
+        //        String str = "bb";
+        String str = "ccc";
+        //        String str = "ccd";
+        //        String str = "cbbd";
+        //                                                        String str = "a";
+        //                                                String str = "";
+        long start = System.currentTimeMillis();
+        System.out.println("--->" + longestPalindrome(str));
+        System.out.println("time-->" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        System.out.println("--->" + longestPalindrome02(str));
+        System.out.println("time-->" + (System.currentTimeMillis() - start));
+        start = System.currentTimeMillis();
+        System.out.println("--->" + longestPalindrome03(str));
+        System.out.println("time-->" + (System.currentTimeMillis() - start));
+    }
+
+
+    public String longestPalindrome03(String s) {
+        int len = s.length();
+        if (len < 1) return s;
+        String ans = s.charAt(0) + "";
+        for (int i = 1; i < len; i++) {
+            int x = i - 1, y = i;
+            boolean end01 = false;    //偶数退出标识
+            boolean end02 = false; //奇数退出标识
+            String temp = "";
+            for (; x >= 0 && y < len; ) {
+                if (s.charAt(x) != s.charAt(y)) {
+                    temp = s.substring(x + 1, y);
+                    end01 = true;   //偶数结束
+                }
+                if (s.charAt(x) != s.charAt(y + 1)) {
+                    temp = s.substring(x + 1, y + 1);
+                    end02 = true;
+                }
+
+                if (end01 && end02) break;
+                x--;
+                y++;
+            }
+            if (temp == "") {
+                temp = s.substring(0, i + 1);
+            }
+
+            if (temp.length() > ans.length()) {
+                ans = temp;
+            }
+        }
+        return ans;
+    }
+
+
+    public String longestPalindrome02(String s) {
+        int len = s.length();
+        if (len < 1) return s;
+        String ans = s.charAt(0) + "";
+        for (int i = 1; i < len; i++) {
+            //            System.out.println("====" + i + "=====");
+            //对偶数进行循环
+            int x = i - 1, y = i;
+            for (; x >= 0 && y < len; ) {
+                //                System.out.println("====>" + x + "===" + y);
+                if (s.charAt(x) != s.charAt(y)) break;
+                x--;
+                y++;
+            }
+            int xx = ++x;
+            if (ans.length() < (y - xx)) {
+                ans = s.substring(xx, y);
+            }
+
+            //对奇数进行循环
+            int m = i - 1, n = i + 1;
+            for (; m >= 0 && n < len; ) {
+                //                System.out.println("====>" + m + "===" + n);
+                if (s.charAt(m) != s.charAt(n)) break;
+                m--;
+                n++;
+            }
+            int mm = m++;
+            if (ans.length() < (n - mm)) {
+                ans = s.substring(m, n);
+            }
+        }
+
+        return ans;
     }
 
     public String longestPalindrome(String s) {
         int len = s.length();
-        //递归，传入i，j 。 判断是否是回文串 如果是返回长度 ，如果不是 返回0
-        class Task {
-            //TODO
-            public int doTask(int i, int j) {
-                if (s.charAt(i) == s.charAt(j)) return 1;
-                return doTask(i + 1, j - 1);
+        String ans = "";
+        for (int i = 0; i < len; i++) {
+            for (int j = i; j < len; j++) {
+                String str = s.substring(i, j + 1);
+                if (isXXX(str)) {
+                    if (ans.length() < (j + 1 - i)) {
+                        ans = str;
+                    }
+                }
             }
+
         }
+        return ans;
+    }
 
-
-        return "";
+    // 判断是否是回文数
+    public boolean isXXX(String s) {
+        //        System.out.println(s);
+        if (s == null) return false;
+        if (s.length() == 1) return true;
+        int len = s.length();
+        if (len % 2 == 1) {
+            for (int x = 0, y = len; x + 1 != y; ) {
+                if (s.charAt(x) != s.charAt(y - 1)) return false;
+                x++;
+                y--;
+            }
+            return true;
+        } else {
+            for (int x = 0, y = len; x != y; ) {
+                if (s.charAt(x) != s.charAt(y - 1)) return false;
+                x++;
+                y--;
+            }
+            return true;
+        }
     }
 
 
@@ -650,4 +762,193 @@ public class LeetCodeJava {
         }
         return Math.min(a, b);
     }
+
+
+    @Test
+    public void test62() {
+        System.out.println("\n--->" + uniquePaths(7, 3));
+        System.out.println("\n--->" + uniquePaths02(7, 3));
+        System.out.println("\n--->" + uniquePaths03(7, 3));
+    }
+
+    public int uniquePaths03(int m, int n) {
+        //动态规划
+        if (m <= 0 || n <= 0) return 0;
+        int[] res = new int[n];
+        res[0] = 1;
+        for (int i = 0; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                res[j] += res[j - 1];
+            }
+        }
+        return res[n - 1];
+    }
+
+    public int uniquePaths02(int m, int n) {
+        int[] data = new int[n];
+        data[0] = 1;
+        for (int i = 0; i < m; i++) {
+            // 每下移一行，则data存储的是上一行，同列的数据，所以可以省略二维数组
+            for (int j = 1; j < n; j++) {
+                data[j] += data[j - 1];
+            }
+        }
+        return data[n - 1];
+    }
+
+    public int uniquePaths(int m, int n) {
+        int[][] data = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || j == 0) {
+                    data[i][j] = 1;
+                } else {
+                    data[i][j] = data[i - 1][j] + data[i][j - 1];
+                }
+            }
+
+        }
+        return data[m - 1][n - 1];
+    }
+
+    @Test
+    public void test63() {
+        int[][] data = new int[3][3];
+        data[0][0] = 0;
+        data[0][1] = 0;
+        data[0][2] = 0;
+        data[1][0] = 0;
+        data[1][1] = 1;
+        data[1][2] = 0;
+        data[2][0] = 0;
+        data[2][1] = 0;
+        data[2][2] = 0;
+
+        System.out.println("\n--->" + uniquePathsWithObstacles(data));
+        System.out.println("\n--->" + uniquePathsWithObstacles02(data));
+    }
+
+
+    public int uniquePathsWithObstacles02(int[][] obstacleGrid) {
+        int n = obstacleGrid[0].length;
+        int[] data = new int[n];
+        data[0] = 1;
+        for (int[] item : obstacleGrid) {
+            for (int j = 0; j < n; j++) {
+                if (item[j] == 1) { // 先进行判断，如果走不通，则置为0
+                    data[j] = 0;
+                } else if (j > 0) {
+                    data[j] += data[j - 1];
+                }
+            }
+        }
+        return data[n - 1];
+    }
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] data = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) {
+                    if (obstacleGrid[i][j] == 1) {
+                        data[i][j] = 0;
+                    } else {
+                        data[i][j] = 1;
+                    }
+                } else if (i == 0) {
+                    if (obstacleGrid[i][j] == 1) {
+                        data[i][j] = 0;
+                    } else {
+                        data[i][j] = data[i][j - 1];
+                    }
+                } else if (j == 0) {
+                    if (obstacleGrid[i][j] == 1) {
+                        data[i][j] = 0;
+                    } else {
+                        data[i][j] = data[i - 1][j];
+                    }
+                } else {
+                    if (obstacleGrid[i][j] == 1) {
+                        data[i][j] = 0;
+                    } else {
+                        data[i][j] = data[i][j - 1] + data[i - 1][j];
+                    }
+                }
+            }
+        }
+        return data[m - 1][n - 1];
+    }
+
+    @Test
+    public void test64() {
+        int[][] data = new int[3][3];
+        data[0][0] = 1;
+        data[0][1] = 3;
+        data[0][2] = 1;
+        data[1][0] = 1;
+        data[1][1] = 5;
+        data[1][2] = 1;
+        data[2][0] = 4;
+        data[2][1] = 2;
+        data[2][2] = 1;
+
+        System.out.println("\n--->" + minPathSum(data));
+    }
+
+    public int minPathSum(int[][] grid) {
+        int m = grid[0].length;
+        int n = grid.length;
+        int[] data = new int[m];
+        for (int j = 0; j < n; j++) {
+            int[] item = grid[j];
+            if (j == 0) {
+                for (int i = 0; i < m; i++) {
+                    if (i == 0) {
+                        data[i] = item[i] + data[i];
+                    } else {
+                        data[i] = item[i] + data[i - 1];
+                    }
+                }
+            } else {
+                for (int i = 0; i < m; i++) {
+                    if (i == 0) {
+                        data[i] = item[i] + data[i];
+                    } else {
+                        data[i] = item[i] + Math.min(data[i], data[i - 1]);
+                    }
+                }
+            }
+            System.out.println();
+        }
+        return data[m - 1];
+    }
+
+    @Test
+    public void test91() {
+        String str = "1010";
+        System.out.println("\n--->" + numDecodings(str));
+    }
+
+    public int numDecodings(String s) {
+        if (s.startsWith("0")) return 0;
+
+        int len = s.length();
+        if (len == 1) return 1;
+
+        int a = 1, b = 1;
+        for (int i = 1; i < len; i++) {
+            char pre = s.charAt(i - 1);
+            char cur = s.charAt(i);
+            if (cur == '0') b = 0;
+            if (pre == '1' || pre == '2' && s.charAt(i) < '7') {
+                int tem = a + b;
+                a = b;
+                b = tem;
+            }
+        }
+        return b;
+    }
+
 }
