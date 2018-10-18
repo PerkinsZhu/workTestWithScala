@@ -375,14 +375,14 @@ public class LeetCodeJava {
 
     @Test
     public void testFive() {
-        //                        String str = "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd";
+        // String str = "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd";
         //                                                        String str = "ewwktkwlwlk23";
         //        String str = "bb";
         String str = "ccc";
         //        String str = "ccd";
         //        String str = "cbbd";
-        //                                                        String str = "a";
-        //                                                String str = "";
+        // String str = "a";
+        // String str = "";
         long start = System.currentTimeMillis();
         System.out.println("--->" + longestPalindrome(str));
         System.out.println("time-->" + (System.currentTimeMillis() - start));
@@ -435,7 +435,7 @@ public class LeetCodeJava {
         if (len < 1) return s;
         String ans = s.charAt(0) + "";
         for (int i = 1; i < len; i++) {
-            //            System.out.println("====" + i + "=====");
+            //System.out.println("====" + i + "=====");
             //对偶数进行循环
             int x = i - 1, y = i;
             for (; x >= 0 && y < len; ) {
@@ -951,4 +951,20 @@ public class LeetCodeJava {
         return b;
     }
 
+
+    @Test
+    public void testArray01() {
+        int[] data = new int[3];
+        data[0] = 1;
+        data[1] = 2;
+        data[2] = 2;
+        data[3] = 5;
+
+        System.out.println("\n--->" + removeDuplicates(data));
+    }
+
+    public int removeDuplicates(int[] nums) {
+
+        return 0;
+    }
 }

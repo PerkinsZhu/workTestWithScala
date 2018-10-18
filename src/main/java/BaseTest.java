@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 public class BaseTest {
     public static void main(String[] args) {
         //        new BaseTest().testThread();
-        new BaseTest().testJVM();
+        new BaseTest().testConcurrentHashMap();
 
     }
 
@@ -185,18 +185,29 @@ public class BaseTest {
         Hashtable table2 = (Hashtable) table.clone();
         System.out.println(table2);
         System.out.println(table2.equals(table));
-        table2.replace("c",4);
+        table2.replace("c", 4);
         System.out.println(table2.equals(table));
         System.out.println(table.equals(table2));
         ConcurrentHashMap chm = new ConcurrentHashMap(10);
-        chm.put("a",1);
-        chm.put("b",2);
-        chm.put("c",3);
+        chm.put("a", 1);
+        chm.put("b", 2);
+        chm.put("c", 3);
         System.out.println(chm);
 
 
     }
 
+
+    @Test
+    public void testConcurrentHashMap() {
+//        ConcurrentHashMap map = new ConcurrentHashMap();
+        ConcurrentHashMap map = new ConcurrentHashMap(10);
+        map.put("a", "111");
+//        map.remove("a");
+        System.out.println(1 << 30);
+        System.out.println(3 << 2);
+        System.out.println(3 << 3);
+    }
 }
 
 class Creature {
