@@ -3,6 +3,9 @@ package lambda;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicStampedReference;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -106,5 +109,32 @@ public class TestCase {
         map.put("c", 3);
 
     }
+
+    @Test
+    public void testCAS() {
+
+        AtomicInteger integer = new AtomicInteger(15);
+        boolean tip = integer.compareAndSet(10, 9);
+        System.out.println(tip);
+
+
+        AtomicStampedReference<Integer> integer02 = new AtomicStampedReference<>(10, 100);
+        System.out.println("stamp-->" + integer02.getStamp());
+        System.out.println("reference-->" + integer02.getReference());
+        boolean two = integer02.compareAndSet(10, 11, 100, 101);
+        System.out.println(two);
+        int[] stampHolder = new int[101];
+        System.out.println(integer02.get(stampHolder));
+
+
+    }
+
+    @Test
+    public void testConcurrentHashMap() {
+        ConcurrentHashMap<String, Integer> map = new ConcurrentHashMap<>(10);
+        map.put("jack", 23);
+        
+    }
+
 
 }

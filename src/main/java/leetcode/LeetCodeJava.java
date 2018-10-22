@@ -927,28 +927,28 @@ public class LeetCodeJava {
 
     @Test
     public void test91() {
-        String str = "1010";
+        String str = "181";
         System.out.println("\n--->" + numDecodings(str));
     }
 
     public int numDecodings(String s) {
-        if (s.startsWith("0")) return 0;
-
-        int len = s.length();
-        if (len == 1) return 1;
-
-        int a = 1, b = 1;
+        if (s.isEmpty() || s.startsWith("0")) return 0;
+        int[] data = new int[s.length() + 1];
+        data[0] = 1;
+        int len = data.length;
         for (int i = 1; i < len; i++) {
-            char pre = s.charAt(i - 1);
-            char cur = s.charAt(i);
-            if (cur == '0') b = 0;
-            if (pre == '1' || pre == '2' && s.charAt(i) < '7') {
-                int tem = a + b;
-                a = b;
-                b = tem;
+            //data[i] = data[i-1] + data[i-2]
+            char n = s.charAt(i - 1);
+            data[i] = n == '0' ? 0 : data[i - 1]; // 无论如何data[i]都要加上data[i-1]
+            //要不要加data[i-2] ,需要看是否符合条件。
+            if (i > 1) {
+                char m = s.charAt(i - 2);
+                if (m == '1' || (m == '2' && n < '7')) {
+                    data[i] = data[i] + data[i - 2];
+                }
             }
         }
-        return b;
+        return data[len - 1];
     }
 
 
@@ -966,5 +966,31 @@ public class LeetCodeJava {
     public int removeDuplicates(int[] nums) {
 
         return 0;
+    }
+
+    @Test
+    public void test639() {
+        String str = "1*";
+        System.out.println("\n--->" + numDecodings02(str));
+    }
+
+    public int numDecodings02(String s) {
+        if (s.isEmpty() || s.startsWith("0")) return 0;
+        int[] data = new int[s.length() + 1];
+        data[0] = s.indexOf(0) == '*' ? 9 : 1;
+        int len = data.length;
+
+        for (int i = 1; i < len; i++) {
+            char n = s.charAt(i - 1);
+            data[i] = 9 * (n == '0' ? 0 : data[i - 1]);
+            if (i > 1) {
+                char m = s.charAt(i - 2);
+                if (m == '1' || (m == '2' && n < '7')) {
+                    data[i] = data[i] + data[i - 2];
+                }
+            }
+        }
+
+        return data[len - 1];
     }
 }

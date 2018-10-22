@@ -1453,6 +1453,16 @@ class UtilTest {
 
   }
 
+  @Test
+  def testNothing(): Unit = {
+    val i: Int = null;
+    println(i)
+    def j:Nothing = throw new RuntimeException
+    println("---")
+    var y = 0
+    val x = y = 1
+  }
+
 
 }
 
