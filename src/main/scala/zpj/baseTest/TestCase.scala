@@ -17,6 +17,7 @@ import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
 import play.api.libs.json._
+import zpj.baseTest
 import zpj.proxy.User
 import zpj.scalazTest.Color
 
@@ -1435,6 +1436,21 @@ class UtilTest {
   def testXX(): Unit = {
     println(5 / 2)
     println(4 / 2)
+
+    //    val set = Seq(1,2,3,4,5,6,7)
+    val set = (0 to 100).toSet[Int]
+
+    set.par.foreach(i => println(s"threadName:${Thread.currentThread().getName} -->$i"))
+
+    set.map(_ * 10).map(_ + 1).sum / set.size
+    Map.empty[String, String].+("a" -> 1).+("b" -> 2).+("c" -> 3)
+
+
+    type MyType = Tuple4[String, Student, Int, Map[String, Int]]
+    val stuendt = Student("jack", 20, true)
+
+    def getStudentInfo(): MyType = ("jack", stuendt, 20, Map("驾龄" -> 3)) //返回自定义类型
+
   }
 
 
