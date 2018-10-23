@@ -2,8 +2,11 @@ package zpj.baseTest;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by PerkinsZhu on 2017/12/4 14:36.
@@ -13,7 +16,7 @@ public class JavaTest {
     private static ConcurrentHashMap<String, List<String>> answerListMap = new ConcurrentHashMap<String, List<String>>();
 
     public static void main(String[] args) {
-        new JavaTest().testCase();
+        new JavaTest().testCOW();
     }
 
     @Test
@@ -116,5 +119,71 @@ public class JavaTest {
         }
 
 
+    }
+
+    @Test
+    public void testCOW() {
+        //TODO  测试 CopyOnWriteArrayList
+        CopyOnWriteArrayList list = new CopyOnWriteArrayList();
+        HashMap<String, Integer> map = new HashMap<>(1000);
+        new Thread(() -> {
+            int i = 0;
+            while (true) {
+                list.add(i++);
+                list.add(i++);
+                list.add(i++);
+                list.add(i++);
+                map.put(i + "", i++);
+                map.put(i + "", i++);
+                map.put(i + "", i++);
+                map.put(i + "", i++);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                list.remove(0);
+                map.remove(i - 3 + "");
+                System.out.println("========>" + list.size());
+                System.out.println("========>" + map.size());
+            }
+        }).start();
+
+        new Thread(() -> {
+            while (true) {
+                list.forEach((Object obj) -> {
+                    if (list.size() > 5) {
+                        list.remove(5);
+                    }
+                    System.out.println("--->" + obj);
+                });
+                Iterator iterator = list.iterator();
+                while (iterator.hasNext()) {
+                    Object next = iterator.next();
+                    if (list.size() > 5) {
+                        list.remove(5);
+                    }
+                    System.out.println("====>" + next);
+                }
+
+                int j = 0;
+                Iterator keys = map.keySet().iterator();
+                while (keys.hasNext()) {
+                    Object next = keys.next();
+                    if (j % 2 == 0) {
+                        map.remove(next); //HashMap 在循环中进行删除操作会导致ConcurrentModificationException异常
+                        j++;
+                    }
+                    System.out.println("==---==>" + next);
+                }
+
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

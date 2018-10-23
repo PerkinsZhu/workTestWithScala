@@ -1485,6 +1485,12 @@ class UtilTest {
   def testCase(): Unit = {
     val ss = Student("jack", 23, true)
     ss.name = "22";
+
+    ("lllll1ll1ll1l1ll1ll1l1ll1l1ll1l1ll1l1ll1l1ll1l1ll1l1l1ll1lll1l1ll1ll1l1l1ll1l1lll1l1ll1l1ll1l11ll1l1l11llllllll111l1lll1l1l1ll" +
+      "l1l1ll1l1ll1l1ll1l1l11ll1l1llll1l1ll1l1l1ll1l22ll2l2l2l2ll112345ljkd;;;;;;;;;sddddddddddssdpowpeofsdjfsadhiweiksadfhwe" +
+      "hhhhidfllll1lllll1llll1llll1lll1ll").toCharArray
+      .foreach(item => println(item.toInt))
+
   }
 
 
