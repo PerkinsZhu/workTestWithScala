@@ -400,7 +400,7 @@ class UtilTest {
     println((l1.::(Some("===").get)))
   }
 
-  case class Student(name: String, age: Int, little: Boolean)
+  case class Student(var name: String, age: Int, little: Boolean)
 
   @Test
   def testSort(): Unit = {
@@ -1455,12 +1455,36 @@ class UtilTest {
 
   @Test
   def testNothing(): Unit = {
-    val i: Int = null;
-    println(i)
-    def j:Nothing = throw new RuntimeException
+    //    val i: Int = null;
+    //    println(i)
+    def j: Nothing = throw new RuntimeException
+
     println("---")
     var y = 0
     val x = y = 1
+
+    def s(x: Int): Unit = {
+      x + 1
+    } //指定返回值类型为Unit
+    def ss(x: Int) {
+      x + 1
+    } //第一种的简写,把返回值类型和‘=’同时省略，如同 :Unit=  ，返回值类型为Unit
+    def sss(x: Int) = {
+      x + 1
+    } //未定义返回值类型，自动推断出为 Int
+    def ssss(x: Int): Int = {
+      x + 1
+    } //指定返回值类型为Int
+    println(ss(2)) // ()
+    println(sss(2)) // 3
+    println(ssss(2)) // 3
+
+  }
+
+  @Test
+  def testCase(): Unit = {
+    val ss = Student("jack", 23, true)
+    ss.name = "22";
   }
 
 

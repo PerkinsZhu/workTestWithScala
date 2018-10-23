@@ -10,8 +10,8 @@ import concurrent.duration._
   * Created by PerkinsZhu on 2017/12/21 15:07. 
   */
 object WorkTest {
-  val mongoClient: MongoClient = MongoClient("mongodb://qizhi:qizhi&123@106.75.6.179:52174/cloud-vip-test?authMode=scram-sha1")
-  val database: MongoDatabase = mongoClient.getDatabase("cloud-vip-test")
+  val mongoClient: MongoClient = MongoClient("mongodb://13221:root@127.0.0.1:22364/test?authMode=scram-sha1")
+  val database: MongoDatabase = mongoClient.getDatabase("test")
   val qacol: MongoCollection[Document] = database.getCollection("common-qa");
 
   def main(args: Array[String]): Unit = {

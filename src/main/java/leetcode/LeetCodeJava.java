@@ -970,7 +970,12 @@ public class LeetCodeJava {
 
     @Test
     public void test639() {
-        String str = "1*";
+        //        String str = "1*";
+        String str = "***";
+        //        String str = "*";
+        //        String str = "3*";
+        //        String str = "1**";
+        //        String str = "*1";
         System.out.println("\n--->" + numDecodings02(str));
     }
 
@@ -982,14 +987,38 @@ public class LeetCodeJava {
 
         for (int i = 1; i < len; i++) {
             char n = s.charAt(i - 1);
-            data[i] = 9 * (n == '0' ? 0 : data[i - 1]);
+
+            // data[i] = 9 * (n == '0' ? 0 : data[i - 1]);
+            if (n == '0') {
+                data[i] = 0;
+            } else if (n == '*') {
+                data[i] = data[i - 1] * 9;
+            } else {
+                data[i] = data[i - 1];
+            }
+
             if (i > 1) {
                 char m = s.charAt(i - 2);
-                if (m == '1' || (m == '2' && n < '7')) {
+                if (m == '*' && n < '7' && n > '0') {
+                    data[i] = data[i] + 2;
+                }
+                if (m == '*' && n == '*') {
+                    data[i] = data[i] * 9;
+                }
+                if (m == '1' && n == '*') {
+                    data[i] = data[i] * 9;
+                }
+                if (m == '2' && n == '*') {
+                    data[i] = data[i] * 6;
+                }
+
+                if ((m == '1' && n < '7' && n > '0') || (m == '2' && n < '7' && n > '0')) {
                     data[i] = data[i] + data[i - 2];
                 }
+
             }
         }
+
 
         return data[len - 1];
     }
