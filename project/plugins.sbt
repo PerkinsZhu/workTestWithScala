@@ -1,2 +1,5 @@
 addSbtPlugin("pl.project13.scala" % "sbt-jmh" % "0.3.4")
 addSbtPlugin("com.hanhuy.sbt" % "kotlin-plugin" % "1.0.7")
+addSbtPlugin("com.github.mwz" % "sbt-sonar" % "1.5.0")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.5.1")
+addSbtPlugin("com.sksamuel.scapegoat" %% "sbt-scapegoat" % "1.0.9")

@@ -5,12 +5,14 @@ import java.io.File
 import concurrent.duration._
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
-import java.util.Date
+import java.util
+import java.util.{Collections, Date}
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.{ConcurrentHashMap, Executors, TimeUnit}
+import java.util.concurrent.{ConcurrentHashMap, Executor, Executors, TimeUnit}
 
 import akka.actor.ActorSystem
 import cats.Monoid
+import com.alibaba.fastjson.JSONObject
 import com.typesafe.config.Config
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.{DateTime, DateTimeZone}
@@ -27,7 +29,7 @@ import scala.collection.immutable.{HashMap, Queue, Stack}
 import scala.collection.mutable
 import scala.collection.parallel.ForkJoinTaskSupport
 import scala.concurrent
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future, impl}
 import scala.util.{Failure, Success}
 import scala.util.control.NonFatal
 
@@ -1491,8 +1493,64 @@ class UtilTest {
       "hhhhidfllll1lllll1llll1llll1lll1ll").toCharArray
       .foreach(item => println(item.toInt))
 
+    Instant.now().getNano
+    Instant.now().getEpochSecond
+
+
+    synchronized[Int] {
+      23
+    }
+
   }
 
 
+  @Test
+  def testThreadPool(): Unit = {
+    // implicit val ec = ExecutionContext.fromExecutor(Executors.newFixedThreadPool(5))
+    implicit val ec = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor())
+    // val ec2 = scala.concurrent.ExecutionContext.Implicits.global
+    //从配置文件中读取线程池配置
+    val actorEC: ExecutionContext = ActorSystem.create("MySystem").dispatchers.lookup("my-context")
+
+    Future {
+      println(Thread.currentThread().getName + "----->" + 100)
+      Thread.sleep(500)
+    }
+    Future {
+      println(Thread.currentThread().getName + "----->" + 1001)
+      Thread.sleep(500)
+    }
+    Future {
+      println(Thread.currentThread().getName + "----->" + 1002)
+      Thread.sleep(500)
+    }
+    //自定义线程池 线程池工作原理
+
+    val pool = Executors.newFixedThreadPool(10)
+    pool.execute(() => {println("---->1")})
+
+    Thread.sleep(3000)
+  }
+
+  case class AAB(name: String)
+
+  @Test
+  def testFastJson(): Unit = {
+    import com.alibaba.fastjson.JSON
+    val json = JSON.parseObject("{name:'jack'}")
+    println(json)
+    //    val aa = json.toJavaObject(AAB.getClass)
+    //    println(aa)
+    println("---->")
+    val map = new util.HashMap[String, String](10)
+    println(map.size())
+
+    val i = 0;
+    while(true){
+      i * 100;
+      Thread.sleep(100)
+    }
+
+  }
 }
 
