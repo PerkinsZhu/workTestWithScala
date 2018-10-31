@@ -186,4 +186,31 @@ public class JavaTest {
             }
         }).start();
     }
+
+
+    @Test
+    public void testForEache() {
+        // for 循环中的终止条件，在每次循环的时候都会调用，因此如果计算size较为复杂，则应该定义size 变量，for循环中比较该size，而不是调用.size()方法，这样可以避免每次都进行计算
+        for (int i = 0; i < getSize(); i++) {
+            System.out.println("--->" + i);
+            if (i > 100) {
+                System.exit(0);
+            }
+        }
+
+    }
+
+    int size = 0;
+
+    private int getSize() {
+        System.out.println("getSize--->" + size++);
+        return size;
+    }
+
+    @Test
+    public void testHashMapSize(){
+        HashMap<String,String> map = new HashMap<>(10);
+        map.size();
+    }
+
 }

@@ -1551,6 +1551,11 @@ class UtilTest {
       Thread.sleep(100)
     }
 
+ }
+
+  @Test
+  def testHashMapSize(): Unit ={
   }
+
 }
 
