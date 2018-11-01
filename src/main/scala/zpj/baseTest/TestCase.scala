@@ -1,37 +1,31 @@
 package zpj.baseTest
 
 import java.io.File
-
-import concurrent.duration._
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util
-import java.util.{Collections, Date}
+import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.{ConcurrentHashMap, Executor, Executors, TimeUnit}
+import java.util.concurrent.{TimeUnit => _, _}
 
 import akka.actor.ActorSystem
 import cats.Monoid
-import com.alibaba.fastjson.JSONObject
-import com.typesafe.config.Config
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
 import play.api.libs.json._
-import zpj.baseTest
 import zpj.proxy.User
-import zpj.scalazTest.Color
 
 import scala.annotation.tailrec
 import scala.beans.BeanProperty
 import scala.collection.immutable.{HashMap, Queue, Stack}
 import scala.collection.mutable
 import scala.collection.parallel.ForkJoinTaskSupport
-import scala.concurrent
-import scala.concurrent.{ExecutionContext, Future, impl}
-import scala.util.{Failure, Success}
+import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
+import scala.util.{Failure, Success}
 
 /**
   * Created by PerkinsZhu on 2017/12/14 19:21.
@@ -615,7 +609,7 @@ class UtilTest {
 
   @Test
   def testTime3(): Unit = {
-    println(TimeUnit.MILLISECONDS.toNanos(16L))
+    println(java.util.concurrent.TimeUnit.MILLISECONDS.toNanos(16L))
   }
 
   @Test
@@ -1185,11 +1179,9 @@ class UtilTest {
     //  上界 父类为B
     def demo1[T <: B](a: T): Unit = a.show()
 
-    import scala.reflect.runtime.universe._
     //下界 父类为T
     def demo2[T >: B](a: T): Unit = {
       //这里的T 应该是一个AnyRef类型的
-      import scala.reflect.runtime.{universe => ru}
       // a.show()  这里是编译通不过的
       //      println(ru.typeOf[a.type])
       println(a.getClass)
@@ -1546,16 +1538,60 @@ class UtilTest {
     println(map.size())
 
     val i = 0;
-    while(true){
+    while (true) {
       i * 100;
       Thread.sleep(100)
     }
 
- }
-
-  @Test
-  def testHashMapSize(): Unit ={
   }
 
+  @Test
+  def testTimer(): Unit = {
+    // 不要使用Timer + TimerTask 执行周期性任务。Timer是单线程的，当同一个Timer执行多个任务时，其中一个TimerTask如果发生
+    //异常，会导致所有的Task结束。另外，Task之间的执行时串行的，会导致时间推迟
+    // https://www.jianshu.com/p/08181b779706
+    val executor = new ScheduledThreadPoolExecutor(2)
+    println("startTime:" + LocalTime.now())
+    var i = 0
+    val future = executor.scheduleAtFixedRate(() => {
+      println(Thread.currentThread().getName + "--->" + LocalTime.now())
+      if (i == 3) {
+        println(Thread.currentThread().getName + "--> 抛出异常")
+        throw new RuntimeException("my exception....")
+      }
+      i = i + 1
+    }, 2l, 5l, SECONDS)
+
+    Thread.sleep(100000)
+  }
+
+  @Test
+  def testExecutorCompletionService(): Unit = {
+    val executor = Executors.newFixedThreadPool(5)
+    val cs = new ExecutorCompletionService[Integer](executor)
+    cs.submit(() => {
+      Thread.sleep(5000)
+      println("---sleep over ----")
+      10
+    })
+
+    // 这里的take 实际上是封装的queue.take ,会阻塞在这里等待结果
+    val fu = cs.take()
+    println("get future -->" + fu.isDone)
+    println("get result -->" + fu.get());
+    Thread.sleep(10000)
+
+  }
+
+  @Test
+  def testConcurrentLinkedDeque(): Unit = {
+    val deque = new ConcurrentLinkedDeque[String]()
+    deque.addFirst("B")
+    deque.addLast("A")
+    println(deque.getLast)
+    println(deque.getFirst)
+    println(deque.peek())
+    println(deque.poll())
+  }
 }
 
