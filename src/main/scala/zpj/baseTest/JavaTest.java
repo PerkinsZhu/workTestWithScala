@@ -16,7 +16,7 @@ public class JavaTest {
     private static ConcurrentHashMap<String, List<String>> answerListMap = new ConcurrentHashMap<String, List<String>>();
 
     public static void main(String[] args) {
-        new JavaTest().testCOW();
+        new JavaTest().testInterrupt();
     }
 
     @Test
@@ -208,9 +208,31 @@ public class JavaTest {
     }
 
     @Test
-    public void testHashMapSize(){
-        HashMap<String,String> map = new HashMap<>(10);
+    public void testHashMapSize() {
+        HashMap<String, String> map = new HashMap<>(10);
         map.size();
     }
 
+    @Test
+    public void testInterrupt() {
+        Thread thread = new Thread(() -> {
+            int i = 0;
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println("-->" + i++);
+            }
+            Thread.currentThread().interrupt();
+            System.out.println("-->" + Thread.currentThread().isInterrupted());
+        });
+        thread.start();
+
+
+        try {
+            Thread.sleep(100);
+            thread.interrupt();
+            Thread.sleep(Integer.MAX_VALUE);
+        } catch (InterruptedException e) {
+            System.out.println("main-->");
+        }
+
+    }
 }
