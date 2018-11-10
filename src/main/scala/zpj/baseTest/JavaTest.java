@@ -1,10 +1,14 @@
 package zpj.baseTest;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -234,5 +238,32 @@ public class JavaTest {
             System.out.println("main-->");
         }
 
+    }
+
+    @Test
+    public void testLocalTime() {
+        LocalTime nowTime = LocalTime.now();
+        LocalTime aimTime = LocalTime.of(8, 0, 0, 0);
+        long delay = Duration.between(LocalDateTime.now(), LocalDateTime.of(LocalDate.now(), aimTime)).toMinutes();
+        if (aimTime.isBefore(nowTime)) {
+            delay = (24 * 60) - Duration.between(LocalDateTime.of(LocalDate.now(), aimTime), LocalDateTime.now()).toMinutes();
+        }
+
+        System.out.println(LocalDate.now().plusDays(-1).toString());
+
+        JSONObject json = JSONObject.parseObject("{\"list\":[]}");
+        JSONArray array = json.getJSONArray("list");
+        System.out.println(array);
+        System.out.println(json);
+        System.out.println(new Date().getTime());
+    }
+
+    @Test
+    public void testList(){
+        List<String> list = new ArrayList<>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        System.out.println(list.subList(1,1+2));
     }
 }
