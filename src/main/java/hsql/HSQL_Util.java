@@ -7,10 +7,7 @@ import org.hsqldb.server.ServerAcl;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,6 +73,7 @@ public class HSQL_Util {
             Class.forName("org.hsqldb.jdbcDriver");
             if (mode == SERVER_MODE) {
                 conn = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:" + PORT + "/" + DB_NAME, USER_NAME, PASSWORD);
+                //                conn = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/xdb", USER_NAME, PASSWORD);
             } else if (mode == STAND_ALONE_MODE) {
                 conn = DriverManager.getConnection("jdbc:hsqldb:file:" + DB_PATH + DB_NAME, USER_NAME, PASSWORD);
             }
@@ -90,13 +88,23 @@ public class HSQL_Util {
     /**
      * 测试
      */
-    public static void main(String[] args) throws ServletException {
+    public static void main(String[] args) throws ServletException, SQLException {
         HSQL_Util.mode = HSQL_Util.SERVER_MODE;
-        HSQL_Util.startHSQL();
-        Connection conn = HSQL_Util.getConnection();
+        //        HSQL_Util.startHSQL();
+        //        Connection conn = HSQL_Util.getConnection();
+        //        createTable();
+
+
+        queryData(getConnection());
+        //        HSQL_Util.stopHSQL();
+
+        //        init();
+    }
+
+    private static void createTable() {
         try {
             Statement statement = getConnection().createStatement();
-            statement.executeUpdate("create table customer(id integer not null primary key,firstname varchar,lastname varchar)");
+            statement.executeUpdate("create table customer(id integer not null primary key,firstname varchar(20),lastname varchar(20))");
             for (int i = 10; i < 20; i++) {
                 statement.executeUpdate("insert into customer values(" + i + ",'liu','zhaoyang')");
             }
@@ -104,9 +112,23 @@ public class HSQL_Util {
         } catch (SQLException ex) {
             Logger.getLogger(HSQL_Util.class.getName()).log(Level.SEVERE, null, ex);
         }
-        HSQL_Util.stopHSQL();
+    }
 
-//        init();
+    private static void queryData(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * F FROM CUSTOMER");
+        int col = rs.getMetaData().getColumnCount();
+        System.out.println("============================");
+        while (rs.next()) {
+            for (int i = 1; i <= col; i++) {
+                System.out.print(rs.getString(i) + "\t");
+                if ((i == 2) && (rs.getString(i).length() < 8)) {
+                    System.out.print("\t");
+                }
+            }
+            System.out.println("");
+        }
+        System.out.println("============================");
     }
 
 
