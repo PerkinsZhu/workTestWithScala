@@ -3,15 +3,16 @@ package zpj.es
 import com.sksamuel.elastic4s.ElasticsearchClientUri
 import com.sksamuel.elastic4s.analyzers.StopAnalyzer
 import com.sksamuel.elastic4s.bulk.BulkCompatibleDefinition
-import com.sksamuel.elastic4s.http.{ElasticDsl, HttpClient}
+import com.sksamuel.elastic4s.http.{ElasticDsl, ElasticsearchJavaRestClient, HttpClient}
 import com.sksamuel.elastic4s.searches.SearchDefinition
+import com.sksamuel.elastic4s.searches.queries.BoolQueryDefinition
 import org.apache.http.HttpHost
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.client.RestClientBuilder.RequestConfigCallback
-import org.elasticsearch.client.{RestClient, RestHighLevelClient}
+import org.elasticsearch.client.{RestClient, RestClientBuilder, RestHighLevelClient}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.SearchHit
@@ -129,10 +130,31 @@ object ElasticSearchTestWithScala extends ElasticDsl {
   @Test
   def testQuery(): Unit = {
     //各种查询语法见：https://github.com/sksamuel/elastic4s
-    searchWithType("places" / "cities").query("London") start 0 limit 10 run
+    //    searchWithType("qizhiweixin" / "article").matchQuery("data.title", "机器") start 0 limit 10 run
+    searchWithType("qizhiweixin" / "article").query {
+      boolQuery.
+        must(termQuery("robotId", "5b9c81b81400008400cd0257"), matchQuery("title", "时光"))
+      //      not(termQuery("weather", "hot"))
+
+    }.run()
+  }
+
+  def testMulitQuery() {
+    client.execute(
+      multi(
+        searchWithType("qizhiweixin" / "article").matchQuery("data.title", "超时时间"),
+        searchWithType("qizhiweixin" / "article").matchQuery("title", "诗和远方")
+      )
+    ).map {
+      case Left(failure) => println(failure.body)
+      case Right(data) => {
+        println(data)
+      }
+    }
   }
 
   def main(args: Array[String]): Unit = {
+    //    testMulitQuery()
     testQuery()
   }
 
@@ -149,5 +171,6 @@ object ElasticSearchTestWithScala extends ElasticDsl {
       case Right(data) => println(data.body)
     })
   }
+
 
 }

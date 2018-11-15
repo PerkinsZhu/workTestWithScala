@@ -93,9 +93,9 @@ enablePlugins(JmhPlugin)
 
 
 // https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch
-libraryDependencies += "org.elasticsearch" % "elasticsearch" % "6.3.0"
+//libraryDependencies += "org.elasticsearch" % "elasticsearch" % "6.3.0"
 // https://mvnrepository.com/artifact/org.elasticsearch.client/elasticsearch-rest-high-level-client
-libraryDependencies += "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.3.0"
+//libraryDependencies += "org.elasticsearch.client" % "elasticsearch-rest-high-level-client" % "6.3.0"
 
 // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
 libraryDependencies += "org.apache.logging.log4j" % "log4j-core" % "2.11.0"
@@ -153,3 +153,9 @@ libraryDependencies += "io.spray" %%  "spray-json" % "1.3.4"
 
 // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
 libraryDependencies += "org.hsqldb" % "hsqldb" % "2.4.1"
+
+// https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch
+libraryDependencies += "org.elasticsearch" % "elasticsearch" % "6.4.3"
+// https://mvnrepository.com/artifact/org.elasticsearch.client/transport
+libraryDependencies += "org.elasticsearch.client" % "transport" % "6.4.3"
+libraryDependencies += "org.elasticsearch.plugin" % "transport-netty4-client" % "6.4.3"

@@ -266,4 +266,12 @@ public class JavaTest {
         list.add("c");
         System.out.println(list.subList(1,1+2));
     }
+    @Test
+    public void testJSONObject(){
+        JSONObject json = new JSONObject();
+        json.put("a",1);
+        json.put("b",2);
+        json.put("c",2);
+        System.out.println(json.toJSONString());
+    }
 }
