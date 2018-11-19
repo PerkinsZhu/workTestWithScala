@@ -1568,7 +1568,9 @@ class UtilTest {
   @Test
   def testExecutorCompletionService(): Unit = {
     val executor = Executors.newFixedThreadPool(5)
+
     val cs = new ExecutorCompletionService[Integer](executor)
+
     cs.submit(() => {
       Thread.sleep(5000)
       println("---sleep over ----")
@@ -1592,6 +1594,21 @@ class UtilTest {
     println(deque.getFirst)
     println(deque.peek())
     println(deque.poll())
+  }
+
+
+  @Test
+  def testMatch2(): Unit = {
+    val a = "a"
+    val b = "b"
+    val c = "c"
+    // case 项的符号是 ~ 一个键位的键
+    "c" match {
+      case `a` => println("i am  a")
+      case `b` => println("i am b")
+      case `c` => println("i am c")
+    }
+
   }
 }
 
