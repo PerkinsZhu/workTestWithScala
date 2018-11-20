@@ -141,8 +141,9 @@ class UtilTest {
     println(l2.+:(3))
     println(l2.++(l1))
     println(l2.::("a"))
+
     l1 match {
-      //      case Cons(s,::) => println("")
+      // case Cons(s,::) => println("")
       case x :: h => println(h)
       case _ => println(l1)
     }
