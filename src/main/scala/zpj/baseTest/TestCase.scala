@@ -1611,5 +1611,23 @@ class UtilTest {
     }
 
   }
+
+  @Test
+  def testMap2(): Unit = {
+
+    var map = mutable.Map.empty[String, String]
+    val data = List(1, 2, 3, 4).map(item => {
+
+      map.+=((item + "", item + ""))
+    })
+    println(map)
+  }
+
+  val res = Map(List(1, 2, 3, 4).map(i => (i, i + "--")): _*)
+  println(res)
+
+  val res2 = List(1, 2, 3, 4).map(i => (i, i + "--")).toMap
+  println(res2)
+
 }
 
