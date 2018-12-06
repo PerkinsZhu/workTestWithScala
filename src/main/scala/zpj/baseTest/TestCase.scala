@@ -1623,11 +1623,33 @@ class UtilTest {
     println(map)
   }
 
-  val res = Map(List(1, 2, 3, 4).map(i => (i, i + "--")): _*)
+/*  val res = Map(List(1, 2, 3, 4).map(i => (i, i + "--")): _*)
   println(res)
 
   val res2 = List(1, 2, 3, 4).map(i => (i, i + "--")).toMap
-  println(res2)
+  println(res2)*/
 
+  @Test
+  def optionForeach(): Unit ={
+   /* val data:Option[List[String]] = None
+    data.foreach(println(_))*/
+
+    val future = Future{5/1}
+    val temp = future.recover{
+      case e:Exception => {
+        println("--error")
+        10
+      }
+      case _ => {
+        println("--other")
+        100
+      }
+    }
+    println(future)
+    println(temp)
+
+
+    "asd,sdf，飒飒大师的；sdfas;sdfsd".split("(,|，|;|；)").toList.foreach(println)
+  }
 }
 
