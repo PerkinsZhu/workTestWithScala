@@ -4,7 +4,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util
-import java.util.Date
+import java.util.{Date, TimeZone}
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{TimeUnit => _, _}
 
@@ -1650,6 +1650,23 @@ class UtilTest {
 
 
     "asd,sdf，飒飒大师的；sdfas;sdfsd".split("(,|，|;|；)").toList.foreach(println)
+  }
+
+  @Test
+  def testTime33(): Unit ={
+    val dataStr = LocalDate.now.plusDays(-7).toEpochDay
+    println(dataStr)
+
+    val  temp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    val date = temp.parse("2018-12-11T16:00:00.000Z")
+    val dateTime = new DateTime(date.getTime + (8 * 60* 60*1000))
+
+    println(dateTime.toString("yyyy-MM-dd HH:mm:ss.SSS "))
+
+
+
+    println("2018-12-11T16:00:00.000Z".substring(0,10).replace("-",""))
+    println("2018-12-11T16:00:00.000Z".substring(11,19))
   }
 }
 
