@@ -1623,20 +1623,20 @@ class UtilTest {
     println(map)
   }
 
-/*  val res = Map(List(1, 2, 3, 4).map(i => (i, i + "--")): _*)
-  println(res)
+  /*  val res = Map(List(1, 2, 3, 4).map(i => (i, i + "--")): _*)
+    println(res)
 
-  val res2 = List(1, 2, 3, 4).map(i => (i, i + "--")).toMap
-  println(res2)*/
+    val res2 = List(1, 2, 3, 4).map(i => (i, i + "--")).toMap
+    println(res2)*/
 
   @Test
-  def optionForeach(): Unit ={
-   /* val data:Option[List[String]] = None
-    data.foreach(println(_))*/
+  def optionForeach(): Unit = {
+    /* val data:Option[List[String]] = None
+     data.foreach(println(_))*/
 
-    val future = Future{5/1}
-    val temp = future.recover{
-      case e:Exception => {
+    val future = Future {5 / 1}
+    val temp = future.recover {
+      case e: Exception => {
         println("--error")
         10
       }
@@ -1653,20 +1653,23 @@ class UtilTest {
   }
 
   @Test
-  def testTime33(): Unit ={
+  def testTime33(): Unit = {
     val dataStr = LocalDate.now.plusDays(-7).toEpochDay
     println(dataStr)
 
-    val  temp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    val temp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     val date = temp.parse("2018-12-11T16:00:00.000Z")
-    val dateTime = new DateTime(date.getTime + (8 * 60* 60*1000))
+    val dateTime = new DateTime(date.getTime + (8 * 60 * 60 * 1000))
 
     println(dateTime.toString("yyyy-MM-dd HH:mm:ss.SSS "))
 
 
+    println("2018-12-11T16:00:00.000Z".substring(0, 10).replace("-", ""))
+    println("2018-12-11T16:00:00.000Z".substring(11, 19))
 
-    println("2018-12-11T16:00:00.000Z".substring(0,10).replace("-",""))
-    println("2018-12-11T16:00:00.000Z".substring(11,19))
+    println(LocalDate.now().getDayOfMonth)
+    println(LocalDate.now().toString)
+    println(LocalDate.now().minusMonths(2).toString)
   }
 }
 
