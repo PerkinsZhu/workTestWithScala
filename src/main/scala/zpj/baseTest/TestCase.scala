@@ -1671,5 +1671,26 @@ class UtilTest {
     println(LocalDate.now().toString)
     println(LocalDate.now().minusMonths(2).toString)
   }
+
+  @Test
+  def testList03(): Unit ={
+    val list = List(1,2,3)
+    println(list(0))
+    println(list(1))
+    var a = 23
+   val c,b :Int= 23
+
+  }
 }
 
+object test{
+  def main(args: Array[String]): Unit = {
+    printStackTrace()
+  }
+  def printStackTrace(): Unit ={
+
+    Thread.currentThread.getStackTrace.toList.foreach(item =>{
+      println(item)
+    })
+  }
+}
