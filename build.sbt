@@ -3,7 +3,7 @@ name := "workTestWithScala"
 
 version := "1.0"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.12.2"
 
 // https://mvnrepository.com/artifact/com.typesafe.play/play-json_2.12
 libraryDependencies += "com.typesafe.play" % "play-json_2.12" % "2.6.6"
@@ -116,7 +116,7 @@ libraryDependencies += "javax.mail" % "mail" % "1.4.7"
 // https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper
 libraryDependencies += "org.apache.zookeeper" % "zookeeper" % "3.4.13"
 
-val Http4sVersion = "0.19.0-SNAPSHOT"
+val Http4sVersion = "0.19.0"
 val Specs2Version = "4.2.0"
 val LogbackVersion = "1.2.3"
 
@@ -159,3 +159,9 @@ libraryDependencies += "org.elasticsearch" % "elasticsearch" % "6.4.3"
 // https://mvnrepository.com/artifact/org.elasticsearch.client/transport
 libraryDependencies += "org.elasticsearch.client" % "transport" % "6.4.3"
 libraryDependencies += "org.elasticsearch.plugin" % "transport-netty4-client" % "6.4.3"
+
+libraryDependencies += Defaults.sbtPluginExtra(
+  "com.dwijnand" % "sbt-compat" % "1.0.0",
+  (sbtBinaryVersion in pluginCrossBuild).value,
+  (scalaBinaryVersion in update).value
+)
