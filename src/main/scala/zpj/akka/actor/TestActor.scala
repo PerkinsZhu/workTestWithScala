@@ -3,7 +3,7 @@ package zpj.akka.actor
 import java.util.concurrent.TimeUnit
 
 import akka.actor.SupervisorStrategy.{Escalate, Restart, Resume, Stop}
-import akka.actor.{Actor, ActorRef, ActorSystem, InvalidMessageException, OneForOneStrategy, Props}
+import akka.actor.{Actor, ActorRef, ActorSystem, CoordinatedShutdown, InvalidMessageException, OneForOneStrategy, Props}
 import akka.event.Logging
 import akka.util.Timeout
 
@@ -272,7 +272,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
     }
   }
 
-  val actorSystem = ActorSystem("ask")
+  implicit val actorSystem = ActorSystem("ask")
 
   val myActor = actorSystem.actorOf(Props[MyActor], "myActor")
   implicit val timeout = Timeout(5,TimeUnit.SECONDS)
@@ -283,7 +283,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
     case Failure(ex) => ex.printStackTrace()
   }
   val myActor02 = actorSystem.actorOf(Props[MyActor02],"test")
-  myActor02
+  myActor02 ! "test"
+  CoordinatedShutdown(actorSystem).addJvmShutdownHook {
+    println("custom JVM shutdown hook...")
+  }
+/*  import akka.actor.ActorDSL._
+  implicit val i = inbox()
+  println(i.receive())
+
+actorSystem.terminate()*/
+Thread.sleep(3000)
 
 
 }
