@@ -168,3 +168,7 @@ libraryDependencies += Defaults.sbtPluginExtra(
 
 // scala future 和 jdk 1.8 CompletableFuture 相互转换依赖
 libraryDependencies += "org.scala-lang.modules" %% "scala-java8-compat" % "0.6.0"
+
+
+// https://mvnrepository.com/artifact/com.robbypond/boilerpipe
+libraryDependencies += "com.robbypond" % "boilerpipe" % "1.2.3"

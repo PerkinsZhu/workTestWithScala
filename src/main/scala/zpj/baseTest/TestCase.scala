@@ -1,6 +1,7 @@
 package zpj.baseTest
 
 import java.io.File
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util
@@ -10,10 +11,15 @@ import java.util.concurrent.{TimeUnit => _, _}
 
 import akka.actor.ActorSystem
 import cats.Monoid
+import de.l3s.boilerpipe.BoilerpipeExtractor
+import de.l3s.boilerpipe.document.TextDocument
+import de.l3s.boilerpipe.extractors.CommonExtractors
+import de.l3s.boilerpipe.sax.BoilerpipeSAXInput
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
+import org.xml.sax.InputSource
 import play.api.libs.json._
 import zpj.proxy.User
 
@@ -1688,6 +1694,15 @@ class UtilTest {
     listFuture
   }
 
+  @Test
+  def testBoilerpipe(): Unit ={
+    val url = "http://news.cctv.com/2018/12/21/ARTI6TWgj2PmdQym4hoCM8me181221.shtml";
+    val doc = new BoilerpipeSAXInput(new InputSource(new URL(url).openStream())).getTextDocument();
+    val extractor = CommonExtractors.ARTICLE_EXTRACTOR;
+    extractor.process(doc);
+    System.out.println("title:" + doc.getTitle());
+    System.out.println("content:" + doc.getContent());
+  }
 
 }
 
