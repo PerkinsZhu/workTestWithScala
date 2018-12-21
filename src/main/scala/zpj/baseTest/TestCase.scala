@@ -5,14 +5,12 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util
-import java.util.{Date, TimeZone}
+import java.util.Date
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{TimeUnit => _, _}
 
 import akka.actor.ActorSystem
 import cats.Monoid
-import de.l3s.boilerpipe.BoilerpipeExtractor
-import de.l3s.boilerpipe.document.TextDocument
 import de.l3s.boilerpipe.extractors.CommonExtractors
 import de.l3s.boilerpipe.sax.BoilerpipeSAXInput
 import org.apache.commons.lang3.StringUtils
@@ -27,6 +25,7 @@ import scala.annotation.tailrec
 import scala.beans.BeanProperty
 import scala.collection.immutable.{HashMap, Queue, Stack}
 import scala.collection.mutable
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.collection.parallel.ForkJoinTaskSupport
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -1679,23 +1678,23 @@ class UtilTest {
   }
 
   @Test
-  def testList03(): Unit ={
-    val list = List(1,2,3)
+  def testList03(): Unit = {
+    val list = List(1, 2, 3)
     println(list(0))
     println(list(1))
     var a = 23
-   val c,b :Int= 23
-    Future.successful(123).mapTo[Int].map(_+10)
+    val c, b: Int = 23
+    Future.successful(123).mapTo[Int].map(_ + 10)
   }
 
   @Test
-  def listFutureToFutureList(): Unit ={
+  def listFutureToFutureList(): Unit = {
     val listFuture = (1 to 10).map(i => Future.successful(i))
     listFuture
   }
 
   @Test
-  def testBoilerpipe(): Unit ={
+  def testBoilerpipe(): Unit = {
     val url = "http://news.cctv.com/2018/12/21/ARTI6TWgj2PmdQym4hoCM8me181221.shtml";
     val doc = new BoilerpipeSAXInput(new InputSource(new URL(url).openStream())).getTextDocument();
     val extractor = CommonExtractors.ARTICLE_EXTRACTOR;
@@ -1704,15 +1703,109 @@ class UtilTest {
     System.out.println("content:" + doc.getContent());
   }
 
+  @Test
+  def testJsNull02: Unit = {
+    val j1 = JsNull
+    val j2 = JsNull
+    val j3 = JsNull
+    val j4 = JsNull
+    println(j1 == j2)
+    println(j1 == j3)
+    println(j1 == j4)
+    println(j3 == j4)
+    println(j2 == j4)
+    import scala.collection.JavaConverters._
+    val num = 100
+    val list = new util.ArrayList[String](num)
+    (0 to num).foreach(i => list.add(""))
+    /*(0 to num ).foreach(i =>{
+      list.add(i, "-->"+i)
+    })*/
+
+    // 这里是增加，不是替换
+    list.add(2, "-->2")
+    list.add(12, "-->12")
+    list.add(24, "-->24")
+    list.add(4, "-->4")
+    list.add(34, "-->34")
+
+    println(list)
+    println(list.asScala.zipWithIndex)
+
+    //TODO 为什么 zipWithIndex 会错乱？
+  }
+
+
+  import scala.collection.JavaConverters._
+
+  @Test
+  def testZipWithIndex02(): Unit = {
+    // 1、不能跳过元素 链表不允许断开
+    //2、 add 是添加元素，不是覆盖元素
+    //3、 set 替换指定位置元素
+
+    val num = 100
+    val list = new util.ArrayList[String](num) //这里的参数如果是无效的，为什么还有接收呢？ 注意 size和initialCapacity的区别
+    (0 until num) foreach (i => list.add(""))
+    println(list.size())
+    (0 until num) foreach (i => {
+      list.set(i, i + "")
+    })
+    println(list.size())
+    val temp = list.asScala.zipWithIndex
+    println(temp)
+    temp.filter(item => item._1 != item._2 + "").foreach(println(_))
+
+  }
+
+  @Test
+  def testZipWithIndex03(): Unit = {
+    //TODO listBuffer 有set(index,ele)方法吗/**/
+    val num = 100
+    val list = new ListBuffer[String]()
+    (0 until num) foreach (i => list.append(""))
+    println(list.size)
+    (0 until num) foreach (i => {
+      if (i % 2 == 0) {
+        list.insert(i, i + "")
+      }
+    })
+    println(list.size)
+    val temp = list.zipWithIndex
+    println(temp)
+    temp.filter(item => item._1 != item._2 + "").foreach(println(_))
+
+  }
+
+  @Test
+  def testZipWithIndex04(): Unit = {
+
+    val num = 100
+    val array = new ArrayBuffer[String](num)
+    (0 until num) foreach (i => array.append(""))
+    println(array.size)
+    (0 until num) foreach (i => {
+      if (i % 2 == 0) {
+        array(i) = i + ""
+      }
+    })
+    println(array.size)
+    val temp = array.zipWithIndex
+    println(temp)
+    temp.filter(item => item._1 != item._2 + "").foreach(println(_))
+
+  }
+
 }
 
-object test{
+object test {
   def main(args: Array[String]): Unit = {
     printStackTrace()
   }
-  def printStackTrace(): Unit ={
 
-    Thread.currentThread.getStackTrace.toList.foreach(item =>{
+  def printStackTrace(): Unit = {
+
+    Thread.currentThread.getStackTrace.toList.foreach(item => {
       println(item)
     })
   }
