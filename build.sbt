@@ -1,8 +1,7 @@
 
+organization := "com.perkinsZhu"
 name := "workTestWithScala"
-
 version := "1.0"
-
 scalaVersion := "2.12.2"
 
 // https://mvnrepository.com/artifact/com.typesafe.play/play-json_2.12
@@ -18,11 +17,11 @@ libraryDependencies += "org.mongodb" %% "casbah" % "3.1.1"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.5.6",
-  "com.typesafe.akka" %% "akka-testkit" % "2.5.6" % Test
+  "com.typesafe.akka" %% "akka-testkit" % "2.5.6"
 )
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.0.10",
-  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.10" % Test
+  "com.typesafe.akka" %% "akka-http-testkit" % "10.0.10"
 )
 
 libraryDependencies += "com.typesafe.akka" %% "akka-persistence" % "2.5.10"
@@ -32,7 +31,7 @@ libraryDependencies += "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % "2.5.6",
-  "com.typesafe.akka" %% "akka-stream-testkit" % "2.5.6" % Test
+  "com.typesafe.akka" %% "akka-stream-testkit" % "2.5.6"
 )
 libraryDependencies += "com.typesafe.play" %% "play-ahc-ws-standalone" % "1.0.7"
 libraryDependencies += "com.typesafe.play" %% "play-ws-standalone-json" % "1.0.7"
@@ -139,7 +138,7 @@ libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "3.1.2
 
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.2.3",
-//  "org.slf4j" % "slf4j-nop" % "1.6.4",
+  //  "org.slf4j" % "slf4j-nop" % "1.6.4",
   "com.typesafe.slick" %% "slick-hikaricp" % "3.2.3"
 )
 
@@ -149,7 +148,7 @@ libraryDependencies += "postgresql" % "postgresql" % "9.1-901-1.jdbc4"
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.5"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-http-spray-json" % "10.1.5"
-libraryDependencies += "io.spray" %%  "spray-json" % "1.3.4"
+libraryDependencies += "io.spray" %% "spray-json" % "1.3.4"
 
 // https://mvnrepository.com/artifact/org.hsqldb/hsqldb
 libraryDependencies += "org.hsqldb" % "hsqldb" % "2.4.1"
@@ -165,3 +164,7 @@ libraryDependencies += Defaults.sbtPluginExtra(
   (sbtBinaryVersion in pluginCrossBuild).value,
   (scalaBinaryVersion in update).value
 )
+
+
+// scala future 和 jdk 1.8 CompletableFuture 相互转换依赖
+libraryDependencies += "org.scala-lang.modules" %% "scala-java8-compat" % "0.6.0"

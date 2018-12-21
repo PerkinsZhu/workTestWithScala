@@ -1679,8 +1679,16 @@ class UtilTest {
     println(list(1))
     var a = 23
    val c,b :Int= 23
-
+    Future.successful(123).mapTo[Int].map(_+10)
   }
+
+  @Test
+  def listFutureToFutureList(): Unit ={
+    val listFuture = (1 to 10).map(i => Future.successful(i))
+    listFuture
+  }
+
+
 }
 
 object test{
