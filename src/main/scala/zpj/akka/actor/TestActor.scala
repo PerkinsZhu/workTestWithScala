@@ -1,21 +1,42 @@
 package zpj.akka.actor
 
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 import akka.actor.SupervisorStrategy.{Escalate, Restart, Resume, Stop}
 import akka.actor.{Actor, ActorRef, ActorSystem, CoordinatedShutdown, InvalidMessageException, OneForOneStrategy, Props}
 import akka.event.Logging
 import akka.util.Timeout
+import akka.pattern.ask
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+import akka.pattern.pipe
 
 /**
   * Created by Administrator on 2017/6/3.
   */
 object TestActor {
   def main(args: Array[String]): Unit = {
-    testActor()
+    testPipe()
 
+  }
+
+  def testPipe(): Unit = {
+    implicit val system = ActorSystem("HelloSystem")
+    val helloActor = system.actorOf(Props[HelloActor], name = "HelloActor")
+    implicit val timeOut = Timeout(5 seconds)
+    1 to 10 foreach (i => {
+      val future = helloActor ? i
+      future.onComplete({
+        case Success(value) => println(i + "----->" + value)
+        case Failure(exception) => exception.printStackTrace()
+      })
+    })
+
+    system.terminate()
   }
 
   def testActor(): Unit = {
@@ -36,8 +57,9 @@ class HelloActor() extends Actor {
   import context._
 
   val log = Logging(system, this)
+
   override val supervisorStrategy =
-    OneForOneStrategy() {
+    OneForOneStrategy(maxNrOfRetries = 2) {  //配置重试次数
       case _: ArithmeticException => Resume
       case _: NullPointerException => Restart
       case _: IllegalArgumentException => Stop
@@ -51,9 +73,26 @@ class HelloActor() extends Actor {
   }
 
   def receive = {
-    case "hello" => println("send"); sender() ! "start"
+    case "hello" => {
+      println("send");
+      sender() ! "start"
+    }
+    case e: Int => {
+      val future = Future {
+        println(s"receive int ${e}")
+        e
+      }
+      // sender() ! s"i have receive ${e}"
+
+      // val temp = sender()  //这里要赋值个临时变量，否则 回复消息的时候 sender会为null
+      // future.map(i => temp ! s"i have receive ${i}")
+
+      pipe(future) to sender()
+    }
     case _ => println("您是?")
   }
+
+
 }
 
 class ByeByeActor(helloActor: ActorRef) extends Actor {
@@ -75,7 +114,8 @@ class Ping(pong: ActorRef) extends Actor {
   var count = 0
 
   def incrementAndPrint {
-    count += 1; println("ping")
+    count += 1;
+    println("ping")
   }
 
   def receive = {
@@ -111,9 +151,8 @@ object PingPongTest extends App {
   import akka.util.Timeout
   import scala.concurrent.duration._
   import akka.pattern.ask
-  import akka.dispatch.ExecutionContexts._
 
-  implicit val ec = global
+
   val system = ActorSystem("PingPongSystem")
   val pong = system.actorOf(Props[Pong], name = "pong")
   val ping = system.actorOf(Props(new Ping(pong)), name = "ping")
@@ -188,8 +227,6 @@ object Sample extends App {
   import akka.actor.ActorSystem
   import akka.actor.Props
 
-  implicit val ec = global
-
   override def main(args: Array[String]) {
     val system = ActorSystem("System")
     val actor = system.actorOf(Props(new WordCounterActor("E:\\zhupingjing\\test\\123.txt")))
@@ -253,46 +290,49 @@ object RunableTest {
 }
 
 object TestAskActor extends App {
-import scala.concurrent.ExecutionContext.Implicits.global
+
+  import scala.concurrent.ExecutionContext.Implicits.global
   import akka.pattern.ask
 
   class MyActor extends Actor {
     override def receive: Receive = {
       case "hello" => {
-        Thread.sleep(1000); sender() ! "你好！"
+        Thread.sleep(1000);
+        sender() ! "你好！"
       }
     }
   }
+
   class MyActor02 extends Actor {
     val log = Logging(context.system, this)
 
     def receive = {
       case "test" ⇒ log.info("received test")
-      case _      ⇒ log.info("received unknown message")
+      case _ ⇒ log.info("received unknown message")
     }
   }
 
   implicit val actorSystem = ActorSystem("ask")
 
   val myActor = actorSystem.actorOf(Props[MyActor], "myActor")
-  implicit val timeout = Timeout(5,TimeUnit.SECONDS)
-//  val future = myActor ? "hello"
+  implicit val timeout = Timeout(5, TimeUnit.SECONDS)
+  //  val future = myActor ? "hello"
   val future = myActor ? "hello"
   future.onComplete {
     case Success(res) => println(res)
     case Failure(ex) => ex.printStackTrace()
   }
-  val myActor02 = actorSystem.actorOf(Props[MyActor02],"test")
+  val myActor02 = actorSystem.actorOf(Props[MyActor02], "test")
   myActor02 ! "test"
   CoordinatedShutdown(actorSystem).addJvmShutdownHook {
     println("custom JVM shutdown hook...")
   }
-/*  import akka.actor.ActorDSL._
-  implicit val i = inbox()
-  println(i.receive())
+  /*  import akka.actor.ActorDSL._
+    implicit val i = inbox()
+    println(i.receive())
 
-actorSystem.terminate()*/
-Thread.sleep(3000)
+  actorSystem.terminate()*/
+  Thread.sleep(3000)
 
 
 }
