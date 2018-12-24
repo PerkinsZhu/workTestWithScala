@@ -4,25 +4,52 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 import akka.actor.SupervisorStrategy.{Escalate, Restart, Resume, Stop}
-import akka.actor.{Actor, ActorRef, ActorSystem, CoordinatedShutdown, InvalidMessageException, OneForOneStrategy, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, CoordinatedShutdown, InvalidMessageException, OneForOneStrategy, Props}
 import akka.event.Logging
 import akka.util.Timeout
-import akka.pattern.ask
+import akka.pattern.{CircuitBreaker, ask, pipe}
+import zpj.akka.akkadb.GetRequest
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import akka.pattern.pipe
 
 /**
   * Created by Administrator on 2017/6/3.
   */
 object TestActor {
+
   def main(args: Array[String]): Unit = {
-    testPipe()
+//    testPipe()
+    testBreaker()
 
   }
+
+  //熔断器使用
+  def testBreaker(): Unit = {
+    implicit val system = ActorSystem("HelloSystem")
+    val breaker = new CircuitBreaker(
+      system.scheduler,
+      maxFailures = 10,
+      callTimeout = 1 seconds,
+      resetTimeout = 1 seconds
+    )
+      .onOpen(println("circuit breaker opened!"))
+      .onClose(println("circuit breaker closed!"))
+      .onHalfOpen(println("circuit breaker half-open"))
+
+    implicit val timeout = Timeout(2 seconds)
+    val actor = system.actorOf(Props[HelloActor])
+    (1 to 1000000).map(x => {
+      Thread.sleep(50)
+      val askFuture = breaker.withCircuitBreaker(actor ? "key")
+      askFuture.map(x => "got it: " + x).recover({
+        case t => "error: " + t.toString
+      }).foreach(x => println(x))
+    })
+  }
+
 
   def testPipe(): Unit = {
     implicit val system = ActorSystem("HelloSystem")
@@ -52,14 +79,14 @@ object TestActor {
 
 case object Stu;
 
-class HelloActor() extends Actor {
+class HelloActor() extends Actor with ActorLogging{
 
   import context._
 
-  val log = Logging(system, this)
+//  val log = Logging(system, this)
 
   override val supervisorStrategy =
-    OneForOneStrategy(maxNrOfRetries = 2) {  //配置重试次数
+    OneForOneStrategy(maxNrOfRetries = 2) { //配置重试次数
       case _: ArithmeticException => Resume
       case _: NullPointerException => Restart
       case _: IllegalArgumentException => Stop
@@ -88,6 +115,11 @@ class HelloActor() extends Actor {
       // future.map(i => temp ! s"i have receive ${i}")
 
       pipe(future) to sender()
+    }
+    case "key" =>{
+      // 熔断器测试
+      Thread.sleep(70)
+      sender() ! "i have key"
     }
     case _ => println("您是?")
   }
