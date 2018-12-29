@@ -1796,6 +1796,11 @@ class UtilTest {
 
   }
 
+  @Test
+  def testStream2(): Unit ={
+    val resutlt = List(1,2,3,4,2,2).toStream.filter(_ == 2).take(1).toList
+    println(resutlt)
+  }
 }
 
 object test {
