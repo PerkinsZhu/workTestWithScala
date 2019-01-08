@@ -1801,6 +1801,21 @@ class UtilTest {
     val resutlt = List(1,2,3,4,2,2).toStream.filter(_ == 2).take(1).toList
     println(resutlt)
   }
+
+  @Test
+  def testForExpression(): Unit = {
+    for {
+      i <- Some("a")
+      j <- {
+        // for表达式不允许混合类型返回
+        Future.successful(20)
+        Some("a")
+      }
+    } yield {
+      println(i + "--" + j)
+    }
+  }
+
 }
 
 object test {
