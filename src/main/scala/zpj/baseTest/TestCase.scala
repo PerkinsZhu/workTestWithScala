@@ -1859,6 +1859,13 @@ class UtilTest {
     }
   }
 
+  @Test
+  def testSetDiff(): Unit ={
+    println(Set(1,2,3) -- Set(3,4,5))
+    val id = "/11670469704996648"
+    val start = id.lastIndexOf("/")
+    println(id.substring(start+1,id.length))
+  }
 
 }
 
