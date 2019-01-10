@@ -310,8 +310,8 @@ class TestAgain {
       //      def ints = Source.fromIterator(() ⇒ Iterator.from(1))
       val ints = Source(1 to 100)
       // connect the graph
-      //      ints.filter(_ % 2 != 0) ~> zip.in0
-      //      ints.filter(_ % 2 == 0) ~> zip.in1
+      // ints.filter(_ % 2 != 0) ~> zip.in0
+      // ints.filter(_ % 2 == 0) ~> zip.in1
 
       ints.map(_ * 2) ~> zip.in(0)
       ints.map(_ * 10) ~> zip.in(1)
@@ -322,7 +322,7 @@ class TestAgain {
 
 
       // expose port
-      //            SourceShape(zip1.out)
+      // SourceShape(zip1.out)
       SourceShape(zip.out)
     })
 
@@ -379,7 +379,13 @@ class TestAgain {
     val sink = Sink.combine(sendRmotely, localProcessing)(Broadcast[Int](_))
 
     Source(List(0, 1, 2)).runWith(sink)
-//      source.runForeach(println)
+    //      source.runForeach(println)
+  }
+
+  @Test
+  def test033(): Unit = {
+    val source = Source(1 to 10000)
+    source.scan(BigInt(1))((acc, next) ⇒ acc * next).runForeach(println(_))
   }
 
 }

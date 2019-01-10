@@ -1873,7 +1873,8 @@ class UtilTest {
     println(5L !) // 120
     println(100L !) // 120
 
-    def  factorial(i:BigDecimal):BigDecimal = if(i < 1) 1 else i *factorial(i-1)
+    def factorial(i: BigDecimal): BigDecimal = if (i < 1) 1 else i * factorial(i - 1)
+
     println(factorial(100))
   }
 
@@ -1883,6 +1884,20 @@ class UtilTest {
     def !(): Long = if (x == 0) 1 else x * ((x - 1) !)
   }
 
+
+  @Test
+  def testAt() {
+    case class AA(age: Int)
+
+    AA(12) match {
+      case e@AA(age) => { // @类似于赋值语句，把@后面的内容赋值给e
+        println(e)
+        println(e.age)
+        println(age)
+      }
+    }
+
+  }
 
 }
 
