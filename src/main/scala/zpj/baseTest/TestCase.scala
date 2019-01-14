@@ -1899,6 +1899,22 @@ class UtilTest {
 
   }
 
+  @Test
+  def testMapWithDefault(): Unit = {
+
+    val map = Map[String,Int]("a" -> 1).withDefaultValue(100)
+    println(map("a"))
+    println(map.get("a"))
+    println(map("b"))
+    println(map.get("b"))
+
+
+    val m = Map[Int, List[String]]().withDefaultValue(List())
+    println( m(123))
+
+
+  }
+
 }
 
 object test {
