@@ -1915,6 +1915,12 @@ class UtilTest {
 
   }
 
+  @Test
+  def testStream03(): Unit ={
+    println(List(1,2,3,4,5).toStream.filter(_ == 2).isEmpty)
+    println("" == "")
+  }
+
 }
 
 object test {
