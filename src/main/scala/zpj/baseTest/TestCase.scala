@@ -1,7 +1,8 @@
 package zpj.baseTest
 
-import java.io.File
+import java.io.{DefaultFileSystem, File}
 import java.net.URL
+import java.nio.file.FileSystem
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util
@@ -1921,6 +1922,12 @@ class UtilTest {
     println("" == "")
   }
 
+  @Test
+  def createFile(): Unit = {
+    val fs = new File("C:\\Users\\DIY\\AppData\\Local\\Temp\\playtemp5305434099464858440\\123\\multipartBody88445714197351sdfsd47182asTemporaryFile.tmp").createNewFile()
+
+
+  }
 }
 
 object test {
