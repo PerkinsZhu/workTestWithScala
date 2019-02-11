@@ -1932,6 +1932,14 @@ class UtilTest {
   def hello2019(): Unit ={
     println("Hello 2019 !!!")
   }
+
+  @Test
+  def testList04(){
+    val list = List(1,2,3,4)
+    println(list.++:(List(5,6,7)))
+    println(List(5,6,7).++:(list))
+    println(List(5,6,7).tail.++:(list))
+  }
 }
 
 object test {
