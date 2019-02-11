@@ -1939,6 +1939,8 @@ class UtilTest {
     println(list.++:(List(5,6,7)))
     println(List(5,6,7).++:(list))
     println(List(5,6,7).tail.++:(list))
+
+    System.err.println("error message")
   }
 }
 
