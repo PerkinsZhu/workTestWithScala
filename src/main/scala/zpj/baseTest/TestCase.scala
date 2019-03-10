@@ -6,7 +6,7 @@ import java.nio.file.FileSystem
 import java.text.SimpleDateFormat
 import java.time.{Instant, LocalDate, LocalTime}
 import java.util
-import java.util.Date
+import java.util.{Collections, Date}
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.{TimeUnit => _, _}
 
@@ -1903,7 +1903,7 @@ class UtilTest {
   @Test
   def testMapWithDefault(): Unit = {
 
-    val map = Map[String,Int]("a" -> 1).withDefaultValue(100)
+    val map = Map[String, Int]("a" -> 1).withDefaultValue(100)
     println(map("a"))
     println(map.get("a"))
     println(map("b"))
@@ -1911,37 +1911,70 @@ class UtilTest {
 
 
     val m = Map[Int, List[String]]().withDefaultValue(List())
-    println( m(123))
+    println(m(123))
 
 
   }
 
   @Test
-  def testStream03(): Unit ={
-    println(List(1,2,3,4,5).toStream.filter(_ == 2).isEmpty)
+  def testStream03(): Unit = {
+    println(List(1, 2, 3, 4, 5).toStream.filter(_ == 2).isEmpty)
     println("" == "")
   }
 
   @Test
   def createFile(): Unit = {
     val fs = new File("C:\\Users\\DIY\\AppData\\Local\\Temp\\playtemp5305434099464858440\\123\\multipartBody88445714197351sdfsd47182asTemporaryFile.tmp").createNewFile()
-
+    Collections.synchronizedMap(null)
 
   }
+
   @Test
-  def hello2019(): Unit ={
+  def hello2019(): Unit = {
     println("Hello 2019 !!!")
   }
 
   @Test
-  def testList04(){
-    val list = List(1,2,3,4)
-    println(list.++:(List(5,6,7)))
-    println(List(5,6,7).++:(list))
-    println(List(5,6,7).tail.++:(list))
+  def testList04() {
+    val list = List(1, 2, 3, 4)
+    println(list.++:(List(5, 6, 7)))
+    println(List(5, 6, 7).++:(list))
+    println(List(5, 6, 7).tail.++:(list))
 
     System.err.println("error message")
   }
+
+  @Test
+  def testStream04(): Unit = {
+    println(List(1, 2, 3, 4).toStream.filter(_ > 10).take(4).toList)
+
+    val list = List.empty[Int]
+    val list2 = List.empty[Int]
+    val list3 = list2.++:(list)
+    println(list3)
+
+    println("itbot.gf.com.cn/qizhi_gf".replace("itbot", "itbotfw"))
+  }
+
+  @Test
+  def testCase02(): Unit = {
+    "kkk" match {
+      case i if (i == "aa" || i == "bb") => println(i)
+      case "cc" => println("cc")
+      case _ => println("====")
+    }
+
+    val key = "会12ds" +
+      ""
+    val contentKey = if(key.size > 2 ){
+      key.charAt(0)+" "+key.substring(1, key.size)
+    }else{
+      key
+    }
+    println(contentKey)
+  }
+
+
 }
 
 object test {
