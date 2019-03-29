@@ -1974,6 +1974,12 @@ class UtilTest {
     println(contentKey)
   }
 
+  @Test
+  def testJsonFormat(): Unit ={
+    print(Json.parse("{}"))
+    println(((9590) / 9590.toFloat).formatted("%.4f"))
+
+  }
 
 }
 

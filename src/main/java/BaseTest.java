@@ -1,4 +1,5 @@
 import org.junit.Test;
+import utiltool.JsonValidator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -207,6 +208,11 @@ public class BaseTest {
         System.out.println(1 << 30);
         System.out.println(3 << 2);
         System.out.println(3 << 3);
+    }
+
+    @Test
+    public void testJsonFormat(){
+        System.out.println(new JsonValidator().validate(""));
     }
 }
 
