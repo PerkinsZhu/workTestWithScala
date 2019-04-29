@@ -4,7 +4,7 @@ import java.io.{DefaultFileSystem, File}
 import java.net.URL
 import java.nio.file.FileSystem
 import java.text.SimpleDateFormat
-import java.time.{Instant, LocalDate, LocalTime}
+import java.time._
 import java.util
 import java.util.{Collections, Date}
 import java.util.concurrent.atomic.AtomicInteger
@@ -15,6 +15,7 @@ import cats.Monoid
 import de.l3s.boilerpipe.extractors.CommonExtractors
 import de.l3s.boilerpipe.sax.BoilerpipeSAXInput
 import org.apache.commons.lang3.StringUtils
+import org.joda.time.format.DateTimeFormat
 import org.joda.time.{DateTime, DateTimeZone}
 import org.junit.Test
 import org.scalatest.FlatSpec
@@ -1976,10 +1977,76 @@ class UtilTest {
 
   @Test
   def testJsonFormat(): Unit ={
-    print(Json.parse("{}"))
-    println(((9590) / 9590.toFloat).formatted("%.4f"))
+   /* print(Json.parse("{}"))
+    println(((9590) / 9590.toFloat).formatted("%.4f"))*/
+    val data = "aaa".split("\\|")
+    data.foreach(println)
+    println(data)
+  }
+  @Test
+  def testLocalDate(): Unit ={
+    val nowDate = LocalDateTime.now().minusMonths(1L).toInstant(ZoneOffset.of("+8"))
+    println(nowDate.toEpochMilli())
+
+    (0 until 15).map(i => LocalDateTime.now().minusDays(i).toLocalDate.toString()).foreach(println)
+
+    val result = List(1,2,3,4,5).sum
+    println(result)
+
+
+    val yesterday = LocalDate.now().minusDays(1L).toEpochDay
+    val beforYesterday = LocalDateTime.now().minusDays(2L).toInstant(ZoneOffset.of("+8")).toEpochMilli
+    println(yesterday)
+    println(beforYesterday)
+    val timeFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss.SSS Z")
+    val yesterdayStr = new DateTime().minusDays(1).toString("yyyy-MM-dd")
+    val yesterdayStartTime = timeFormat.withOffsetParsed.parseDateTime(yesterdayStr + " 00:00:00.000 +0800").getMillis
+    println(yesterdayStartTime)
 
   }
+
+  @Test
+  def testSplit02(): Unit ={
+    "aaaa;bbb；ddd,ccc,eee，fff".split("(,|，|;|；)").foreach(println(_))
+
+    List(1,2,3).:+(4) // 1234
+
+    val time = new Date(1544085026000L)
+
+
+    println(time)
+
+
+    val res = List(1,2,3,4).find(_ > 2)
+    println(res)
+    val text = "\r\n123\n\t"
+    println("=============")
+    println(text.trim)
+    println("=============")
+  }
+
+
+  @Test
+  def testFile02(): Unit = {
+    val file = new File("G:\\test\\run_api_bak.log")
+    println(file.getName)
+    val fileName = file.getName
+    val suffix = fileName.substring(fileName.lastIndexOf(".") + 1)
+    println(suffix)
+    println(fileName.substring(0,fileName.indexOf(".")))
+
+  }
+
+  @Test
+  def testReplace03(): Unit ={
+    val a = "assss${aaa}"
+    val tem = "${aaa}".replace("$","\\$")
+      .replace("{","\\{")
+      .replace("}","\\}")
+    println(tem)
+    println(a.replaceAll(tem,"sss"))
+  }
+
 
 }
 
