@@ -2047,6 +2047,11 @@ class UtilTest {
     println(a.replaceAll(tem,"sss"))
   }
 
+  @Test
+  def testStringLength(): Unit = {
+    val str = "tempAnser"
+    println(str.length)
+  }
 
 }
 
