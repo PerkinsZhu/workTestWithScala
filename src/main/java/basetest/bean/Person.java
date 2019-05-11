@@ -5,12 +5,22 @@ package basetest.bean;
  **/
 public class Person {
     protected final String name = "jack";
-//    protected static Intger age;
+    protected final String name2;
+
+    public Person() {
+        name2 = "200";
+    }
+
+    //    protected static Intger age;
+
 
     class Inner{}
 
     static  class StaticInner{}
     public void testInner(){
+
+//        name2 = "q2w333";
+
         Person p = new Person();
         Inner inner = new Inner();
         Person.Inner in2 = p.new Inner();
