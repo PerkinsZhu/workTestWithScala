@@ -2051,6 +2051,13 @@ class UtilTest {
   def testStringLength(): Unit = {
     val str = "tempAnser"
     println(str.length)
+    val d1 = DateTime.now
+    val d2 = DateTime.parse("2019-05-23")
+    println(d2.toString())
+    println(d1.toString())
+    println(d2.compareTo(d1))
+    println(d1.compareTo(d2))
+
   }
 
 }

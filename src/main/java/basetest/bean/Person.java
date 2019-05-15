@@ -7,6 +7,13 @@ public class Person {
     protected final String name = "jack";
     protected final String name2;
 
+    static {
+        System.out.println("静态代码块执行");
+    }
+    {
+        System.out.println("非静态代码块执行");
+    }
+
     public Person() {
         name2 = "200";
     }

@@ -10,6 +10,8 @@ public class TestMain {
         TestService server = new TestService();
         server.test();
 
+        Person p2 = new Person();
+        Person p3 = new Person();
         Person p = new Person();
         p.testInner();
 //        Person.StaticInner staticInner = new Person.StaticInner();
