@@ -176,20 +176,31 @@ libraryDependencies += "com.robbypond" % "boilerpipe" % "1.2.3"
 
 //宏编程相关配置
 val commonSettings = Seq(
+  version := "1.0" ,
   scalaVersion := "2.12.2",
   scalacOptions ++= Seq("-deprecation", "-feature"),
+  scalacOptions += "-Xplugin-require:macroparadise",
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
     "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.1",
-    "org.specs2" %% "specs2" % "2.3.12" % "test",
-    "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test"
+//    "org.specs2" %% "specs2" % "3.8.9" % "test",
+//    "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+    "org.scalameta" %% "scalameta" % "4.3.20"
   ),
   addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+  ,resolvers += Resolver.sonatypeRepo("snapshots")
+  ,addCompilerPlugin("org.scalameta" % "paradise" % "4.3.20" cross CrossVersion.full)
+
+
 )
+
+//scalameta ,一种替代宏编程的新技术
+//https://www.cnblogs.com/tiger-xc/p/6137081.html
 
 //指定宏目录以及demo目录
 lazy val root = (project in file(".")).aggregate(macros, demos)
 
 lazy val macros = project.in(file("macros")).settings(commonSettings : _*)
+//  .settings(macrosSettings : _*)
 
 lazy val demos  = project.in(file("demos")).settings(commonSettings : _*).dependsOn(macros)
