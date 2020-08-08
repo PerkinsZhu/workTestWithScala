@@ -172,3 +172,24 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-java8-compat" % "0.6.0
 
 // https://mvnrepository.com/artifact/com.robbypond/boilerpipe
 libraryDependencies += "com.robbypond" % "boilerpipe" % "1.2.3"
+
+
+//宏编程相关配置
+val commonSettings = Seq(
+  scalaVersion := "2.12.2",
+  scalacOptions ++= Seq("-deprecation", "-feature"),
+  libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+    "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.1",
+    "org.specs2" %% "specs2" % "2.3.12" % "test",
+    "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test"
+  ),
+  addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+)
+
+//指定宏目录以及demo目录
+lazy val root = (project in file(".")).aggregate(macros, demos)
+
+lazy val macros = project.in(file("macros")).settings(commonSettings : _*)
+
+lazy val demos  = project.in(file("demos")).settings(commonSettings : _*).dependsOn(macros)
